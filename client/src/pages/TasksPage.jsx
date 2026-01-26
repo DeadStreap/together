@@ -1,54 +1,62 @@
-import { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import './TasksPage.css'; // Если у вас есть файл стилей
 
 function TasksPage() {
-  const [tasks, setTasks] = useState([
-    { id: 1, text: 'Купить молоко' },
-    { id: 2, text: 'Сделать домашнее задание' },
-  ]);
+  const [contentItems, setContentItems] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const API = 'together-alpha-one.vercel.app';
 
-  const addTask = (e) => {
-    if (e.key === 'Enter' && e.target.value) {
-      setTasks([...tasks, { id: Date.now(), text: e.target.value }]);
-      e.target.value = '';
-    }
-  };
+  useEffect(() => {
+     const API_URL = `https://${API}/api/content_items`;
 
-  const deleteTask = (id) => {
-    setTasks(tasks.filter(task => task.id !== id));
-  };
+    fetch(API_URL)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`Ошибка сети: ${response.statusText}`);
+        }
+        return response.json();
+      })
+      .then(data => {
+        setContentItems(data);
+        setIsLoading(false);
+      })
+      .catch(error => {
+        console.error("Ошибка при получении данных:", error);
+        setError(error);
+        setIsLoading(false);
+      });
+  }, []); 
+
+  if (isLoading) {
+    return <div className="loading">Загрузка контента...</div>;
+  }
+
+  if (error) {
+    return <div className="error">Ошибка: {error.message}</div>;
+  }
 
   return (
-    <div className="tasks-page">
-      <h2>Список задач</h2>
-      <input
-        type="text"
-        className="task-input"
-        placeholder="Новая задача (нажмите Enter)"
-        onKeyDown={addTask}
-      />
-      <button className="add-btn" onClick={() => {
-        const input = document.querySelector('.task-input');
-        if (input.value) addTask({ key: 'Enter', target: input });
-      }}>
-        Добавить
-      </button>
-
-      <ul className="tasks-list">
-        {tasks.map(task => (
-          <li key={task.id} className="task-item">
-            <span className="task-text">{task.text}</span>
-            <button
-              onClick={() => deleteTask(task.id)}
-              className="delete-btn"
-            >
-              Удалить
-            </button>
-          </li>
-        ))}
-      </ul>
+    <div className="tasks-container">
+      <h1>Доступный контент ({contentItems.length})</h1>
+      {contentItems.length > 0 ? (
+        <ul className="content-list">
+          {contentItems.map(item => (
+            <li key={item.id} className="content-item">
+              <div className="item-title">**{item.title || 'Без названия'}**</div>
+              <div className="item-details">Категория: *{item.category || 'N/A'}*</div>
+              <div className="item-dates">
+                <span>Начало: {item.start_date ? new Date(item.start_date).toLocaleDateString() : 'N/A'}</span>
+                <span>Конец: {item.end_date ? new Date(item.end_date).toLocaleDateString() : 'N/A'}</span>
+              </div>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p>На данный момент контент отсутствует.</p>
+      )}
     </div>
   );
 }
 
 export default TasksPage;
-
