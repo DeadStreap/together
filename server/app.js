@@ -1,5 +1,6 @@
 // server.js
 const express = require('express');
+const pool = require('./config/db');
 const prisma = require('./prismaClient'); // Ваш модуль с PrismaClient
 const app = express();
 const PORT = 3001; // Выберите порт для вашего API (отличный от порта React-приложения)
@@ -13,13 +14,15 @@ app.use((req, res, next) => {
 
 // Маршрут API для получения всех элементов контента
 app.get('/api/content_items', async (req, res) => {
-  try {
-    const allItems = await prisma.content_items.findMany();
-    res.json(allItems); // Отправляем данные в формате JSON
-  } catch (error) {
-    console.error(error);
-    res.status(500).send('Ошибка сервера');
-  }
+  pool.query(`SELECT * FROM content_items`, (err, result) => {
+            if (!err) {
+                res.json(result)
+            }
+            else {
+                res.send(err)
+                console.log(err)
+            }
+        })
 });
 
 app.listen(PORT, () => {
