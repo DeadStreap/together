@@ -1,30 +1,34 @@
-// server.js
 const express = require('express');
-const pool = require('./config/db');
-const prisma = require('./prismaClient'); // Ваш модуль с PrismaClient
+const cors = require('cors'); // Установите: npm install cors
+const db = require('./config/db');
+
 const app = express();
-const PORT = 3001; // Выберите порт для вашего API (отличный от порта React-приложения)
 
-// Разрешаем CORS, чтобы React-приложение могло делать запросы
-app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', 'http://localhost:3000'); // Замените 3000 на порт вашего React-приложения
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-  next();
-});
+app.use(cors());
 
-// Маршрут API для получения всех элементов контента
+app.use(express.json());
+
 app.get('/api/content_items', async (req, res) => {
-  pool.query(`SELECT * FROM content_items`, (err, result) => {
-            if (!err) {
-                res.json(result)
-            }
-            else {
-                res.send(err)
-                console.log(err)
-            }
-        })
+  try {
+    console.log('→ Запрос к БД...');
+    const [rows] = await db.execute('SELECT * FROM content_items');
+    console.log(`✓ Получено ${rows.length} записей`);
+    res.json(rows);
+  } catch (error) {
+    console.error('❌ Ошибка SQL:', {
+      message: error.message,
+      code: error.code,
+      errno: error.errno,
+      sqlState: error.sqlState,
+      stack: error.stack
+    });
+    res.status(500).json({
+      error: 'Сервер не смог обработать запрос',
+      details: error.message
+    });
+  }
 });
 
-app.listen(PORT, () => {
-  console.log(`Сервер API запущен на http://localhost:${PORT}`);
+app.listen(3001, () => {
+  console.log('🔗 Сервер на http://localhost:3001');
 });
