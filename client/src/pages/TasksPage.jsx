@@ -6,7 +6,8 @@ function TasksPage() {
   const [error, setError] = useState(null);
 
   const URL = 'localhost:3001'
-  const API_URL = `http://${URL}/api/content_items`;
+  const API = 'together-alpha-one.vercel.app'
+  const API_URL = `http://${API}/api/content_items`;
 
   useEffect(() => {
     fetch(API_URL)
