@@ -1,14 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import './TasksPage.css'; // Если у вас есть файл стилей
+import { useState } from 'react';
 
 function TasksPage() {
   const [contentItems, setContentItems] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  const API = 'together-alpha-one.vercel.app';
+  const API = 'together-alpha-one.vercel.app/';
 
   useEffect(() => {
-     const API_URL = `https://${API}/api/content_items`;
+     const API_URL = `https://${API}/api/content_items`;  
 
     fetch(API_URL)
       .then(response => {
