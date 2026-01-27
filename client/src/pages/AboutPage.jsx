@@ -2,11 +2,10 @@ function AboutPage() {
   return (
     <div className="about-page">
       <h2>О проекте</h2>
-      <p>Это демо-приложение с маршрутизацией на React.</p>
+      <p>Это приложение на React + Node для моей любимой девчоки</p>
       <ul>
-        <li>Роутинг через <code>react-router-dom</code></li>
-        <li>Состояние в <code>useState</code></li>
-        <li>Прокси к бэкенду (см. <code>vite.config.js</code>)</li>
+        <li>Мы тут будем записывать все наши совместыне приколы которые мы делаем </li>
+        <li>И еще я буду хвастаться какой я крутой программист:)</li>
       </ul>
     </div>
   );
