@@ -1,34 +1,19 @@
 const express = require('express');
-const cors = require('cors'); // Установите: npm install cors
-const db = require('./config/db');
+const cors = require('cors');
+const Router = require('./routes/router');
+const PORT = process.env.PORT || 3001;
 
 const app = express();
 
+
 app.use(cors());
-
 app.use(express.json());
+app.use('/api', Router);
 
-app.get('/api/content_items', async (req, res) => {
-  try {
-    console.log('→ Запрос к БД...');
-    const [rows] = await db.execute('SELECT * FROM content_items');
-    console.log(`✓ Получено ${rows.length} записей`);
-    res.json(rows);
-  } catch (error) {
-    console.error('❌ Ошибка SQL:', {
-      message: error.message,
-      code: error.code,
-      errno: error.errno,
-      sqlState: error.sqlState,
-      stack: error.stack
-    });
-    res.status(500).json({
-      error: 'Сервер не смог обработать запрос',
-      details: error.message
-    });
-  }
-});
-
-app.listen(3001, () => {
-  console.log('🔗 Сервер на http://localhost:3001');
-});
+app.listen(PORT, (err) => {
+    if(err){
+        console.log(err)
+    }else{
+        console.log(`Server started on port ${PORT}`)
+    }
+})

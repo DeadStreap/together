@@ -1,17 +1,14 @@
 const mysql = require('mysql2/promise');
+require('dotenv').config();
 
 const pool = mysql.createPool({
-  host: process.env.MYSQL_HOST || 'bpvc1zsief2yavox1cw7-mysql.services.clever-cloud.com',
-  port: process.env.MYSQL_PORT || 3306,
-  user: process.env.MYSQL_USER || 'ucqa9qdpsstwl4i0',
-  password: process.env.MYSQL_PASSWORD || 'uyeQo6bmhrycuT1jz9KW',
-  database: process.env.MYSQL_DATABASE || 'bpvc1zsief2yavox1cw7',
-  ssl: { rejectUnauthorized: false },
+  host: process.env.MYSQL_HOST,
+  port: process.env.MYSQL_PORT,
+  user: process.env.MYSQL_USER,
+  password: process.env.MYSQL_PASSWORD,
+  database: process.env.MYSQL_DATABASE,
   connectionLimit: 10,
-  waitForConnections: true,
   queueLimit: 0,
-  connectTimeout: 10000,
-  timeout: 30000 
 });
 
 async function testConnection() {
