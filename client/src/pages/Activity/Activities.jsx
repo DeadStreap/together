@@ -8,7 +8,7 @@ function Activities() {
 
     const URL = "localhost:3001";
     const API = "together-alpha-one.vercel.app";
-    const API_URL = `http://${API}/api/content`;
+    const API_URL = `https://${API}/api/content`;
 
     useEffect(() => {
         fetch(API_URL)
