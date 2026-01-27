@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import * as styles from '../../styles/style';
 
 function ActivityById() {
@@ -58,6 +58,7 @@ function ActivityById() {
                 <ul className="content-list">
                     {contentItems.map((item) => (
                         <div key={item.id} style={styles.contentItem}>
+                            <Link to={`/`} style={{color: '#ccc'}}>Back</Link>
                                 <div className="item-title">
                                     <strong>{item.title || "Без названия"}</strong>
                                 </div>

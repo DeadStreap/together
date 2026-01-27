@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Link } from 'react-router-dom';
 import * as styles from '../../styles/style';
 
 function Activities() {
@@ -54,7 +55,7 @@ function Activities() {
                 <ul className="content-list">
                     {contentItems.map((item) => (
                         <div key={item.id} style={styles.contentItem}>
-                            <a href={`/activity/${item.id}`} style={{color: '#fff'}}>
+                            <Link to={`/activity/${item.id}`} style={{color: '#fff'}}>
                             <div className="item-title">
                                 <strong>{item.title || "Без названия"}</strong>
                             </div>
@@ -98,12 +99,15 @@ function Activities() {
                                         : "не указанно"}
                                 </span>
                             </div>
-                            </a>
+                            </Link>
                         </div>
                     ))}
                 </ul>
             ) : (
-                <p>На данный момент контент отсутствует.</p>
+                <>
+                <p>Не добавленно ни одной активности</p>
+                <p>Добавить?</p>
+                </>
             )}
         </div>
     );
