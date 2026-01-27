@@ -34,4 +34,5 @@ export const contentItem = {
   color: '#fff',
   padding: 10,
   borderRadius: 5,
+  marginBottom: 10,
 }
