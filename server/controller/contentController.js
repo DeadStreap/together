@@ -130,5 +130,5 @@ class ContentController {
 
 
 }
-console.log('Exported controller:', new ContentController());
+
 module.exports = new ContentController()
