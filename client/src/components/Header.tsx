@@ -9,8 +9,37 @@ const Header = () => {
                 to="/"
                 className={`nav-link ${location.pathname === '/' ? 'active' : ''}`}
             >
-                Задачи
+                Главная
             </Link>
+
+            <Link
+                to="/activity/together"
+                className={`nav-link ${location.pathname === '/activity/together' ? 'active' : ''}`}
+            >
+                Вместе
+            </Link>
+
+            <Link
+                to="/activity/alone"
+                className={`nav-link ${location.pathname === '/activity/alone' ? 'active' : ''}`}
+            >
+                Одиночные
+            </Link>
+
+            <Link
+                to="/profile"
+                className={`nav-link ${location.pathname === '/activity/addContent' ? 'active' : ''}`}
+            >
+                + Добавить
+            </Link>
+
+            <Link
+                to="/profile"
+                className={`nav-link ${location.pathname === '/profile' ? 'active' : ''}`}
+            >
+                Профиль
+            </Link>
+
             <Link
                 to="/about"
                 className={`nav-link ${location.pathname === '/about' ? 'active' : ''}`}
