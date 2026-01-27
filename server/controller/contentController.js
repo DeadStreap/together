@@ -31,7 +31,6 @@ class ContentController {
     }
 
     async updateContentById(req, res) {
-        console.log('req.body:', req.body);
         const { id, ...fields } = req.body;
 
         if (!id) {
