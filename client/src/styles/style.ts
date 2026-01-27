@@ -28,3 +28,10 @@ export const titleStyles: React.CSSProperties = {
   color: '#212121',
   marginBottom: '16px',
 };
+
+export const contentItem = {
+  background: '#7a55ff',
+  color: '#fff',
+  padding: 10,
+  borderRadius: 5,
+}

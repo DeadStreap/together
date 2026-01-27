@@ -1,32 +1,36 @@
-import { Routes, Route, Link, useLocation } from 'react-router-dom';
-import TasksPage from './pages/TasksPage';
+import { Routes, Route, Link } from 'react-router-dom';
+
 import AboutPage from './pages/AboutPage';
+import NotFoundPage from './pages/NotFoundPage';
+
+import Activities from './pages/Activity/Activities';
+import ActivityById from './pages/Activity/ActivityById';
+
+import { Header } from './components/Header'
+
 
 function App() {
-  const location = useLocation(); // Теперь работает!
 
   return (
     <div className="app-container">
-      <header>
-        <nav>
-          <Link
-            to="/"
-            className={`nav-link ${location.pathname === '/' ? 'active' : ''}`}
-          >
-            Задачи
-          </Link>
-          <Link
-            to="/about"
-            className={`nav-link ${location.pathname === '/about' ? 'active' : ''}`}
-          >
-            О проекте
-          </Link>
-        </nav>
-      </header>
+      <Header />
 
       <Routes>
-        <Route path="/" element={<TasksPage />} />
+        <Route path="/" element={<Activities />} />
+        <Route path="/profile" element={<Activities />} />
+        <Route path="/authorization" element={<Activities />} />
+        <Route path="/register" element={<Activities />} />
+
+
+        <Route path="/together_activity" element={<Activities />} />
+        <Route path="/activity/:ActivityId" element={<ActivityById />} />
+        <Route path="/activity" element={<Activities />} />
+
+        <Route path="/activity/create" element={<Activities />} />
+
         <Route path="/about" element={<AboutPage />} />
+
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </div>
   );
