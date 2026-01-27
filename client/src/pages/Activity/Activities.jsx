@@ -84,14 +84,12 @@ function Activities() {
                                         })()
                                         : "не указано"}
                                 </span>
-                                <br></br>
                                 <span>
                                     Начало:{" "}
                                     {item.start_date
                                         ? new Date(item.start_date).toLocaleDateString()
                                         : "не указанно"}
                                 </span>
-                                <br></br>
                                 <span>
                                     Конец:{" "}
                                     {item.end_date
