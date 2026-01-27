@@ -2,9 +2,9 @@ const Router = require('express')
 const router = new Router()
 
 const contentController = require('../controller/contentController')
-const userController = require('../controller/userController')
-const coupleController = require('../controller/coupleController')
-const commentController = require('../controller/commentController')
+// const userController = require('../controller/userController')
+// const coupleController = require('../controller/coupleController')
+// const commentController = require('../controller/commentControler')
 
 router.get('/content', contentController.getContent)
 router.get('/content/id/:id', contentController.getContentById)
