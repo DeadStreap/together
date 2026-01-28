@@ -414,6 +414,7 @@ h1 {
 
 .activity-form input[type="text"],
 .activity-form input[type="date"],
+.activity-form input[type="password"],
 .activity-form select {
   border-radius: 10px;
   border: 1px solid #e5e7eb;
@@ -783,4 +784,19 @@ h1 {
   .item-dates {
     font-size: 11px;
   }
+}
+
+.profile-badge-link {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  color: #7a55ff;
+  cursor: pointer;
+  text-align: right;
+}
+
+.profile-badge-link:hover {
+  text-decoration: underline;
 }
