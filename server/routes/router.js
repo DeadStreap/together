@@ -14,6 +14,7 @@ router.delete('/delete/content', contentController.deleteContent)
 
 router.get('/users', userController.getUsers)
 router.get('/user/id/:id', userController.getUserById)
+router.post('/auth/user', userController.userAuth)
 router.put('/update/user', userController.updateUser)
 router.post('/create/user', userController.createUser)
 router.delete('/delete/user', userController.deleteUser)
