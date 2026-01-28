@@ -70,67 +70,85 @@ function CreateActivity() {
     }
 
     return (
-        <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "10px", margin: 50 }}>
-            <label>
-                Название:
-                <input
-                    type="text"
-                    name="title"
-                    value={formData.title}
-                    onChange={handleChange}
-                    required
-                />
-            </label>
+        <div className="tasks-container create-activity-page">
+            <div className="content-card content-card--detail activity-form-wrapper">
+                <div className="content-card-link">
+                    <div className="item-title">Новая активность</div>
 
-            <label>
-                Категория:
-                <select
-                    name="category"
-                    value={formData.category}
-                    onChange={handleChange}
-                >
-                    <option value="anime">Аниме</option>
-                    <option value="game">Игра</option>
-                    <option value="film">Фильм</option>
-                    <option value="serial">Сериал</option>
-                </select>
-            </label>
+                    <form onSubmit={handleSubmit} className="activity-form">
+                        <div className="activity-form-field">
+                            <label htmlFor="title">Название</label>
+                            <input
+                                id="title"
+                                type="text"
+                                name="title"
+                                value={formData.title}
+                                onChange={handleChange}
+                                required
+                            />
+                        </div>
 
-            <label>
-                Совместно:
-                <input
-                    type="checkbox"
-                    name="shared_with_partner"
-                    checked={formData.shared_with_partner}
-                    onChange={handleChange}
-                />
-            </label>
+                        <div className="activity-form-field">
+                            <label htmlFor="category">Категория</label>
+                            <select
+                                id="category"
+                                name="category"
+                                value={formData.category}
+                                onChange={handleChange}
+                            >
+                                <option value="anime">Аниме</option>
+                                <option value="game">Игра</option>
+                                <option value="film">Фильм</option>
+                                <option value="serial">Сериал</option>
+                            </select>
+                        </div>
 
-            <label>
-                Статус:
-                <select
-                    name="status"
-                    value={formData.status}
-                    onChange={handleChange}
-                >
-                    <option value="planned">Запланировано</option>
-                    <option value="inProgress">В процессе</option>
-                    <option value="done">Завершено</option>
-                </select>
-            </label>
+                        <div className="activity-form-field">
+                            <span>Статус</span>
+                            <select
+                                name="status"
+                                value={formData.status}
+                                onChange={handleChange}
+                            >
+                                <option value="planned">Запланировано</option>
+                                <option value="inProgress">В процессе</option>
+                                <option value="done">Завершено</option>
+                            </select>
+                        </div>
 
-            <label>
-                Дата начала:
-                <input
-                    type="date"
-                    name="start_date"
-                    value={formData.start_date || ""}
-                    onChange={handleChange}
-                />
-            </label>
+                        <div className="activity-form-field">
+                            <label htmlFor="start_date">Дата начала</label>
+                            <input
+                                id="start_date"
+                                type="date"
+                                name="start_date"
+                                value={formData.start_date || ""}
+                                onChange={handleChange}
+                            />
+                        </div>
 
-            <button type="submit" style={styles.buttonStyles('primary')}>Отправить</button>
-        </form>
+                        <div className="activity-form-checkbox">
+                            <input
+                                id="shared_with_partner"
+                                type="checkbox"
+                                name="shared_with_partner"
+                                checked={formData.shared_with_partner}
+                                onChange={handleChange}
+                            />
+                            <label htmlFor="shared_with_partner">
+                                Делиться с партнёром
+                            </label>
+                        </div>
+
+                        <div className="activity-form-actions">
+                            <button type="submit" className="primary-button">
+                                Сохранить
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     );
 }
 
