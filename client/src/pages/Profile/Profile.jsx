@@ -11,8 +11,8 @@ function Profile() {
     const API_URL = `https://${API}/api/user/id/1`;
     const [error, setError] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
-    const [user, setUser] = useState([]);
-    const [partner, setPartner] = useState([]);
+    const [user, setUser] = useState(null);
+    const [partner, setPartner] = useState(null);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -34,9 +34,7 @@ function Profile() {
             try {
                 setIsLoading(true);
                 const data = await apiReq(`https://${API}/api/user/id/${partner_id}`);
-                console.log(data)
                 setPartner(data)
-                console.log(partner)
             } catch (error) {
                 setError(error.message);
             } finally {
@@ -45,7 +43,7 @@ function Profile() {
         };
 
     
-    if (isLoading) {
+    if (isLoading || !user) {
         return <div className="loading">Загрузка контента...</div>;
     }
 
@@ -62,11 +60,18 @@ function Profile() {
             <h1>Профиль</h1>
             <p>Name: {user.username}</p>
 
-            <p>{partner ? 
-            `В паре с ${partner.username} 🖤` 
-            : 
-            `У вас пока нет пары`}
+            <p>
+                {partner
+                    ? `В паре с ${partner.username} 🖤`
+                    : `У вас пока нет пары`}
             </p>
+
+            {user.couple_start_date && (
+                <p>
+                    Дата начала отношений:{" "}
+                    {new Date(user.couple_start_date).toLocaleDateString()}
+                </p>
+            )}
 
             <Link to='/'>Вернуться на главную </Link>
         </div>
