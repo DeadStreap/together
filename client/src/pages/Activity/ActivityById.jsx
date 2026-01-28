@@ -164,7 +164,14 @@ function ActivityById() {
                         </span>
                     </div>
 
-                    <div style={{ marginTop: 14, display: "flex", justifyContent: "flex-end" }}>
+                    <div style={{ marginTop: 14, display: "flex", justifyContent: "space-between", gap: 8 }}>
+                        <Link
+                            to={`/activity/${ActivityId}/edit`}
+                            className="primary-button"
+                            style={{ textDecoration: "none", textAlign: "center" }}
+                        >
+                            Редактировать
+                        </Link>
                         <button
                             type="button"
                             onClick={handleDelete}
