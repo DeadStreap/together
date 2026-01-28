@@ -1,50 +1,64 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import { apiReq } from "../../utils/apiReq";
+import { useUser } from "../../store/UserContext";
 
 function Profile() {
-    const API = "together-alpha-one.vercel.app";
-    const API_URL = `https://${API}/api/user/id/1`;
+    const { user, isAuthenticated, logout } = useUser();
     const [error, setError] = useState(null);
-    const [isLoading, setIsLoading] = useState(true);
-    const [user, setUser] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);
     const [partner, setPartner] = useState(null);
+    const navigate = useNavigate();
+
+    const API = "together-alpha-one.vercel.app";
 
     useEffect(() => {
-        const fetchData = async () => {
+        const fetchPartner = async () => {
+            if (!user || !user.partner_id) return;
             try {
                 setIsLoading(true);
-                const data = await apiReq(API_URL);
-                setUser(data);
-                if (data.partner_id) {
-                    getPartner(data.partner_id);
-                }
+                const data = await apiReq(
+                    `https://${API}/api/user/id/${user.partner_id}`
+                );
+                setPartner(data);
             } catch (err) {
                 setError(err);
             } finally {
                 setIsLoading(false);
             }
         };
-        fetchData();
-    }, []);
 
-    const getPartner = async (partner_id) => {
-        try {
-            setIsLoading(true);
-            const data = await apiReq(
-                `https://${API}/api/user/id/${partner_id}`
-            );
-            setPartner(data);
-        } catch (err) {
-            setError(err);
-        } finally {
-            setIsLoading(false);
-        }
-    };
+        fetchPartner();
+    }, [user]);
 
-    if (isLoading || !user) {
-        return <div className="loading">Загрузка контента...</div>;
+    if (!isAuthenticated || !user) {
+        return (
+            <div className="profile-page">
+                <div className="profile-card">
+                    <div className="item-title">Профиль</div>
+                    <p
+                        style={{
+                            fontSize: 13,
+                            color: "#6b7280",
+                            marginBottom: 12,
+                        }}
+                    >
+                        Чтобы увидеть информацию о профиле, войдите в аккаунт.
+                    </p>
+                    <div className="profile-footer">
+                        <Link to="/authorization" className="profile-link-back">
+                            Войти
+                        </Link>
+                        <div className="profile-meta">Гость</div>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    if (isLoading) {
+        return <div className="loading">Загрузка профиля...</div>;
     }
 
     if (error) {
@@ -62,6 +76,11 @@ function Profile() {
               .join("")
               .slice(0, 2)
         : "?";
+
+    const handleLogout = () => {
+        logout();
+        navigate("/authorization");
+    };
 
     return (
         <div className="profile-page">
@@ -126,8 +145,18 @@ function Profile() {
                     <Link to="/" className="profile-link-back">
                         ← Вернуться к активностям
                     </Link>
-                    <div className="profile-meta">
-                        ID пользователя: {user.id}
+                    <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
+                        <div className="profile-meta">
+                            ID пользователя: {user.id}
+                        </div>
+                        <button
+                            type="button"
+                            className="primary-button"
+                            style={{ paddingInline: 14, fontSize: 12 }}
+                            onClick={handleLogout}
+                        >
+                            Выйти
+                        </button>
                     </div>
                 </div>
             </div>
