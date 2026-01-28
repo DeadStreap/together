@@ -2,53 +2,69 @@ import { Link, useLocation } from 'react-router-dom';
 
 const Header = () => {
     const location = useLocation();
-    return(
-    <header>
-        <nav>
-            <Link
-                to="/"
-                className={`nav-link ${location.pathname === '/' ? 'active' : ''}`}
-            >
-                Главная
-            </Link>
 
-            <Link
-                to="/activity/together"
-                className={`nav-link ${location.pathname === '/activity/together' ? 'active' : ''}`}
-            >
-                Вместе
-            </Link>
+    const isActive = (path: string) => location.pathname === path;
 
-            <Link
-                to="/activity/alone"
-                className={`nav-link ${location.pathname === '/activity/alone' ? 'active' : ''}`}
-            >
-                Одиночные
-            </Link>
+    return (
+        <aside className="sidebar">
+            <div className="sidebar-top">
+                <div className="sidebar-logo">
+                    <div className="sidebar-logo-icon">
+                        <img src="/heart.svg" alt="Together" className="sidebar-logo-img" />
+                    </div>
+                    <div className="sidebar-logo-text">
+                        Together
+                    </div>
+                </div>
 
-            <Link
-                to="/activity/create"
-                className={`nav-link ${location.pathname === '/activity/addContent' ? 'active' : ''}`}
-            >
-                + Добавить
-            </Link>
+                <nav className="sidebar-nav">
+                    <Link
+                        to="/"
+                        className={`sidebar-link ${isActive('/') ? 'active' : ''}`}
+                    >
+                        Главная
+                    </Link>
 
-            <Link
-                to="/profile"
-                className={`nav-link ${location.pathname === '/profile' ? 'active' : ''}`}
-            >
-                Профиль
-            </Link>
+                    <Link
+                        to="/activity/together"
+                        className={`sidebar-link ${isActive('/activity/together') ? 'active' : ''}`}
+                    >
+                        Вместе
+                    </Link>
 
-            <Link
-                to="/about"
-                className={`nav-link ${location.pathname === '/about' ? 'active' : ''}`}
-            >
-                О проекте
-            </Link>
-        </nav>
-    </header>
-    )
-}
+                    <Link
+                        to="/activity/alone"
+                        className={`sidebar-link ${isActive('/activity/alone') ? 'active' : ''}`}
+                    >
+                        Одиночные
+                    </Link>
 
-export { Header }
+                    <Link
+                        to="/activity/create"
+                        className={`sidebar-link ${isActive('/activity/create') ? 'active' : ''}`}
+                    >
+                        Добавить
+                    </Link>
+
+                    <Link
+                        to="/about"
+                        className={`sidebar-link ${isActive('/about') ? 'active' : ''}`}
+                    >
+                        О проекте
+                    </Link>
+                </nav>
+            </div>
+
+            <div className="sidebar-bottom">
+                <Link
+                    to="/profile"
+                    className={`sidebar-link sidebar-link-profile ${isActive('/profile') ? 'active' : ''}`}
+                >
+                    Мой профиль
+                </Link>
+            </div>
+        </aside>
+    );
+};
+
+export { Header };
