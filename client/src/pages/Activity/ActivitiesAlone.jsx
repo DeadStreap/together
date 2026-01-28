@@ -1,33 +1,48 @@
 import { useState, useEffect } from "react";
-import { Link } from 'react-router-dom';
-import * as styles from '../../styles/style';
+import { Link } from "react-router-dom";
+import * as styles from "../../styles/style";
 
-import { apiReq } from '../../utils/apiReq'
+import { apiReq } from "../../utils/apiReq";
+import { useUser } from "../../store/UserContext";
 
 function ActivitiesAlone() {
     const [contentItems, setContentItems] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    const URL = "localhost:3001";
+    const { user, isAuthenticated } = useUser();
+
     const API = "together-alpha-one.vercel.app";
     const API_URL = `https://${API}/api/contents`;
 
     useEffect(() => {
         const fetchData = async () => {
-                    try {
-                        setIsLoading(true);
-                        const data = await apiReq(API_URL);
-                        const filteredData = data.filter(item => item.shared_with_partner == false);
-                        setContentItems(filteredData);
-                    } catch (error) {
-                        setError(error.message);
-                    } finally {
-                        setIsLoading(false);
-                    }
-                };
-                fetchData();
-    }, []);
+            try {
+                setIsLoading(true);
+                const data = await apiReq(API_URL);
+
+                if (!isAuthenticated || !user) {
+                    setContentItems([]);
+                    setIsLoading(false);
+                    return;
+                }
+
+                const currentId = user.id;
+
+                const filteredData = data.filter(
+                    (item) =>
+                        item.shared_with_partner == false &&
+                        item.added_by_user_id == currentId
+                );
+                setContentItems(filteredData);
+            } catch (err) {
+                setError(err);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+        fetchData();
+    }, [isAuthenticated, user]);
 
     if (isLoading) {
         return <div className="loading">Загрузка контента...</div>;
@@ -42,7 +57,13 @@ function ActivitiesAlone() {
     }
     return (
         <div className="tasks-container">
-            <h1>Доступный контент ({contentItems.length})</h1>
+            <h1>Мои одиночные активности ({contentItems.length})</h1>
+
+            {!isAuthenticated || !user ? (
+                <p>
+                    Чтобы увидеть одиночные активности, нужно авторизоваться.
+                </p>
+            ) : null}
 
             {contentItems.length > 0 ? (
                 <ul className="content-list">
