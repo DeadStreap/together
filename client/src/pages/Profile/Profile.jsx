@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 
 import { apiReq } from "../../utils/apiReq";
 import { useUser } from "../../store/UserContext";
@@ -10,8 +10,10 @@ function Profile() {
     const [isLoading, setIsLoading] = useState(false);
     const [partner, setPartner] = useState(null);
     const navigate = useNavigate();
+    const params = useParams();
 
     const API = "together-alpha-one.vercel.app";
+    const requestedId = params.userId ? Number(params.userId) : null;
 
     useEffect(() => {
         const fetchPartner = async () => {
@@ -31,6 +33,22 @@ function Profile() {
 
         fetchPartner();
     }, [user]);
+
+    useEffect(() => {
+        if (!isAuthenticated || !user) return;
+        if (!requestedId) return; // /profile без id всегда ок
+
+        if (requestedId === user.id) return;
+
+        if (!user.partner_id) {
+            navigate("/profile", { replace: true });
+            return;
+        }
+
+        if (partner && requestedId !== partner.id) {
+            navigate("/profile", { replace: true });
+        }
+    }, [requestedId, user, partner, isAuthenticated, navigate]);
 
     if (!isAuthenticated || !user) {
         return (
@@ -69,8 +87,15 @@ function Profile() {
         );
     }
 
-    const initials = user.username
-        ? user.username
+    const viewedUser =
+        !requestedId || requestedId === user.id
+            ? user
+            : partner && requestedId === partner.id
+            ? partner
+            : user;
+
+    const initials = viewedUser.username
+        ? viewedUser.username
               .split(" ")
               .map((w) => w[0])
               .join("")
@@ -82,6 +107,40 @@ function Profile() {
         navigate("/authorization");
     };
 
+    const hasCoupleStart = !!user.couple_start_date;
+    let daysTogether = null;
+    if (hasCoupleStart) {
+        const start = new Date(user.couple_start_date);
+        const now = new Date();
+        const diff = now.getTime() - start.getTime();
+        daysTogether = Math.max(0, Math.floor(diff / (1000 * 60 * 60 * 24)));
+    }
+
+    const isViewingPartner =
+        !!requestedId && partner && requestedId === partner.id;
+
+    let pairStatusText = "Партнёр пока не привязан";
+    if (partner) {
+        pairStatusText = isViewingPartner
+            ? `В паре с ${user.username} 🖤`
+            : `В паре с ${partner.username} 🖤`;
+    }
+
+    const statusTargetId = partner
+        ? isViewingPartner
+            ? user.id
+            : partner.id
+        : null;
+
+    const handleStatusClick = () => {
+        if (!statusTargetId) return;
+        if (statusTargetId === user.id) {
+            navigate("/profile");
+        } else {
+            navigate(`/profile/${statusTargetId}`);
+        }
+    };
+
     return (
         <div className="profile-page">
             <div className="profile-card">
@@ -90,7 +149,7 @@ function Profile() {
                         <div className="profile-avatar">{initials}</div>
                         <div className="profile-name-block">
                             <div className="profile-name">
-                                {user.username || "Без имени"}
+                                {viewedUser.username || "Без имени"}
                             </div>
                             <div className="profile-tagline">
                                 Личная страничка для совместных активностей
@@ -100,7 +159,13 @@ function Profile() {
                 </div>
 
                 <div className="profile-badges">
-                    <div className="profile-badge">
+                    <div
+                        className="profile-badge"
+                        style={{
+                            cursor: partner ? "pointer" : "default",
+                        }}
+                        onClick={partner ? handleStatusClick : undefined}
+                    >
                         <div className="profile-badge-label">
                             <span className="profile-badge-dot" />
                             <span>Статус пары</span>
@@ -111,9 +176,7 @@ function Profile() {
                                 (!partner ? " muted" : "")
                             }
                         >
-                            {partner
-                                ? `В паре с ${partner.username} 🖤`
-                                : "Партнёр пока не привязан"}
+                            {pairStatusText}
                         </div>
                     </div>
 
@@ -139,15 +202,38 @@ function Profile() {
                                 : "Не указана"}
                         </div>
                     </div>
+
+                    {daysTogether !== null && (
+                        <div className="profile-badge">
+                            <div className="profile-badge-label">
+                                <span className="profile-badge-dot" />
+                                <span>Уже вместе</span>
+                            </div>
+                            <div className="profile-badge-value">
+                                {daysTogether} дней
+                            </div>
+                        </div>
+                    )}
                 </div>
 
                 <div className="profile-footer">
                     <Link to="/" className="profile-link-back">
                         ← Вернуться к активностям
                     </Link>
-                    <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
+                    <div
+                        style={{ display: "flex", gap: 10, alignItems: "center" }}
+                    >
+                        {isViewingPartner && (
+                            <Link
+                                to={`/activity/partner/${viewedUser.id}`}
+                                className="profile-link-back"
+                                style={{ marginRight: 8 }}
+                            >
+                                Активности партнёра
+                            </Link>
+                        )}
                         <div className="profile-meta">
-                            ID пользователя: {user.id}
+                            ID пользователя: {viewedUser.id}
                         </div>
                         <button
                             type="button"
