@@ -16,7 +16,7 @@ export const buttonStyles = (variant: 'primary' | 'secondary' | 'danger') => ({
   cursor: 'pointer',
   transition: 'background-color 0.2s',
   backgroundColor: {
-    primary: '#1E88E5',
+    primary: '#7a55ff',
     secondary: '#4CAF50',
     danger: '#F44336',
   }[variant],
