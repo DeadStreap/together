@@ -19,7 +19,17 @@ class UserController {
             return res.status(400).json({ error: 'ID is required in params' });
         }
 
-        const sql = 'SELECT * FROM users WHERE id = ?';
+        const sql = `
+            SELECT 
+                u.*,
+                c.id AS couple_id,
+                c.start_date AS couple_start_date
+            FROM users u
+            LEFT JOIN couples c
+                ON (c.first_user_id = u.id OR c.second_user_id = u.id)
+            WHERE u.id = ?
+            LIMIT 1
+        `;
 
         try {
             const [rows] = await pool.query(sql, [id]);
