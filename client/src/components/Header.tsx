@@ -4,6 +4,7 @@ const Header = () => {
     const location = useLocation();
 
     const isActive = (path: string) => location.pathname === path;
+    const isProfileActive = location.pathname === '/profile';
 
     return (
         <aside className="sidebar">
@@ -58,7 +59,7 @@ const Header = () => {
             <div className="sidebar-bottom">
                 <Link
                     to="/profile"
-                    className={`sidebar-link sidebar-link-profile ${isActive('/profile') ? 'active' : ''}`}
+                    className={`sidebar-link sidebar-link-profile ${isProfileActive ? 'active' : ''}`}
                 >
                     Мой профиль
                 </Link>
