@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { Link } from 'react-router-dom';
 import * as styles from '../../styles/style';
 
+import { apiReq } from '../../utils/apiReq'
+
 function ActivitiesAlone() {
     const [contentItems, setContentItems] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
@@ -12,28 +14,19 @@ function ActivitiesAlone() {
     const API_URL = `https://${API}/api/contents`;
 
     useEffect(() => {
-        fetch(API_URL)
-            .then((response) => {
-                if (!response.ok) {
-                    throw new Error(
-                        `Ошибка сети: ${response.statusText} (${response.status})`
-                    );
-                }
-                return response.json();
-            })
-            .then((data) => {
-                if (Array.isArray(data)) {
-                    setContentItems(data);
-                } else {
-                    throw new Error("Некорректный формат данных от API");
-                }
-                setIsLoading(false);
-            })
-            .catch((error) => {
-                console.error("Ошибка при получении данных:", error);
-                setError(error);
-                setIsLoading(false);
-            });
+        const fetchData = async () => {
+                    try {
+                        setIsLoading(true);
+                        const data = await apiReq(API_URL);
+                        const filteredData = data.filter(item => item.shared_with_partner == false);
+                        setContentItems(filteredData);
+                    } catch (error) {
+                        setError(error.message);
+                    } finally {
+                        setIsLoading(false);
+                    }
+                };
+                fetchData();
     }, []);
 
     if (isLoading) {
