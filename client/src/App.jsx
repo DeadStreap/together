@@ -9,6 +9,7 @@ import Activities from './pages/Activity/Activities';
 import ActivityById from './pages/Activity/ActivityById';
 import ActivitiesTogether from './pages/Activity/ActivitiesTogether';
 import ActivitiesAlone from './pages/Activity/ActivitiesAlone';
+import CreateActivity from './pages/Activity/CreateActivity';
 
 
 import { Header } from './components/Header'
@@ -31,8 +32,7 @@ function App() {
         <Route path="/activity" element={<Activities />} />
         <Route path="/activity/alone" element={<ActivitiesAlone />} />
         <Route path="/activity/together" element={<ActivitiesTogether />} />
-
-        <Route path="/activity/create" element={<Activities />} />
+        <Route path="/activity/create" element={<CreateActivity />} />
 
         <Route path="/about" element={<AboutPage />} />
 
