@@ -1,4 +1,4 @@
-import { Routes, Route, Link } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 
 import AboutPage from './pages/AboutPage';
 import NotFoundPage from './pages/NotFoundPage';
@@ -20,24 +20,24 @@ function App() {
   return (
     <div className="app-container">
       <Header />
+      <main className="app-main">
+        <Routes>
+          <Route path="/" element={<Activities />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/authorization" element={<Activities />} />
+          <Route path="/register" element={<Activities />} />
 
-      <Routes>
-        <Route path="/" element={<Activities />} />
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/authorization" element={<Activities />} />
-        <Route path="/register" element={<Activities />} />
+          <Route path="/activity/:ActivityId" element={<ActivityById />} />
+          <Route path="/activity" element={<Activities />} />
+          <Route path="/activity/alone" element={<ActivitiesAlone />} />
+          <Route path="/activity/together" element={<ActivitiesTogether />} />
+          <Route path="/activity/create" element={<CreateActivity />} />
 
+          <Route path="/about" element={<AboutPage />} />
 
-        <Route path="/activity/:ActivityId" element={<ActivityById />} />
-        <Route path="/activity" element={<Activities />} />
-        <Route path="/activity/alone" element={<ActivitiesAlone />} />
-        <Route path="/activity/together" element={<ActivitiesTogether />} />
-        <Route path="/activity/create" element={<CreateActivity />} />
-
-        <Route path="/about" element={<AboutPage />} />
-
-        <Route path="*" element={<NotFoundPage />} />
-      </Routes>
+          <Route path="*" element={<NotFoundPage />} />
+        </Routes>
+      </main>
     </div>
   );
 }
