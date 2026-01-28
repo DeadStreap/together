@@ -10,6 +10,7 @@ import ActivityById from './pages/Activity/ActivityById';
 import ActivitiesTogether from './pages/Activity/ActivitiesTogether';
 import ActivitiesAlone from './pages/Activity/ActivitiesAlone';
 import CreateActivity from './pages/Activity/CreateActivity';
+import ActivityEdit from './pages/Activity/ActivityEdit';
 
 
 import { Header } from './components/Header'
@@ -28,6 +29,7 @@ function App() {
           <Route path="/register" element={<Activities />} />
 
           <Route path="/activity/:ActivityId" element={<ActivityById />} />
+          <Route path="/activity/:ActivityId/edit" element={<ActivityEdit />} />
           <Route path="/activity" element={<Activities />} />
           <Route path="/activity/alone" element={<ActivitiesAlone />} />
           <Route path="/activity/together" element={<ActivitiesTogether />} />
