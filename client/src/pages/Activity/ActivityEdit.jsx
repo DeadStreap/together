@@ -204,7 +204,7 @@ function ActivityEdit() {
                                 onChange={handleChange}
                             />
                             <label htmlFor="shared_with_partner">
-                                Делиться с партнёром
+                                Совместно с партнёром
                             </label>
                         </div>
 
