@@ -44,6 +44,50 @@ class UserController {
         }
     }
 
+    async userAuth(req, res) {
+        const { username, password } = req.body;
+
+        if (!username || !password) {
+            return res.status(400).json({
+                error: 'Missing required fields',
+                required: ['username', 'password'],
+            });
+        }
+
+        const sql = `
+            SELECT 
+                u.*,
+                c.id AS couple_id,
+                c.start_date AS couple_start_date
+            FROM users u
+            LEFT JOIN couples c
+                ON (c.first_user_id = u.id OR c.second_user_id = u.id)
+            WHERE u.username = ?
+            LIMIT 1
+        `;
+
+        try {
+            const [rows] = await pool.query(sql, [username]);
+
+            if (rows.length === 0) {
+                return res.status(404).json({ error: 'User not found' });
+            }
+
+            const user = rows[0];
+
+            if (user.password !== password) {
+                return res.status(401).json({ error: 'Invalid password' });
+            }
+
+            delete user.password;
+
+            res.json(user);
+        } catch (err) {
+            console.error('DB Error:', err);
+            res.status(500).json({ error: 'Server error' });
+        }
+    }
+
     async updateUser(req, res) {
         const { id, ...fields } = req.body;
 
