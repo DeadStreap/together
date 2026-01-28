@@ -27,7 +27,7 @@ const Header = () => {
             </Link>
 
             <Link
-                to="/profile"
+                to="/activity/create"
                 className={`nav-link ${location.pathname === '/activity/addContent' ? 'active' : ''}`}
             >
                 + Добавить
