@@ -110,9 +110,11 @@ function Profile() {
     const hasCoupleStart = !!user.couple_start_date;
     let daysTogether = null;
     if (hasCoupleStart) {
-        const start = new Date(user.couple_start_date);
-        const now = new Date();
-        const diff = now.getTime() - start.getTime();
+        const startDate = new Date(user.couple_start_date);
+        const today = new Date();
+        const startUTC = Date.UTC(startDate.getFullYear(), startDate.getMonth(), startDate.getDate());
+        const todayUTC = Date.UTC(today.getFullYear(), today.getMonth(), today.getDate());
+        const diff = todayUTC - startUTC;
         daysTogether = Math.max(0, Math.floor(diff / (1000 * 60 * 60 * 24)));
     }
 
