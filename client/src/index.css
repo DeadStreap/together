@@ -248,6 +248,135 @@ h1 {
   gap: 4px;
 }
 
+/* Profile page */
+.profile-page {
+  padding: 20px 24px 28px;
+}
+
+.profile-card {
+  max-width: 640px;
+  margin: 0 auto;
+  background: #ffffff;
+  border-radius: 20px;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 14px 40px rgba(15, 23, 42, 0.06);
+  padding: 22px 22px 20px;
+}
+
+.profile-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+
+.profile-main {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.profile-avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 999px;
+  background: radial-gradient(circle at 30% 30%, #ffbae6, #7a55ff);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fdf2ff;
+  font-weight: 700;
+  font-size: 26px;
+  text-transform: uppercase;
+  box-shadow: 0 10px 25px rgba(122, 85, 255, 0.4);
+}
+
+.profile-name-block {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.profile-name {
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: -0.2px;
+  color: #111827;
+}
+
+.profile-tagline {
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.profile-badges {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.profile-badge {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 14px;
+  background: #f9fafb;
+  border: 1px dashed #e5e7eb;
+  font-size: 13px;
+  color: #4b5563;
+}
+
+.profile-badge-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  color: #4b5563;
+}
+
+.profile-badge-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #7a55ff, #ff3b8a);
+}
+
+.profile-badge-value {
+  font-weight: 500;
+}
+
+.profile-badge-value.muted {
+  color: #9ca3af;
+}
+
+.profile-footer {
+  margin-top: 18px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.profile-link-back {
+  font-size: 13px;
+  color: #7a55ff;
+  text-decoration: none;
+}
+
+.profile-link-back:hover {
+  text-decoration: underline;
+}
+
+.profile-meta {
+  font-size: 12px;
+  color: #9ca3af;
+}
+
 .activity-form-wrapper {
   max-width: 520px;
   margin: 0 auto;
