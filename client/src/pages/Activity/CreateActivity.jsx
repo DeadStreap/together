@@ -1,10 +1,12 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import * as styles from "../../styles/style";
+import { useUser } from "../../store/UserContext";
 
 function CreateActivity() {
     const [error, setError] = useState(null);
     const navigate = useNavigate();
+    const { user, isAuthenticated } = useUser();
     const [formData, setFormData] = useState({
         title: "",
         category: "anime",
@@ -28,11 +30,17 @@ function CreateActivity() {
         e.preventDefault();
 
         try {
+            if (!isAuthenticated || !user) {
+                throw new Error(
+                    "Чтобы добавить активность, необходимо авторизоваться"
+                );
+            }
+
             const payload = {
                 title: formData.title,
                 category: formData.category,
                 status: formData.status,
-                added_by_user_id: 1,
+                added_by_user_id: user.id,
             };
 
             if (formData.start_date) {
@@ -60,6 +68,40 @@ function CreateActivity() {
             setError(err);
         }
     };
+
+    if (!isAuthenticated || !user) {
+        return (
+            <div className="tasks-container create-activity-page">
+                <div className="content-card content-card--detail activity-form-wrapper">
+                    <div className="content-card-link">
+                        <div className="item-title">Новая активность</div>
+                        <p
+                            style={{
+                                fontSize: 13,
+                                color: "#6b7280",
+                                marginTop: 8,
+                                marginBottom: 12,
+                            }}
+                        >
+                            Чтобы добавить активность, необходимо авторизоваться.
+                        </p>
+                        <div className="activity-form-actions">
+                            <Link
+                                to="/authorization"
+                                className="primary-button"
+                                style={{
+                                    textDecoration: "none",
+                                    textAlign: "center",
+                                }}
+                            >
+                                Перейти к авторизации
+                            </Link>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+    }
 
     if (error) {
         return (
