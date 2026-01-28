@@ -4,6 +4,7 @@ import AboutPage from './pages/AboutPage';
 import NotFoundPage from './pages/NotFoundPage';
 
 import Profile from './pages/Profile/Profile';
+import Authorization from './pages/Authorization';
 
 import Activities from './pages/Activity/Activities';
 import ActivityById from './pages/Activity/ActivityById';
@@ -25,7 +26,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Activities />} />
           <Route path="/profile" element={<Profile />} />
-          <Route path="/authorization" element={<Activities />} />
+          <Route path="/authorization" element={<Authorization />} />
           <Route path="/register" element={<Activities />} />
 
           <Route path="/activity/:ActivityId" element={<ActivityById />} />
