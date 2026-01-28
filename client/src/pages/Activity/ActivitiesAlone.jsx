@@ -9,7 +9,7 @@ function ActivitiesAlone() {
 
     const URL = "localhost:3001";
     const API = "together-alpha-one.vercel.app";
-    const API_URL = `https://${API}/api/content`;
+    const API_URL = `https://${API}/api/contents`;
 
     useEffect(() => {
         fetch(API_URL)
