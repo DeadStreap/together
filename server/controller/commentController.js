@@ -13,7 +13,7 @@ class CommentController {
     }
 
     async getCommentById(req, res) {
-        const { id } = req.body;
+        const id = req.params.id;
 
         if (!id) {
             return res.status(400).json({ error: 'ID is required in body' });

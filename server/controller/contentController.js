@@ -13,7 +13,7 @@ class ContentController {
     }
 
     async getContentById(req, res) {
-        const { id } = req.body;
+        const id = req.params.id;
         const sql = 'SELECT * FROM content_items WHERE id = ?';
 
         try {
