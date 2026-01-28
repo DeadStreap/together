@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import {  Link } from 'react-router-dom';
 
+import * as styles from '../../styles/style';
+
 import { apiReq } from '../../utils/apiReq'
 
 function Profile() {
@@ -18,7 +20,6 @@ function Profile() {
                 setIsLoading(true);
                 const data = await apiReq(API_URL);
                 setUser(data);
-                console.log(data.partner_id)
                 data.partner_id ? getPartner(data.partner_id) : null
             } catch (error) {
                 setError(error.message);
@@ -57,10 +58,16 @@ function Profile() {
     }
 
     return (
-        <div>
+        <div style={styles.containerStyles}>
             <h1>Профиль</h1>
             <p>Name: {user.username}</p>
-            <p>{partner ? `В паре с ${partner.username} 🖤` : `У вас пока нет пары`}</p>
+
+            <p>{partner ? 
+            `В паре с ${partner.username} 🖤` 
+            : 
+            `У вас пока нет пары`}
+            </p>
+
             <Link to='/'>Вернуться на главную </Link>
         </div>
     );
