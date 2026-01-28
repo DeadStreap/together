@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from "react-router-dom";
 import * as styles from '../../styles/style';
 
 function ActivityById() {
@@ -7,8 +7,9 @@ function ActivityById() {
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    const params = useParams()
-    const ActivityId = params.ActivityId
+    const params = useParams();
+    const navigate = useNavigate();
+    const ActivityId = params.ActivityId;
 
     const URL = "localhost:3001";
     const API = "together-alpha-one.vercel.app";
@@ -39,6 +40,36 @@ function ActivityById() {
             });
     }, []);
 
+    const handleDelete = async () => {
+        try {
+            setIsLoading(true);
+            setError(null);
+
+            const response = await fetch(
+                `https://${API}/api/delete/content`,
+                {
+                    method: "DELETE",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ id: ActivityId }),
+                }
+            );
+
+            if (!response.ok) {
+                throw new Error(
+                    `Ошибка при удалении: ${response.statusText} (${response.status})`
+                );
+            }
+
+            navigate("/");
+        } catch (err) {
+            console.error("Ошибка при удалении активности:", err);
+            setError(err);
+            setIsLoading(false);
+        }
+    };
+
     if (isLoading) {
         return <div className="loading">Загрузка контента...</div>;
     }
@@ -50,68 +81,101 @@ function ActivityById() {
             </div>
         );
     }
+
+    const item = contentItems[0];
+
+    if (!item) {
+        return (
+            <div className="tasks-container">
+                <p>На данный момент контент отсутствует.</p>
+            </div>
+        );
+    }
+
     return (
         <div className="tasks-container">
-            <p>Element ID: {ActivityId}</p>
+            <div className="content-card content-card--detail">
+                <div className="content-card-link" style={{ paddingBottom: 12 }}>
+                    <div className="content-detail-header">
+                        <Link to="/" className="content-detail-back">
+                            ← Назад к списку
+                        </Link>
+                        <span style={{ fontSize: 12, color: "#9ca3af" }}>
+                            ID: {ActivityId}
+                        </span>
+                    </div>
 
-            {contentItems.length > 0 ? (
-                <ul className="content-list">
-                    {contentItems.map((item) => (
-                        <div key={item.id} style={styles.contentItem}>
-                            <Link to={`/`} style={{color: '#ccc'}}>Back</Link>
-                                <div className="item-title">
-                                    <strong>{item.title || "Без названия"}</strong>
-                                </div>
-                                <div className="item-details">
-                                    Категория: {item.category || "N/A"}
-                                </div>
-                                <div className="item-details">
-                                    Created by: {item.added_by_user_id || "N/A"}
-                                </div>
-                                <div className="item-dates">
-                                    <span>
-                                        Добавлено:{" "}
-                                        {item.added_at
-                                            ? (() => {
-                                                const date = new Date(item.added_at);
-                                                const formattedDate = date.toLocaleDateString(
-                                                    "ru-RU",
-                                                    {
-                                                        day: "2-digit",
-                                                        month: "long",
-                                                        year: "numeric",
-                                                    }
-                                                );
-                                                const formattedTime = date.toLocaleTimeString(
-                                                    "ru-RU",
-                                                    {
-                                                        hour: "2-digit",
-                                                        minute: "2-digit",
-                                                    }
-                                                );
-                                                return `${formattedDate} ${formattedTime}`;
-                                            })()
-                                            : "не указано"}
-                                    </span>
-                                    <span>
-                                        Начало:{" "}
-                                        {item.start_date
-                                            ? new Date(item.start_date).toLocaleDateString()
-                                            : "не указанно"}
-                                    </span>
-                                    <span>
-                                        Конец:{" "}
-                                        {item.end_date
-                                            ? new Date(item.end_date).toLocaleDateString()
-                                            : "не указанно"}
-                                    </span>
-                                </div>
-                        </div>
-                    ))}
-                </ul>
-            ) : (
-                <p>На данный момент контент отсутствует.</p>
-            )}
+                    <div className="item-title">
+                        {item.title || "Без названия"}
+                    </div>
+
+                    <div className="item-details">
+                        <span>Категория</span>: {item.category || "N/A"}
+                    </div>
+                    <div className="item-details">
+                        <span>Создал</span>: {item.added_by_user_id || "N/A"}
+                    </div>
+                    <div className="item-details">
+                        <span>Статус</span>: {item.status || "не указан"}
+                    </div>
+
+                    <div className="item-dates">
+                        <span>
+                            <span>Добавлено</span>
+                            <span>
+                                {item.added_at
+                                    ? (() => {
+                                        const date = new Date(item.added_at);
+                                        const formattedDate = date.toLocaleDateString(
+                                            "ru-RU",
+                                            {
+                                                day: "2-digit",
+                                                month: "long",
+                                                year: "numeric",
+                                            }
+                                        );
+                                        const formattedTime = date.toLocaleTimeString(
+                                            "ru-RU",
+                                            {
+                                                hour: "2-digit",
+                                                minute: "2-digit",
+                                            }
+                                        );
+                                        return `${formattedDate} ${formattedTime}`;
+                                    })()
+                                    : "не указано"}
+                            </span>
+                        </span>
+                        <span>
+                            <span>Начало</span>
+                            <span>
+                                {item.start_date
+                                    ? new Date(item.start_date).toLocaleDateString()
+                                    : "не указано"}
+                            </span>
+                        </span>
+                        <span>
+                            <span>Конец</span>
+                            <span>
+                                {item.end_date
+                                    ? new Date(item.end_date).toLocaleDateString()
+                                    : "не указано"}
+                            </span>
+                        </span>
+                    </div>
+
+                    <div style={{ marginTop: 14, display: "flex", justifyContent: "flex-end" }}>
+                        <button
+                            type="button"
+                            onClick={handleDelete}
+                            disabled={isLoading}
+                            className="primary-button danger-button"
+                        >
+                            Удалить активность
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
     );
 }
