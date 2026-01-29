@@ -104,9 +104,29 @@ function ActivityById() {
                         <Link to="/" className="content-detail-back">
                             ← Назад к списку
                         </Link>
-                        <span style={{ fontSize: 12, color: "#9ca3af" }}>
-                            ID: {ActivityId}
-                        </span>
+                        <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+                            <span style={{ fontSize: 12, color: "#9ca3af" }}>
+                                ID: {ActivityId}
+                            </span>
+                            {user.id == item.added_by_user_id &&
+                                <>
+                                    <Link
+                                        to={`/activity/${ActivityId}/edit`}
+                                        className="icon-button-edit"
+                                    >
+                                        <img src="/edit.svg" alt="Edit" />
+                                    </Link>
+                                    <button
+                                        type="button"
+                                        onClick={handleDelete}
+                                        disabled={isLoading}
+                                        className="icon-button-delete"
+                                    >
+                                        <img src="/trash.svg" alt="Delete" />
+                                    </button>
+                                </>
+                            }
+                        </div>
                     </div>
 
                     <div className="item-title-card">
@@ -171,25 +191,6 @@ function ActivityById() {
                         </span>
                     </div>
                     
-                    {user.id == item.added_by_user_id ?
-                        <div style={{ marginTop: 14, display: "flex", justifyContent: "space-between", gap: 8 }}>
-                            <Link
-                                to={`/activity/${ActivityId}/edit`}
-                                className="primary-button"
-                                style={{ textDecoration: "none", textAlign: "center" }}
-                            >
-                                Редактировать
-                            </Link>
-                            <button
-                                type="button"
-                                onClick={handleDelete}
-                                disabled={isLoading}
-                                className="primary-button danger-button"
-                            >
-                                Удалить активность
-                            </button>
-                        </div>
-                        : <></>}
                 </div>
             </div>
         </div>
