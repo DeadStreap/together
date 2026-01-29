@@ -6,7 +6,7 @@ class ContentController {
         const sql = `
         SELECT 
             ci.*,
-            u.username AS added_by_username
+            u.username AS added_by
         FROM content_items ci
         LEFT JOIN users u
             ON u.id = ci.added_by_user_id
