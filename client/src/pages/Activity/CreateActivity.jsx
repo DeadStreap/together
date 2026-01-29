@@ -46,6 +46,10 @@ function CreateActivity() {
                 payload.start_date = formData.start_date;
             }
 
+            if (formData.end_date) {
+                payload.end_date = formData.end_date;
+            }
+
             if (formData.shared_with_partner) {
                 payload.shared_with_partner = true;
             }
@@ -167,6 +171,21 @@ function CreateActivity() {
                                 onChange={handleChange}
                             />
                         </div>
+
+                        {formData.status == 'done' ?
+                            <div className="activity-form-field">
+                                <label htmlFor="end_date">Дата конца</label>
+                                <input
+                                    id="end_date"
+                                    type="date"
+                                    name="end_date"
+                                    value={formData.end_date || ""}
+                                    onChange={handleChange}
+                                />
+                            </div>
+                            :
+                            <></>
+                        }
 
                         <div className="activity-form-checkbox">
                             <input
