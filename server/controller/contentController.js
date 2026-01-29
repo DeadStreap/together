@@ -40,7 +40,7 @@ class ContentController {
             if (rows.length === 0) {
                 res.status(404).json({ error: 'Not found' });
             } else {
-                res.json(rows[0]); // Возвращаем один объект, а не массив
+                res.json(rows);
             }
         } catch (error) {
             console.error('DB Error:', error);
