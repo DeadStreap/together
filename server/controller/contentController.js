@@ -3,14 +3,24 @@ const pool = require('../config/db');
 class ContentController {
 
     async getContent(req, res) {
+        const sql = `
+        SELECT 
+            ci.*,
+            u.username AS added_by_username
+        FROM content_items ci
+        LEFT JOIN users u
+            ON u.id = ci.added_by_user_id
+    `;
+
         try {
-            const [result] = await pool.query('SELECT * FROM content_items');
+            const [result] = await pool.query(sql);
             res.json(result);
         } catch (err) {
             console.error('DB Error:', err);
             res.status(500).json({ error: err.message });
         }
     }
+
 
     async getContentById(req, res) {
         const id = req.params.id;
