@@ -7,7 +7,8 @@ const StatisticsBlock = () => {
     const [stats, setStats] = useState({
         gamesCompletedTogether: 0,
         watchedTogether: 0,
-        activitiesInProgress: 0
+        activitiesInProgress: 0,
+        activitiesPlanned : 0
     });
     const [isLoading, setIsLoading] = useState(true);
 
@@ -22,7 +23,8 @@ const StatisticsBlock = () => {
                     setStats({
                         gamesCompletedTogether: 0,
                         watchedTogether: 0,
-                        activitiesInProgress: 0
+                        activitiesInProgress: 0,
+                        activitiesPlanned : 0
                     });
                     setIsLoading(false);
                     return;
@@ -35,7 +37,8 @@ const StatisticsBlock = () => {
                     setStats({
                         gamesCompletedTogether: 0,
                         watchedTogether: 0,
-                        activitiesInProgress: 0
+                        activitiesInProgress: 0,
+                        activitiesPlanned : 0
                     });
                     setIsLoading(false);
                     return;
@@ -56,17 +59,23 @@ const StatisticsBlock = () => {
                     item => item.status === 'inProgress'
                 ).length;
 
+                const activitiesPlanned = data.filter(
+                    item => item.status === 'planned'
+                ).length;
+
                 setStats({
                     gamesCompletedTogether,
                     watchedTogether,
-                    activitiesInProgress
+                    activitiesInProgress,
+                    activitiesPlanned
                 });
             } catch (error) {
                 console.error("Error fetching stats:", error);
                 setStats({
                     gamesCompletedTogether: 0,
                     watchedTogether: 0,
-                    activitiesInProgress: 0
+                    activitiesInProgress: 0,
+                    activitiesPlanned: 0
                 });
             } finally {
                 setIsLoading(false);
@@ -91,6 +100,10 @@ const StatisticsBlock = () => {
                     <div className="stat-value">—</div>
                     <div className="stat-label">В процессе</div>
                 </div>
+                <div className="stat-item">
+                    <div className="stat-value">—</div>
+                    <div className="stat-label">Запланировано</div>
+                </div>
             </div>
         );
     }
@@ -108,6 +121,10 @@ const StatisticsBlock = () => {
             <div className="stat-item">
                 <div className="stat-value">{stats.activitiesInProgress}</div>
                 <div className="stat-label">В процессе</div>
+            </div>
+            <div className="stat-item">
+                <div className="stat-value">{stats.activitiesPlanned}</div>
+                <div className="stat-label">Запланировано</div>
             </div>
         </div>
     );
