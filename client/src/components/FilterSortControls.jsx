@@ -53,6 +53,45 @@ const FilterSortControls = ({ filters, onFilterChange, onSortChange, sortConfig 
                         Название {(sortConfig.key === 'title' && sortConfig.isUserSelected) && (sortConfig.direction === 'asc' ? '↑' : '↓')}
                     </button>
                 </div>
+
+                <div className="status-filter-buttons-container">
+                    <button
+                        onClick={() => onFilterChange('status', filters.status === 'done' ? '' : 'done')}
+                        className={`sort-button ${filters.status === 'done' ? 'sort-button-active' : ''}`}
+                        title="Завершено"
+                    >
+                        <img
+                            src="/done.svg"
+                            alt="Завершено"
+                            className="status-icon done"
+                            style={{ width: '16px', height: '16px' }}
+                        />
+                    </button>
+                    <button
+                        onClick={() => onFilterChange('status', filters.status === 'inProgress' ? '' : 'inProgress')}
+                        className={`sort-button ${filters.status === 'inProgress' ? 'sort-button-active' : ''}`}
+                        title="В процессе"
+                    >
+                        <img
+                            src="/clock.svg"
+                            alt="В процессе"
+                            className="status-icon in-progress"
+                            style={{ width: '16px', height: '16px' }}
+                        />
+                    </button>
+                    <button
+                        onClick={() => onFilterChange('status', filters.status === 'planned' ? '' : 'planned')}
+                        className={`sort-button ${filters.status === 'planned' ? 'sort-button-active' : ''}`}
+                        title="Запланировано"
+                    >
+                        <img
+                            src="/dock.svg"
+                            alt="Запланировано"
+                            className="status-icon planned"
+                            style={{ width: '16px', height: '16px' }}
+                        />
+                    </button>
+                </div>
             </div>
         </div>
     );
