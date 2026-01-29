@@ -92,7 +92,7 @@ function ActivitiesAlone() {
                                     <span>Категория</span>: {getCategoryDisplayName(item.category) || "N/A"}
                                 </div>
                                 <div className="item-details">
-                                    <span>Создал</span>: {item.added_by_user_id || "N/A"}
+                                    <span>Добавил</span>: {item.added_by || "N/A"}
                                 </div>
                                 <div className="item-dates">
                                     <span>

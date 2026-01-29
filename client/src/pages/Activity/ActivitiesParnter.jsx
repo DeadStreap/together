@@ -73,8 +73,7 @@ function ActivitiesParnter() {
                                     {getCategoryDisplayName(item.category) || "N/A"}
                                 </div>
                                 <div className="item-details">
-                                    <span>Создал</span>:{" "}
-                                    {item.added_by_user_id || "N/A"}
+                                    <span>Добавил</span>: {item.added_by || "N/A"}
                                 </div>
                                 <div className="item-dates">
                                     <span>
@@ -82,28 +81,28 @@ function ActivitiesParnter() {
                                         <span>
                                             {item.added_at
                                                 ? (() => {
-                                                      const date = new Date(
-                                                          item.added_at
-                                                      );
-                                                      const formattedDate =
-                                                          date.toLocaleDateString(
-                                                              "ru-RU",
-                                                              {
-                                                                  day: "2-digit",
-                                                                  month: "long",
-                                                                  year: "numeric",
-                                                              }
-                                                          );
-                                                      const formattedTime =
-                                                          date.toLocaleTimeString(
-                                                              "ru-RU",
-                                                              {
-                                                                  hour: "2-digit",
-                                                                  minute: "2-digit",
-                                                              }
-                                                          );
-                                                      return `${formattedDate} ${formattedTime}`;
-                                                  })()
+                                                    const date = new Date(
+                                                        item.added_at
+                                                    );
+                                                    const formattedDate =
+                                                        date.toLocaleDateString(
+                                                            "ru-RU",
+                                                            {
+                                                                day: "2-digit",
+                                                                month: "long",
+                                                                year: "numeric",
+                                                            }
+                                                        );
+                                                    const formattedTime =
+                                                        date.toLocaleTimeString(
+                                                            "ru-RU",
+                                                            {
+                                                                hour: "2-digit",
+                                                                minute: "2-digit",
+                                                            }
+                                                        );
+                                                    return `${formattedDate} ${formattedTime}`;
+                                                })()
                                                 : "не указано"}
                                         </span>
                                     </span>
@@ -112,8 +111,8 @@ function ActivitiesParnter() {
                                         <span>
                                             {item.start_date
                                                 ? new Date(
-                                                      item.start_date
-                                                  ).toLocaleDateString()
+                                                    item.start_date
+                                                ).toLocaleDateString()
                                                 : "не указано"}
                                         </span>
                                     </span>
@@ -122,8 +121,8 @@ function ActivitiesParnter() {
                                         <span>
                                             {item.end_date
                                                 ? new Date(
-                                                      item.end_date
-                                                  ).toLocaleDateString()
+                                                    item.end_date
+                                                ).toLocaleDateString()
                                                 : "не указано"}
                                         </span>
                                     </span>
