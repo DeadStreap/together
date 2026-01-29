@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 
 import { apiReq } from '../../utils/apiReq';
 import { getApiUrl } from '../../config/apiConfig';
+import { getCategoryDisplayName } from '../../utils/displayMappings';
+import StatusIcon from '../../components/StatusIcon';
 
 function Activities() {
     const [contentItems, setContentItems] = useState([]);
@@ -46,11 +48,14 @@ function Activities() {
                     {contentItems.map((item) => (
                         <li key={item.id} className="content-card">
                             <Link to={`/activity/${item.id}`} className="content-card-link">
-                                <div className="item-title">
-                                    {item.title || "Без названия"}
+                                <div className="item-title-card">
+                                    <StatusIcon status={item.status} />
+                                    <div className="item-title-content">
+                                        {item.title || "Без названия"}
+                                    </div>
                                 </div>
                                 <div className="item-details">
-                                    <span>Категория</span>: {item.category || "N/A"}
+                                    <span>Категория</span>: {getCategoryDisplayName(item.category) || "N/A"}
                                 </div>
                                 <div className="item-details">
                                     <span>Создал</span>: {item.added_by_user_id || "N/A"}

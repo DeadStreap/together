@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { getApiUrl } from '../../config/apiConfig';
+import { getCategoryDisplayName, getStatusDisplayName } from '../../utils/displayMappings';
+import StatusIcon from '../../components/StatusIcon';
 
 function ActivityById() {
     const [contentItems, setContentItems] = useState([]);
@@ -103,18 +105,21 @@ function ActivityById() {
                         </span>
                     </div>
 
-                    <div className="item-title">
-                        {item.title || "Без названия"}
+                    <div className="item-title-card">
+                        <StatusIcon status={item.status} />
+                        <div className="item-title-content">
+                            {item.title || "Без названия"}
+                        </div>
                     </div>
 
                     <div className="item-details">
-                        <span>Категория</span>: {item.category || "N/A"}
+                        <span>Категория</span>: {getCategoryDisplayName(item.category) || "N/A"}
                     </div>
                     <div className="item-details">
                         <span>Создал</span>: {item.added_by_user_id || "N/A"}
                     </div>
                     <div className="item-details">
-                        <span>Статус</span>: {item.status || "не указан"}
+                        <span>Статус</span>: {getStatusDisplayName(item.status) || "не указан"}
                     </div>
 
                     <div className="item-dates">

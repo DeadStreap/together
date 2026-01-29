@@ -6,6 +6,8 @@ import { useUser } from "../../store/UserContext";
 import useFilterSort from "../../hooks/useFilterSort";
 import FilterSortControls from "../../components/FilterSortControls";
 import { getApiUrl } from "../../config/apiConfig";
+import { getCategoryDisplayName } from "../../utils/displayMappings";
+import StatusIcon from "../../components/StatusIcon";
 
 function ActivitiesAlone() {
     const [contentItems, setContentItems] = useState([]);
@@ -80,11 +82,14 @@ function ActivitiesAlone() {
                     {filteredContent.map((item) => (
                         <li key={item.id} className="content-card">
                             <Link to={`/activity/${item.id}`} className="content-card-link">
-                                <div className="item-title">
-                                    {item.title || "Без названия"}
+                                <div className="item-title-card">
+                                    <StatusIcon status={item.status} />
+                                    <div className="item-title-content">
+                                        {item.title || "Без названия"}
+                                    </div>
                                 </div>
                                 <div className="item-details">
-                                    <span>Категория</span>: {item.category || "N/A"}
+                                    <span>Категория</span>: {getCategoryDisplayName(item.category) || "N/A"}
                                 </div>
                                 <div className="item-details">
                                     <span>Создал</span>: {item.added_by_user_id || "N/A"}
