@@ -219,6 +219,8 @@ h1 {
   margin-bottom: 4px;
   letter-spacing: -0.2px;
   color: #111827;
+  display: flex;
+  align-items: center;
 }
 
 .item-details {
@@ -801,6 +803,60 @@ h1 {
   text-decoration: underline;
 }
 
+/* Status icon styles for cards */
+.item-title-card {
+  font-size: 17px;
+  font-weight: 600;
+  margin-bottom: 4px;
+  letter-spacing: -0.2px;
+  color: #111827;
+  display: flex;
+  align-items: center; /* Центрируем по вертикали */
+}
+
+.item-title-card .status-icon-container {
+  flex-shrink: 0; /* Не сжимаем контейнер иконки */
+  margin-right: 3px; /* Уменьшенный отступ справа от иконки до текста */
+}
+
+.item-title-card .status-icon {
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
+  display: block;
+}
+
+.item-title-content {
+  flex: 1; /* Растягиваем текст на доступное пространство */
+  word-break: break-word; /* Переносим слова при необходимости */
+  overflow-wrap: break-word; /* Обеспечиваем перенос длинных слов */
+}
+
+.sort-button img.status-icon {
+  width: 16px;
+  height: 16px;
+  vertical-align: middle;
+  position: relative;
+  top: 0;
+  transform: none;
+}
+
+.status-filter-buttons-container .sort-button img.status-icon {
+  margin-right: 0;
+}
+
+.status-icon.done {
+  filter: brightness(1.5) saturate(150%) invert(34%) sepia(49%) saturate(302%) hue-rotate(82deg) brightness(140%) contrast(105%); /* Более светлый зеленый оттенок */
+}
+
+.status-icon.in-progress {
+  filter: brightness(1.4) saturate(140%) invert(67%) sepia(59%) saturate(415%) hue-rotate(345deg) brightness(125%) contrast(105%); /* Более светлый желтый/оранжевый оттенок */
+}
+
+.status-icon.planned {
+  filter: brightness(1.3) saturate(130%) invert(40%) sepia(39%) saturate(682%) hue-rotate(245deg) brightness(120%) contrast(100%); /* Более светлый фиолетовый оттенок */
+}
+
 /* Filters and sorting styles */
 .filters-container {
   margin-bottom: 20px;
@@ -871,6 +927,12 @@ h1 {
   align-items: flex-end;
 }
 
+.status-filter-buttons-container {
+  display: flex;
+  gap: 8px;
+  align-items: flex-end;
+}
+
 .sort-button {
   padding: 8px 12px;
   border-radius: 8px;
@@ -892,4 +954,13 @@ h1 {
   background-color: #f4f4ff;
   color: #7a55ff;
   font-weight: 600;
+}
+
+.status-filter-buttons-container .sort-button {
+  width: 36px;
+  height: 36px;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
