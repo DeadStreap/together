@@ -846,15 +846,15 @@ h1 {
 }
 
 .status-icon.done {
-  filter: brightness(1.5) saturate(150%) invert(34%) sepia(49%) saturate(302%) hue-rotate(82deg) brightness(140%) contrast(105%); /* Более светлый зеленый оттенок */
+  filter: brightness(1.5) saturate(150%) invert(34%) sepia(49%) saturate(302%) hue-rotate(82deg) brightness(140%) contrast(105%);
 }
 
 .status-icon.in-progress {
-  filter: brightness(1.4) saturate(140%) invert(67%) sepia(59%) saturate(415%) hue-rotate(345deg) brightness(125%) contrast(105%); /* Более светлый желтый/оранжевый оттенок */
+  filter: brightness(1.4) saturate(140%) invert(67%) sepia(59%) saturate(415%) hue-rotate(345deg) brightness(120%) contrast(105%); 
 }
 
 .status-icon.planned {
-  filter: brightness(1.3) saturate(130%) invert(40%) sepia(39%) saturate(682%) hue-rotate(245deg) brightness(120%) contrast(100%); /* Более светлый фиолетовый оттенок */
+  filter: brightness(1.3) saturate(130%) invert(40%) sepia(39%) saturate(682%) hue-rotate(245deg) brightness(120%) contrast(100%);
 }
 
 /* Filters and sorting styles */
@@ -999,6 +999,35 @@ h1 {
   color: #6b7280;
   font-weight: 500;
 }
+
+/* Icon buttons for edit and delete */
+.icon-button-edit,
+.icon-button-delete {
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: none;
+  background: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.icon-button-edit:hover,
+.icon-button-delete:hover {
+  opacity: 0.8;
+}
+
+.icon-button-edit img,
+.icon-button-delete img {
+  width: 20px;
+  height: 20px;
+  filter: invert(56%) sepia(10%) saturate(88%) hue-rotate(187deg) brightness(95%) contrast(93%);
+}
+
+
 
 /* Status-based hover borders for content cards */
 .content-card[data-status="done"]:hover {
