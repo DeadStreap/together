@@ -964,3 +964,80 @@ h1 {
   align-items: center;
   justify-content: center;
 }
+
+/* Statistics block styles */
+.statistics-block {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+  padding: 20px;
+  background: linear-gradient(135deg, #f8f9ff, #f0f4ff);
+  border-radius: 18px;
+  border: 1px solid #e0e7ff;
+  box-shadow: 0 4px 12px rgba(122, 85, 255, 0.08);
+}
+
+.stat-item {
+  text-align: center;
+  padding: 12px;
+}
+
+.stat-value {
+  font-size: 28px;
+  font-weight: 700;
+  color: #4c1d95;
+  margin-bottom: 4px;
+  background: linear-gradient(135deg, #7a55ff, #5b21b6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.stat-label {
+  font-size: 13px;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+/* Status-based hover borders for content cards */
+.content-card[data-status="done"]:hover {
+  border-color: #4ade80; /* Green for done */
+}
+
+.content-card[data-status="inProgress"]:hover {
+  border-color: #fbbf24; /* Yellow/Orange for in progress */
+}
+
+.content-card[data-status="planned"]:hover {
+  border-color: #a78bfa; /* Purple for planned */
+}
+
+/* Section margins */
+.in-progress-section,
+.recently-added-section {
+  margin-bottom: 24px;
+}
+
+@media (max-width: 768px) {
+  .statistics-block {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    padding: 16px;
+  }
+
+  .stat-value {
+    font-size: 24px;
+  }
+}
+
+@media (max-width: 480px) {
+  .statistics-block {
+    grid-template-columns: 1fr;
+    padding: 14px;
+  }
+
+  .stat-value {
+    font-size: 22px;
+  }
+}
