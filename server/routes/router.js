@@ -7,7 +7,7 @@ const coupleController = require('../controller/coupleController')
 const commentController = require('../controller/commentController')
 
 router.get('/contents', contentController.getContent)
-router.get('/contents/together', contentController.getContentTogether)
+router.get('/contents/together/:userId/:partnerId', contentController.getContentTogether)
 router.get('/content/id/:id', contentController.getContentById)
 router.put('/update/content', contentController.updateContentById)
 router.post('/create/content', contentController.createContent)

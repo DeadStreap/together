@@ -147,6 +147,37 @@ class ContentController {
     }
 
 
+    async getContentTogether(req, res) {
+        const userId = req.params.userId;
+        const partnerId = req.params.partnerId; 
+
+        if (!userId) {
+            return res.status(400).json({ error: "User ID is required" });
+        }
+
+        if (!partnerId) {
+            return res.status(400).json({ error: "Partner ID is required" });
+        }
+
+        const sql = `
+            SELECT
+                ci.*,
+                u.username AS added_by
+            FROM content_items ci
+            LEFT JOIN users u ON u.id = ci.added_by_user_id
+            WHERE (ci.added_by_user_id = ? OR ci.added_by_user_id = ?)
+                AND ci.shared_with_partner = TRUE
+        `;
+
+        try {
+            const [result] = await pool.query(sql, [userId, partnerId]);
+            res.json(result);
+        } catch (err) {
+            console.error("DB Error:", err);
+            res.status(500).json({ error: err.message });
+        }
+    }
+
 
 }
 
