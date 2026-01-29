@@ -3,6 +3,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 
 import { apiReq } from "../../utils/apiReq";
 import { useUser } from "../../store/UserContext";
+import { getApiUrl } from "../../config/apiConfig";
 
 function Profile() {
     const { user, isAuthenticated, logout } = useUser();
@@ -12,7 +13,7 @@ function Profile() {
     const navigate = useNavigate();
     const params = useParams();
 
-    const API = "together-alpha-one.vercel.app";
+    const API_BASE_URL = getApiUrl('');
     const requestedId = params.userId ? Number(params.userId) : null;
 
     useEffect(() => {
@@ -21,7 +22,7 @@ function Profile() {
             try {
                 setIsLoading(true);
                 const data = await apiReq(
-                    `https://${API}/api/user/id/${user.partner_id}`
+                    getApiUrl(`/api/user/id/${user.partner_id}`)
                 );
                 setPartner(data);
             } catch (err) {
@@ -36,7 +37,7 @@ function Profile() {
 
     useEffect(() => {
         if (!isAuthenticated || !user) return;
-        if (!requestedId) return; // /profile без id всегда ок
+        if (!requestedId) return;
 
         if (requestedId === user.id) return;
 
@@ -96,10 +97,10 @@ function Profile() {
 
     const initials = viewedUser.username
         ? viewedUser.username
-              .split(" ")
-              .map((w) => w[0])
-              .join("")
-              .slice(0, 2)
+            .split(" ")
+            .map((w) => w[0])
+            .join("")
+            .slice(0, 2)
         : "?";
 
     const handleLogout = () => {
@@ -195,12 +196,12 @@ function Profile() {
                         >
                             {user.couple_start_date
                                 ? new Date(
-                                      user.couple_start_date
-                                  ).toLocaleDateString("ru-RU", {
-                                      day: "2-digit",
-                                      month: "long",
-                                      year: "numeric",
-                                  })
+                                    user.couple_start_date
+                                ).toLocaleDateString("ru-RU", {
+                                    day: "2-digit",
+                                    month: "long",
+                                    year: "numeric",
+                                })
                                 : "Не указана"}
                         </div>
                     </div>

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import * as styles from "../../styles/style";
+import { getApiUrl } from "../../config/apiConfig";
 
 function ActivityEdit() {
     const { ActivityId } = useParams();
@@ -18,9 +18,8 @@ function ActivityEdit() {
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    const API = "together-alpha-one.vercel.app";
-    const GET_API_URL = `https://${API}/api/content/id/${ActivityId}`;
-    const UPDATE_API_URL = `https://${API}/api/update/content`;
+    const GET_API_URL = getApiUrl(`/api/content/id/${ActivityId}`);
+    const UPDATE_API_URL = getApiUrl('/api/update/content');
 
     useEffect(() => {
         const fetchActivity = async () => {

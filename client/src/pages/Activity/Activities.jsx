@@ -1,17 +1,15 @@
 import { useState, useEffect } from "react";
 import { Link } from 'react-router-dom';
-import * as styles from '../../styles/style';
 
-import { apiReq } from '../../utils/apiReq'
+import { apiReq } from '../../utils/apiReq';
+import { getApiUrl } from '../../config/apiConfig';
 
 function Activities() {
     const [contentItems, setContentItems] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    const URL = "localhost:3001";
-    const API = "together-alpha-one.vercel.app";
-    const API_URL = `https://${API}/api/contents`;
+    const API_URL = getApiUrl('/api/contents');
 
     useEffect(() => {
         const fetchData = async () => {

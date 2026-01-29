@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
-import * as styles from '../../styles/style';
+import { getApiUrl } from '../../config/apiConfig';
 
 function ActivityById() {
     const [contentItems, setContentItems] = useState([]);
@@ -11,9 +11,7 @@ function ActivityById() {
     const navigate = useNavigate();
     const ActivityId = params.ActivityId;
 
-    const URL = "localhost:3001";
-    const API = "together-alpha-one.vercel.app";
-    const API_URL = `https://${API}/api/content/id/${ActivityId}`;
+    const API_URL = getApiUrl(`/api/content/id/${ActivityId}`);
 
     useEffect(() => {
         fetch(API_URL)
@@ -46,7 +44,7 @@ function ActivityById() {
             setError(null);
 
             const response = await fetch(
-                `https://${API}/api/delete/content`,
+                getApiUrl('/api/delete/content'),
                 {
                     method: "DELETE",
                     headers: {

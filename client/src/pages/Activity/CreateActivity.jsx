@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import * as styles from "../../styles/style";
 import { useUser } from "../../store/UserContext";
+import { getApiUrl } from "../../config/apiConfig";
 
 function CreateActivity() {
     const [error, setError] = useState(null);
@@ -15,8 +15,7 @@ function CreateActivity() {
         shared_with_partner: true, 
     });
 
-    const API = "together-alpha-one.vercel.app";
-    const API_URL = `https://${API}/api/create/content`;
+    const API_URL = getApiUrl('/api/create/content');
 
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;

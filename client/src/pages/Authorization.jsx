@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../store/UserContext";
+import { getApiUrl } from "../config/apiConfig";
 
 function Authorization() {
     const [username, setUsername] = useState("");
@@ -10,7 +11,7 @@ function Authorization() {
     const navigate = useNavigate();
     const { login } = useUser();
 
-    const API = "together-alpha-one.vercel.app";
+    const API_URL = getApiUrl('/auth/login');
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -24,7 +25,7 @@ function Authorization() {
 
         try {
             setIsLoading(true);
-            const response = await fetch(`https://${API}/api/auth/user`, {
+            const response = await fetch(getApiUrl('/api/auth/user'), {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

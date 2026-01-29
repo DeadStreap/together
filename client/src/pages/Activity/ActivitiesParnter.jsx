@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
-import * as styles from "../../styles/style";
 
 import { apiReq } from "../../utils/apiReq";
+import { getApiUrl } from "../../config/apiConfig";
 
 function ActivitiesParnter() {
     const [contentItems, setContentItems] = useState([]);
@@ -11,8 +11,7 @@ function ActivitiesParnter() {
 
     const { userId } = useParams();
 
-    const API = "together-alpha-one.vercel.app";
-    const API_URL = `https://${API}/api/contents`;
+    const API_URL = getApiUrl('/api/contents');
 
     useEffect(() => {
         const fetchData = async () => {
