@@ -1,13 +1,17 @@
 import { useState, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { getApiUrl } from '../../config/apiConfig';
+import { useUser } from "../../store/UserContext";
 import { getCategoryDisplayName, getStatusDisplayName } from '../../utils/displayMappings';
 import StatusIcon from '../../components/StatusIcon';
+
 
 function ActivityById() {
     const [contentItems, setContentItems] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
+
+    const { user } = useUser();
 
     const params = useParams();
     const navigate = useNavigate();
@@ -27,6 +31,7 @@ function ActivityById() {
             })
             .then((data) => {
                 if (Array.isArray(data)) {
+                    console.log(data)
                     setContentItems(data);
                 } else {
                     throw new Error("Некорректный формат данных от API");
@@ -166,24 +171,26 @@ function ActivityById() {
                             </span>
                         </span>
                     </div>
-
-                    <div style={{ marginTop: 14, display: "flex", justifyContent: "space-between", gap: 8 }}>
-                        <Link
-                            to={`/activity/${ActivityId}/edit`}
-                            className="primary-button"
-                            style={{ textDecoration: "none", textAlign: "center" }}
-                        >
-                            Редактировать
-                        </Link>
-                        <button
-                            type="button"
-                            onClick={handleDelete}
-                            disabled={isLoading}
-                            className="primary-button danger-button"
-                        >
-                            Удалить активность
-                        </button>
-                    </div>
+                    
+                    {user.id == item.added_by_user_id ?
+                        <div style={{ marginTop: 14, display: "flex", justifyContent: "space-between", gap: 8 }}>
+                            <Link
+                                to={`/activity/${ActivityId}/edit`}
+                                className="primary-button"
+                                style={{ textDecoration: "none", textAlign: "center" }}
+                            >
+                                Редактировать
+                            </Link>
+                            <button
+                                type="button"
+                                onClick={handleDelete}
+                                disabled={isLoading}
+                                className="primary-button danger-button"
+                            >
+                                Удалить активность
+                            </button>
+                        </div>
+                        : <></>}
                 </div>
             </div>
         </div>
