@@ -37,7 +37,6 @@ function ActivitiesTogether() {
                 }
 
                 const API_URL = getApiUrl(`/api/contents/together/${userId}/${partnerId}`);
-                console.log(API_URL)
                 const data = await apiReq(API_URL);
 
                 setContentItems(data);
@@ -119,22 +118,22 @@ function ActivitiesTogether() {
                                                 : "не указано"}
                                         </span>
                                     </span>
-                                    <span>
-                                        <span>Начало</span>
+                                    {item.start_date ?
                                         <span>
-                                            {item.start_date
-                                                ? new Date(item.start_date).toLocaleDateString()
-                                                : "не указано"}
+                                            <span>Начато</span>
+                                            <span>
+                                                {new Date(item.start_date).toLocaleDateString()}
+                                            </span>
                                         </span>
-                                    </span>
-                                    <span>
-                                        <span>Конец</span>
+                                        : <></>}
+                                    {item.end_date ?
                                         <span>
-                                            {item.end_date
-                                                ? new Date(item.end_date).toLocaleDateString()
-                                                : "не указано"}
+                                            <span>Завершено</span>
+                                            <span>
+                                                {new Date(item.end_date).toLocaleDateString()}
+                                            </span>
                                         </span>
-                                    </span>
+                                        : <></>}
                                 </div>
                             </Link>
                         </li>

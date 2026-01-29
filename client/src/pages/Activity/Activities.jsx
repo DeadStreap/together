@@ -112,6 +112,22 @@ function Activities() {
                                                     : "не указано"}
                                             </span>
                                         </span>
+                                        <span>
+                                            <span>Начато</span>
+                                            <span>
+                                                {item.start_date
+                                                    ? new Date(item.start_date).toLocaleDateString()
+                                                    : "не указано"}
+                                            </span>
+                                        </span>
+                                        {item.end_date ?
+                                        <span>
+                                            <span>Завершено</span>
+                                            <span>
+                                                {new Date(item.end_date).toLocaleDateString()}
+                                            </span>
+                                        </span>
+                                        :<></>}
                                     </div>
                                 </Link>
                             </li>
@@ -164,6 +180,22 @@ function Activities() {
                                                     : "не указано"}
                                             </span>
                                         </span>
+                                        {item.start_date ?
+                                        <span>
+                                            <span>Начато</span>
+                                            <span>
+                                                {new Date(item.start_date).toLocaleDateString()}
+                                            </span>
+                                        </span>
+                                        :<></>}
+                                        {item.end_date ?
+                                        <span>
+                                            <span>Завершено</span>
+                                            <span>
+                                                {new Date(item.end_date).toLocaleDateString()}
+                                            </span>
+                                        </span>
+                                        :<></>}
                                     </div>
                                 </Link>
                             </li>
