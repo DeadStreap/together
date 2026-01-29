@@ -16,13 +16,10 @@ function ActivitiesTogether() {
 
     const { user, isAuthenticated } = useUser();
 
-    const API_URL = getApiUrl('/api/contents');
-
     useEffect(() => {
         const fetchData = async () => {
             try {
                 setIsLoading(true);
-                const data = await apiReq(API_URL);
 
                 if (!isAuthenticated || !user) {
                     setContentItems([]);
@@ -30,18 +27,20 @@ function ActivitiesTogether() {
                     return;
                 }
 
-                const currentId = user.id;
+                const userId = user.id;
                 const partnerId = user.partner_id || null;
 
-                const filteredData = data.filter((item) => {
-                    if (!item.shared_with_partner) return false;
-                    if (item.added_by_user_id == currentId) return true;
-                    if (partnerId && item.added_by_user_id == partnerId)
-                        return true;
-                    return false;
-                });
+                if (!partnerId) {
+                    setContentItems([]);
+                    setIsLoading(false);
+                    return;
+                }
 
-                setContentItems(filteredData);
+                const API_URL = getApiUrl(`/api/contents/together/${userId}/${partnerId}`);
+                console.log(API_URL)
+                const data = await apiReq(API_URL);
+
+                setContentItems(data);
             } catch (err) {
                 setError(err);
             } finally {
