@@ -24,21 +24,30 @@ class ContentController {
 
     async getContentById(req, res) {
         const id = req.params.id;
-        const sql = 'SELECT * FROM content_items WHERE id = ?';
+        const sql = `
+        SELECT
+            ci.*,
+            u.username AS added_by
+        FROM content_items ci
+        LEFT JOIN users u
+            ON u.id = ci.added_by_user_id
+        WHERE ci.id = ?
+    `;
 
         try {
             const [rows] = await pool.query(sql, [id]);
+
             if (rows.length === 0) {
-                res.status(404).json('Not found');
+                res.status(404).json({ error: 'Not found' });
             } else {
-                res.json(rows);
+                res.json(rows[0]); // Возвращаем один объект, а не массив
             }
         } catch (error) {
-            res.send(error)
-            console.error(error);
-            res.status(500).send('Server error');
+            console.error('DB Error:', error);
+            res.status(500).json({ error: 'Server error' });
         }
     }
+
 
     async updateContentById(req, res) {
         const { id, ...fields } = req.body;
