@@ -1,9 +1,11 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import * as styles from "../../styles/style";
 
 import { apiReq } from "../../utils/apiReq";
 import { useUser } from "../../store/UserContext";
+import useFilterSort from "../../hooks/useFilterSort";
+import FilterSortControls from "../../components/FilterSortControls";
+import { getApiUrl } from "../../config/apiConfig";
 
 function ActivitiesAlone() {
     const [contentItems, setContentItems] = useState([]);
@@ -12,8 +14,7 @@ function ActivitiesAlone() {
 
     const { user, isAuthenticated } = useUser();
 
-    const API = "together-alpha-one.vercel.app";
-    const API_URL = `https://${API}/api/contents`;
+    const API_URL = getApiUrl('/api/contents');
 
     useEffect(() => {
         const fetchData = async () => {
@@ -44,6 +45,8 @@ function ActivitiesAlone() {
         fetchData();
     }, [isAuthenticated, user]);
 
+    const { filters, sortConfig, filteredContent, handleFilterChange, handleSortChange, totalItemsCount } = useFilterSort(contentItems);
+
     if (isLoading) {
         return <div className="loading">Загрузка контента...</div>;
     }
@@ -57,7 +60,14 @@ function ActivitiesAlone() {
     }
     return (
         <div className="tasks-container">
-            <h1>Мои одиночные активности ({contentItems.length})</h1>
+            <h1>Мои одиночные активности ({totalItemsCount})</h1>
+
+            <FilterSortControls
+                filters={filters}
+                onFilterChange={handleFilterChange}
+                onSortChange={handleSortChange}
+                sortConfig={sortConfig}
+            />
 
             {!isAuthenticated || !user ? (
                 <p>
@@ -65,9 +75,9 @@ function ActivitiesAlone() {
                 </p>
             ) : null}
 
-            {contentItems.length > 0 ? (
+            {filteredContent.length > 0 ? (
                 <ul className="content-list">
-                    {contentItems.map((item) => (
+                    {filteredContent.map((item) => (
                         <li key={item.id} className="content-card">
                             <Link to={`/activity/${item.id}`} className="content-card-link">
                                 <div className="item-title">
