@@ -80,7 +80,7 @@ function ActivitiesAlone() {
             {filteredContent.length > 0 ? (
                 <ul className="content-list">
                     {filteredContent.map((item) => (
-                        <li key={item.id} className="content-card">
+                        <li key={item.id} className="content-card" data-status={item.status}>
                             <Link to={`/activity/${item.id}`} className="content-card-link">
                                 <div className="item-title-card">
                                     <StatusIcon status={item.status} />
