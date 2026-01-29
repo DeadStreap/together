@@ -800,3 +800,96 @@ h1 {
 .profile-badge-link:hover {
   text-decoration: underline;
 }
+
+/* Filters and sorting styles */
+.filters-container {
+  margin-bottom: 20px;
+  padding: 16px;
+  background-color: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.06);
+  border: 1px solid #e5e7eb;
+}
+
+.filter-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+}
+
+.filter-label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  font-size: 13px;
+  color: #4b5563;
+}
+
+.filter-select {
+  width: 100%;
+  padding: 10px 30px 10px 12px;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+  font-size: 14px;
+  background-color: #ffffff;
+  color: #4b5563;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image:
+    linear-gradient(45deg, transparent 50%, #9ca3af 50%),
+    linear-gradient(135deg, #9ca3af 50%, transparent 50%);
+  background-position: calc(100% - 18px) 50%, calc(100% - 13px) 50%;
+  background-size: 6px 6px, 6px 6px;
+  background-repeat: no-repeat;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.filter-select:focus {
+  border-color: #7a55ff;
+  box-shadow: 0 0 0 1px rgba(122, 85, 255, 0.25);
+}
+
+.filter-input {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+  font-size: 14px;
+  background-color: #ffffff;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.filter-input:focus {
+  border-color: #7a55ff;
+  box-shadow: 0 0 0 1px rgba(122, 85, 255, 0.25);
+}
+
+.sort-buttons-container {
+  display: flex;
+  gap: 8px;
+  align-items: flex-end;
+}
+
+.sort-button {
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background-color: #ffffff;
+  color: #4b5563;
+  font-weight: normal;
+}
+
+.sort-button:hover:not(.sort-button-active) {
+  background-color: #f4f4ff;
+  border-color: #c7d2fe;
+}
+
+.sort-button-active {
+  background-color: #f4f4ff;
+  color: #7a55ff;
+  font-weight: 600;
+}
