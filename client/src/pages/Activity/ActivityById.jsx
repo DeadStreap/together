@@ -31,7 +31,6 @@ function ActivityById() {
             })
             .then((data) => {
                 if (Array.isArray(data)) {
-                    console.log(data)
                     setContentItems(data);
                 } else {
                     throw new Error("Некорректный формат данных от API");
