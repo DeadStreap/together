@@ -4,7 +4,8 @@ const useFilterSort = (initialItems) => {
     const [filters, setFilters] = useState({
         category: '',
         startDate: '',
-        endDate: ''
+        endDate: '',
+        status: ''
     });
 
     const [sortConfig, setSortConfig] = useState({
@@ -21,6 +22,12 @@ const useFilterSort = (initialItems) => {
         if (filters.category) {
             result = result.filter(item =>
                 item.category && item.category.toLowerCase() === filters.category.toLowerCase()
+            );
+        }
+
+        if (filters.status) {
+            result = result.filter(item =>
+                item.status && item.status === filters.status
             );
         }
 
