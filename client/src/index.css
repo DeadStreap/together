@@ -335,15 +335,13 @@ h1 {
   width: 64px;
   height: 64px;
   border-radius: 999px;
-  background: radial-gradient(circle at 30% 30%, #ffbae6, #7a55ff);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #fdf2ff;
+  color: #ffffff;
   font-weight: 700;
   font-size: 26px;
   text-transform: uppercase;
-  box-shadow: 0 10px 25px rgba(122, 85, 255, 0.4);
 }
 
 .profile-name-block {
@@ -1378,6 +1376,93 @@ h1 {
   box-shadow: 0 0 0 1px rgba(122, 85, 255, 0.25);
 }
 
+/* Color Picker Styles */
+.color-picker {
+  margin-top: 4px;
+}
+
+.color-picker-label {
+  font-weight: 600;
+  font-size: 13px;
+  color: #4b5563;
+  display: block;
+  margin-bottom: 6px;
+}
+
+.color-palette {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(40px, 1fr));
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.color-option {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 3px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.color-option:hover {
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.color-option.selected {
+  border-color: #ffffff;
+  box-shadow: 0 0 0 2px #4b5563, 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.color-option.selected::after {
+  content: '✓';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #ffffff;
+  font-weight: bold;
+  font-size: 16px;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+/* Avatar Preview Styles */
+.avatar-preview {
+  margin-top: 16px;
+  padding: 16px;
+  background-color: #f9fafb;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+}
+
+.avatar-preview-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #4b5563;
+  margin-bottom: 12px;
+}
+
+.avatar-preview-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.avatar-preview-avatar {
+  width: 60px;
+  height: 60px;
+  font-size: 24px;
+  font-weight: 600;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
 [data-theme="dark"] .sort-button {
   background-color: #2d2d4a;
   border-color: #4a5568;
@@ -1536,3 +1621,30 @@ h1 {
   border-color: #14532d;
   color: #86efac;
 }
+
+[data-theme="dark"] .color-picker-label {
+  color: #e5e7eb;
+}
+
+[data-theme="dark"] .color-option:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+[data-theme="dark"] .color-option.selected {
+  border-color: #ffffff;
+  box-shadow: 0 0 0 2px #4b5568, 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+
+
+[data-theme="dark"] .avatar-preview {
+  background-color: #2d2d4a;
+  border-color: #4a5568;
+}
+
+[data-theme="dark"] .avatar-preview-label {
+  color: #e5e7eb;
+}
+
+
+
