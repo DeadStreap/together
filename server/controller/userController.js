@@ -128,8 +128,10 @@ class UserController {
             WHERE u.id = ?
             LIMIT 1
         `;
-            const [updated] = await pool.query(sql, [id]);
-            res.json(updated[0]);
+            const [rows] = await pool.query(sql, [username]);
+            const updatedUser = rows[0];
+            delete updatedUser.password;
+            res.json(updatedUser);
 
         } catch (err) {
             console.error('DB Error:', err);
