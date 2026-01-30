@@ -1,7 +1,9 @@
 import { Link, useLocation } from 'react-router-dom';
+import { useTheme } from '../store/ThemeContext';
 
 const Header = () => {
     const location = useLocation();
+    const { theme, toggleTheme } = useTheme();
 
     const isActive = (path: string) => location.pathname === path;
     const isProfileActive = location.pathname === '/profile';
@@ -9,13 +11,26 @@ const Header = () => {
     return (
         <aside className="sidebar">
             <div className="sidebar-top">
-                <div className="sidebar-logo">
-                    <div className="sidebar-logo-icon">
-                        <img src="/heart.svg" alt="Together" className="sidebar-logo-img" />
+                <div className="sidebar-header">
+                    <div className="sidebar-logo">
+                        <div className="sidebar-logo-icon">
+                            <img src="/heart.svg" alt="Together" className="sidebar-logo-img" />
+                        </div>
+                        <div className="sidebar-logo-text">
+                            Together
+                        </div>
                     </div>
-                    <div className="sidebar-logo-text">
-                        Together
-                    </div>
+                    <button 
+                        className="theme-toggle"
+                        onClick={toggleTheme}
+                        aria-label="Toggle theme"
+                    >
+                        {theme === 'light' ? (
+                            <img src="/moon.svg" alt="Dark theme" className="theme-icon" />
+                        ) : (
+                            <img src="/sun.svg" alt="Light theme" className="theme-icon sun-icon" />
+                        )}
+                    </button>
                 </div>
 
                 <nav className="sidebar-nav">
@@ -53,6 +68,8 @@ const Header = () => {
                     >
                         О проекте
                     </Link>
+
+
                 </nav>
             </div>
 
