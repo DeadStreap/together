@@ -174,24 +174,28 @@ function ActivityEdit() {
 
                         <div className="activity-form-field">
                             <label htmlFor="start_date">Дата начала</label>
-                            <input
-                                id="start_date"
-                                type="date"
-                                name="start_date"
-                                value={formData.start_date || ""}
-                                onChange={handleChange}
-                            />
+                            <div className="date-input-wrapper">
+                                <input
+                                    id="start_date"
+                                    type="date"
+                                    name="start_date"
+                                    value={formData.start_date || ""}
+                                    onChange={handleChange}
+                                />
+                            </div>
                         </div>
 
                         <div className="activity-form-field">
                             <label htmlFor="end_date">Дата окончания</label>
-                            <input
-                                id="end_date"
-                                type="date"
-                                name="end_date"
-                                value={formData.end_date || ""}
-                                onChange={handleChange}
-                            />
+                            <div className="date-input-wrapper">
+                                <input
+                                    id="end_date"
+                                    type="date"
+                                    name="end_date"
+                                    value={formData.end_date || ""}
+                                    onChange={handleChange}
+                                />
+                            </div>
                         </div>
 
                         <div className="activity-form-checkbox">
