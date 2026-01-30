@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 
 import { apiReq } from "../../utils/apiReq";
+import { getDaysTogether } from "../../utils/daysTogether";
 import { useUser } from "../../store/UserContext";
 import { getApiUrl } from "../../config/apiConfig";
 
@@ -10,6 +11,7 @@ function Profile() {
     const [error, setError] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const [partner, setPartner] = useState(null);
+    const [daysFormat, setDaysFormat] = useState('str')
     const navigate = useNavigate();
     const params = useParams();
 
@@ -108,16 +110,6 @@ function Profile() {
         navigate("/authorization");
     };
 
-    const hasCoupleStart = !!user.couple_start_date;
-    let daysTogether = null;
-    if (hasCoupleStart) {
-        const startDate = new Date(user.couple_start_date);
-        const today = new Date();
-        const startUTC = Date.UTC(startDate.getFullYear(), startDate.getMonth(), startDate.getDate());
-        const todayUTC = Date.UTC(today.getFullYear(), today.getMonth(), today.getDate());
-        const diff = todayUTC - startUTC;
-        daysTogether = Math.max(0, Math.floor(diff / (1000 * 60 * 60 * 24)));
-    }
 
     const isViewingPartner =
         !!requestedId && partner && requestedId === partner.id;
@@ -142,6 +134,10 @@ function Profile() {
         } else {
             navigate(`/profile/${statusTargetId}`);
         }
+    };
+
+    const handleDaysTogetherClick = () => {
+        daysFormat == 'str' ? setDaysFormat('days') : setDaysFormat('str')
     };
 
     return (
@@ -206,14 +202,14 @@ function Profile() {
                         </div>
                     </div>
 
-                    {daysTogether !== null && (
-                        <div className="profile-badge">
+                    {user.couple_start_date && (
+                        <div className="profile-badge" onClick={handleDaysTogetherClick}>
                             <div className="profile-badge-label">
                                 <span className="profile-badge-dot" />
                                 <span>Уже вместе</span>
                             </div>
                             <div className="profile-badge-value">
-                                {daysTogether} дней
+                                {getDaysTogether(user, daysFormat)}
                             </div>
                         </div>
                     )}
@@ -226,6 +222,15 @@ function Profile() {
                     <div
                         style={{ display: "flex", gap: 10, alignItems: "center" }}
                     >
+                        {!isViewingPartner && (
+                            <Link
+                                to="/profile/edit"
+                                className="primary-button"
+                                style={{ paddingInline: 14, fontSize: 12 }}
+                            >
+                                Редактировать профиль
+                            </Link>
+                        )}
                         {isViewingPartner && (
                             <Link
                                 to={`/activity/partner/${viewedUser.id}`}
