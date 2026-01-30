@@ -117,7 +117,18 @@ class UserController {
                 return res.status(404).json({ error: 'User not found' });
             }
 
-            const [updated] = await pool.query('SELECT * FROM users WHERE id = ?', [id]);
+            const sql = `
+            SELECT 
+                u.*,
+                c.id AS couple_id,
+                c.start_date AS couple_start_date
+            FROM users u
+            LEFT JOIN couples c
+                ON (c.first_user_id = u.id OR c.second_user_id = u.id)
+            WHERE u.id = ?
+            LIMIT 1
+        `;
+            const [updated] = await pool.query(sql, [id]);
             res.json(updated[0]);
 
         } catch (err) {
