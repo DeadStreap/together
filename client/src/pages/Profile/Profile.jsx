@@ -5,15 +5,17 @@ import { apiReq } from "../../utils/apiReq";
 import { getDaysTogether } from "../../utils/daysTogether";
 import { useUser } from "../../store/UserContext";
 import { getApiUrl } from "../../config/apiConfig";
+import { getColorGradient, getColorShadow } from "../../utils/colorGradients";
 
 function Profile() {
-    const { user, isAuthenticated, logout } = useUser();
+    const { user, isAuthenticated, logout, getProfileColor } = useUser();
     const [error, setError] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const [partner, setPartner] = useState(null);
     const [daysFormat, setDaysFormat] = useState('str')
     const navigate = useNavigate();
     const params = useParams();
+    const [profileColor, setProfileColor] = useState(getProfileColor());
 
     const API_BASE_URL = getApiUrl('');
     const requestedId = params.userId ? Number(params.userId) : null;
@@ -36,6 +38,24 @@ function Profile() {
 
         fetchPartner();
     }, [user]);
+
+    useEffect(() => {
+        setProfileColor(getProfileColor());
+    }, [getProfileColor]);
+
+    useEffect(() => {
+        const handleStorageChange = () => {
+            setProfileColor(getProfileColor());
+        };
+
+        window.addEventListener('storage', handleStorageChange);
+        window.addEventListener('focus', handleStorageChange);
+
+        return () => {
+            window.removeEventListener('storage', handleStorageChange);
+            window.removeEventListener('focus', handleStorageChange);
+        };
+    }, [getProfileColor]);
 
     useEffect(() => {
         if (!isAuthenticated || !user) return;
@@ -145,7 +165,15 @@ function Profile() {
             <div className="profile-card">
                 <div className="profile-header">
                     <div className="profile-main">
-                        <div className="profile-avatar">{initials}</div>
+                        <div 
+                            className="profile-avatar" 
+                            style={{ 
+                                background: getColorGradient(profileColor),
+                                boxShadow: getColorShadow(profileColor)
+                            }}
+                        >
+                            {initials}
+                        </div>
                         <div className="profile-name-block">
                             <div className="profile-name-section">
                                 <div className="profile-name">
