@@ -72,9 +72,11 @@ function ProfileEdit() {
     if (!user) {
         return (
             <div className="profile-edit-page">
-                <div className="profile-card">
-                    <div className="item-title">Редактирование профиля</div>
-                    <p>Для редактирования профиля необходимо войти в систему.</p>
+                <div className="activity-form-wrapper">
+                    <div className="profile-card">
+                        <div className="item-title">Редактирование профиля</div>
+                        <p>Для редактирования профиля необходимо войти в систему.</p>
+                    </div>
                 </div>
             </div>
         );
@@ -82,42 +84,25 @@ function ProfileEdit() {
 
     return (
         <div className="profile-edit-page">
-            <div className="profile-card">
+            <div className="activity-form-wrapper">
+                <div className="profile-card">
                 <div className="item-title">Редактировать профиль</div>
                 
                 {error && (
-                    <div className="error-message" style={{ 
-                        backgroundColor: '#fee', 
-                        border: '1px solid #fcc', 
-                        padding: '10px', 
-                        borderRadius: '4px', 
-                        color: '#c33',
-                        marginBottom: '15px'
-                    }}>
+                    <div className="error-message">
                         {error}
                     </div>
                 )}
                 
                 {success && (
-                    <div className="success-message" style={{ 
-                        backgroundColor: '#efe', 
-                        border: '1px solid #cfc', 
-                        padding: '10px', 
-                        borderRadius: '4px', 
-                        color: '#363',
-                        marginBottom: '15px'
-                    }}>
+                    <div className="success-message">
                         Профиль успешно обновлён!
                     </div>
                 )}
 
-                <form onSubmit={handleSubmit} className="profile-edit-form">
-                    <div className="form-group" style={{ marginBottom: '15px' }}>
-                        <label htmlFor="username" style={{ 
-                            display: 'block', 
-                            marginBottom: '5px', 
-                            fontWeight: 'bold' 
-                        }}>
+                <form onSubmit={handleSubmit} className="activity-form">
+                    <div className="activity-form-field">
+                        <label htmlFor="username">
                             Имя пользователя
                         </label>
                         <input
@@ -126,34 +111,15 @@ function ProfileEdit() {
                             name="username"
                             value={formData.username}
                             onChange={handleChange}
-                            style={{
-                                width: '100%',
-                                padding: '8px 12px',
-                                border: '1px solid #ddd',
-                                borderRadius: '4px',
-                                fontSize: '16px'
-                            }}
                             required
                         />
                     </div>
 
-                    <div className="form-actions" style={{ 
-                        display: 'flex', 
-                        justifyContent: 'space-between', 
-                        marginTop: '20px' 
-                    }}>
+                    <div className="activity-form-actions">
                         <button
                             type="button"
                             onClick={() => navigate('/profile')}
                             className="secondary-button"
-                            style={{
-                                padding: '10px 20px',
-                                fontSize: '14px',
-                                border: 'none',
-                                borderRadius: '4px',
-                                cursor: 'pointer',
-                                backgroundColor: '#f0f0f0'
-                            }}
                             disabled={isLoading}
                         >
                             Отмена
@@ -162,20 +128,13 @@ function ProfileEdit() {
                         <button
                             type="submit"
                             className="primary-button"
-                            style={{
-                                padding: '10px 20px',
-                                fontSize: '14px',
-                                border: 'none',
-                                borderRadius: '4px',
-                                cursor: isLoading ? 'not-allowed' : 'pointer',
-                                opacity: isLoading ? 0.6 : 1
-                            }}
                             disabled={isLoading}
                         >
                             {isLoading ? 'Сохранение...' : 'Сохранить изменения'}
                         </button>
                     </div>
                 </form>
+                </div>
             </div>
         </div>
     );
