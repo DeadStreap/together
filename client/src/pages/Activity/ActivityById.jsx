@@ -101,29 +101,31 @@ function ActivityById() {
             <div className="content-card content-card--detail">
                 <div className="content-card-link" style={{ paddingBottom: 12 }}>
                     <div className="content-detail-header">
-                        <Link to="/" className="content-detail-back">
+                        <button onClick={() => navigate(-1)} className="content-detail-back">
                             ← Назад к списку
-                        </Link>
-                        <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
-                            <span style={{ fontSize: 12, color: "#9ca3af" }}>
-                                ID: {ActivityId}
-                            </span>
+                        </button>
+                        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 4 }}>
                             {user.id == item.added_by_user_id &&
                                 <>
-                                    <Link
-                                        to={`/activity/${ActivityId}/edit`}
-                                        className="icon-button-edit"
-                                    >
-                                        <img src="/edit.svg" alt="Edit" />
-                                    </Link>
-                                    <button
-                                        type="button"
-                                        onClick={handleDelete}
-                                        disabled={isLoading}
-                                        className="icon-button-delete"
-                                    >
-                                        <img src="/trash.svg" alt="Delete" />
-                                    </button>
+                                    <div style={{ display: "flex", gap: 4 }}>
+                                        <Link
+                                            to={`/activity/${ActivityId}/edit`}
+                                            className="icon-button-edit"
+                                        >
+                                            <img src="/edit.svg" alt="Edit" />
+                                        </Link>
+                                        <button
+                                            type="button"
+                                            onClick={handleDelete}
+                                            disabled={isLoading}
+                                            className="icon-button-delete"
+                                        >
+                                            <img src="/trash.svg" alt="Delete" />
+                                        </button>
+                                    </div>
+                                    <span style={{ fontSize: 12, color: "#9ca3af" }}>
+                                        ID: {ActivityId}
+                                    </span>
                                 </>
                             }
                         </div>
