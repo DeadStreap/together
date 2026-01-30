@@ -1020,6 +1020,51 @@ h1 {
   font-size: 14px;
   background-color: #ffffff;
   transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  min-height: 44px;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+/* Custom date input wrapper */
+.date-input-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.date-input-wrapper input[type="date"] {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+  font-size: 14px;
+  background-color: #ffffff;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  min-height: 44px;
+  -webkit-appearance: none;
+  appearance: none;
+  position: relative;
+}
+
+.date-input-wrapper input[type="date"]::-webkit-calendar-picker-indicator {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  opacity: 0.6;
+  transition: opacity 0.15s ease;
+}
+
+.date-input-wrapper input[type="date"]::-webkit-calendar-picker-indicator:hover {
+  opacity: 1;
+}
+
+.date-input-wrapper input[type="date"]:focus {
+  border-color: #7a55ff;
+  box-shadow: 0 0 0 1px rgba(122, 85, 255, 0.25);
+  outline: none;
 }
 
 .filter-input:focus {
@@ -1318,6 +1363,17 @@ h1 {
 
 [data-theme="dark"] .filter-select:focus,
 [data-theme="dark"] .filter-input:focus {
+  border-color: #7a55ff;
+  box-shadow: 0 0 0 1px rgba(122, 85, 255, 0.25);
+}
+
+[data-theme="dark"] .date-input-wrapper input[type="date"] {
+  background-color: #2d2d4a;
+  border-color: #4a5568;
+  color: #ffffff;
+}
+
+[data-theme="dark"] .date-input-wrapper input[type="date"]:focus {
   border-color: #7a55ff;
   box-shadow: 0 0 0 1px rgba(122, 85, 255, 0.25);
 }

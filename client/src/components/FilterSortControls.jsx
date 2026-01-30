@@ -19,24 +19,26 @@ const FilterSortControls = ({ filters, onFilterChange, onSortChange, sortConfig 
 
                 <div>
                     <label htmlFor="start-date-filter" className="filter-label">Дата начала от:</label>
-                    <input
-                        id="start-date-filter"
-                        type="date"
-                        value={filters.startDate}
-                        onChange={(e) => onFilterChange('startDate', e.target.value)}
-                        className="filter-input"
-                    />
+                    <div className="date-input-wrapper">
+                        <input
+                            id="start-date-filter"
+                            type="date"
+                            value={filters.startDate}
+                            onChange={(e) => onFilterChange('startDate', e.target.value)}
+                        />
+                    </div>
                 </div>
 
                 <div>
                     <label htmlFor="end-date-filter" className="filter-label">Дата окончания до:</label>
-                    <input
-                        id="end-date-filter"
-                        type="date"
-                        value={filters.endDate}
-                        onChange={(e) => onFilterChange('endDate', e.target.value)}
-                        className="filter-input"
-                    />
+                    <div className="date-input-wrapper">
+                        <input
+                            id="end-date-filter"
+                            type="date"
+                            value={filters.endDate}
+                            onChange={(e) => onFilterChange('endDate', e.target.value)}
+                        />
+                    </div>
                 </div>
 
                 <div className="sort-buttons-container">
