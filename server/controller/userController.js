@@ -128,7 +128,7 @@ class UserController {
             WHERE u.id = ?
             LIMIT 1
         `;
-            const [rows] = await pool.query(sql, [username]);
+            const [rows] = await pool.query(sql, [id]);
             const updatedUser = rows[0];
             delete updatedUser.password;
             res.json(updatedUser);
