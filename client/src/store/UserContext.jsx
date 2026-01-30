@@ -36,9 +36,17 @@ export const UserProvider = ({ children }) => {
         setUser(null);
     };
 
+    const updateProfileColor = (color) => {
+        localStorage.setItem("profile_color", color);
+    };
+
+    const getProfileColor = () => {
+        return localStorage.getItem("profile_color") || "#7a55ff";
+    };
+
     return (
         <UserContext.Provider
-            value={{ user, isAuthenticated: !!user, login, logout }}
+            value={{ user, isAuthenticated: !!user, login, logout, updateProfileColor, getProfileColor }}
         >
             {children}
         </UserContext.Provider>
