@@ -4,6 +4,7 @@ import AboutPage from './pages/AboutPage';
 import NotFoundPage from './pages/NotFoundPage';
 
 import Profile from './pages/Profile/Profile';
+import ProfileEdit from './pages/Profile/ProfileEdit';
 import Authorization from './pages/Authorization';
 
 import Activities from './pages/Activity/Activities';
@@ -28,6 +29,7 @@ function App() {
           <Route path="/" element={<Activities />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/profile/:userId" element={<Profile />} />
+          <Route path="/profile/edit" element={<ProfileEdit />} />
           <Route path="/authorization" element={<Authorization />} />
           <Route path="/register" element={<Activities />} />
 
