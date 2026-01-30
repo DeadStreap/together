@@ -147,8 +147,19 @@ function Profile() {
                     <div className="profile-main">
                         <div className="profile-avatar">{initials}</div>
                         <div className="profile-name-block">
-                            <div className="profile-name">
-                                {viewedUser.username || "Без имени"}
+                            <div className="profile-name-section">
+                                <div className="profile-name">
+                                    {viewedUser.username || "Без имени"}
+                                </div>
+                                {!isViewingPartner && (
+                                    <Link
+                                        to="/profile/edit"
+                                        className="icon-button-edit"
+                                        aria-label="Редактировать профиль"
+                                    >
+                                        <img src="/edit.svg" alt="Редактировать" />
+                                    </Link>
+                                )}
                             </div>
                             <div className="profile-tagline">
                                 Личная страничка для совместных активностей
@@ -222,15 +233,7 @@ function Profile() {
                     <div
                         style={{ display: "flex", gap: 10, alignItems: "center" }}
                     >
-                        {!isViewingPartner && (
-                            <Link
-                                to="/profile/edit"
-                                className="primary-button"
-                                style={{ paddingInline: 14, fontSize: 12 }}
-                            >
-                                Редактировать профиль
-                            </Link>
-                        )}
+
                         {isViewingPartner && (
                             <Link
                                 to={`/activity/partner/${viewedUser.id}`}
