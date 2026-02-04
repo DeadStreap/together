@@ -95,7 +95,7 @@ class UserController {
             return res.status(400).json({ error: 'ID is required in body' });
         }
 
-        const allowed = ['username', 'password', 'partner_id'];
+        const allowed = ['username', 'password', 'partner_id', 'color'];
         const updates = Object.keys(fields)
             .filter(f => allowed.includes(f) && fields[f] !== undefined)
             .map(f => `${f} = ?`);
@@ -118,7 +118,7 @@ class UserController {
             }
 
             const sql = `
-            SELECT 
+            SELECT
                 u.*,
                 c.id AS couple_id,
                 c.start_date AS couple_start_date
