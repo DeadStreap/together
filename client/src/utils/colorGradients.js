@@ -1,4 +1,9 @@
+import { getColorValueByName } from './colorUtils';
+
 export const getColorGradient = (color) => {
+    // Convert color name to hex value if needed
+    const colorValue = color.startsWith('#') ? color : getColorValueByName(color);
+
     const gradients = {
         '#7a55ff': 'radial-gradient(circle at 30% 30%, #baa5ff, #7a55ff)',
         '#ff3b8a': 'radial-gradient(circle at 30% 30%, #ffbae6, #ff3b8a)',
@@ -13,11 +18,14 @@ export const getColorGradient = (color) => {
         '#0ea5e9': 'radial-gradient(circle at 30% 30%, #7dd3fc, #0ea5e9)',
         '#059669': 'radial-gradient(circle at 30% 30%, #6ee7b7, #059669)'
     };
-    
-    return gradients[color] || gradients['#7a55ff'];
+
+    return gradients[colorValue] || gradients['#7a55ff'];
 };
 
 export const getColorShadow = (color) => {
+    // Convert color name to hex value if needed
+    const colorValue = color.startsWith('#') ? color : getColorValueByName(color);
+
     const shadows = {
         '#7a55ff': '0 10px 25px rgba(122, 85, 255, 0.4)',
         '#ff3b8a': '0 10px 25px rgba(255, 59, 138, 0.4)',
@@ -32,6 +40,6 @@ export const getColorShadow = (color) => {
         '#0ea5e9': '0 10px 25px rgba(14, 165, 233, 0.4)',
         '#059669': '0 10px 25px rgba(5, 150, 105, 0.4)'
     };
-    
-    return shadows[color] || shadows['#7a55ff'];
+
+    return shadows[colorValue] || shadows['#7a55ff'];
 };

@@ -4,13 +4,14 @@ import { useUser } from "../../store/UserContext";
 import { getApiUrl } from "../../config/apiConfig";
 import ColorPicker from "../../components/ColorPicker";
 import AvatarPreview from "../../components/AvatarPreview";
+import { getColorValueByName, isValidColorName } from "../../utils/colorUtils";
 
 function ProfileEdit() {
     const { user, login, updateProfileColor, getProfileColor } = useUser();
     const [formData, setFormData] = useState({
         username: "",
     });
-    const [profileColor, setProfileColor] = useState(getProfileColor());
+    const [profileColor, setProfileColor] = useState(user?.color || 'Purple');
     const [error, setError] = useState(null);
     const [success, setSuccess] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
@@ -21,9 +22,10 @@ function ProfileEdit() {
             setFormData({
                 username: user.username || "",
             });
-            setProfileColor(getProfileColor());
+            // Initialize profile color from user object
+            setProfileColor(user?.color || 'Purple');
         }
-    }, [user, getProfileColor]);
+    }, [user]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -40,11 +42,13 @@ function ProfileEdit() {
         setSuccess(false);
 
         try {
-            updateProfileColor(profileColor);
+            // Validate that the color is a valid color name before sending to server
+            const validatedColor = isValidColorName(profileColor) ? profileColor : 'Purple';
 
             const updateData = {
                 id: user.id,
                 username: formData.username,
+                color: validatedColor,
             };
 
             const response = await fetch(getApiUrl(`/api/update/user`), {
@@ -121,11 +125,10 @@ function ProfileEdit() {
                         />
                     </div>
 
-                    <ColorPicker 
+                    <ColorPicker
                         selectedColor={profileColor}
                         onColorChange={(color) => {
                             setProfileColor(color);
-                            updateProfileColor(color);
                         }}
                         label="Цвет профиля"
                     />

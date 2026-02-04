@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 
 const ColorPicker = ({ selectedColor, onColorChange, label = "Цвет профиля" }) => {
-    const [currentColor, setCurrentColor] = useState(selectedColor || '#7a55ff');
+    const [currentColor, setCurrentColor] = useState(selectedColor || 'Purple');
 
     // Цветовая палитра с хорошо подобранными цветами
     const colorPalette = [
@@ -21,17 +21,19 @@ const ColorPicker = ({ selectedColor, onColorChange, label = "Цвет проф�
 
     useEffect(() => {
         if (selectedColor) {
-            setCurrentColor(selectedColor);
+            // If selectedColor is a hex code, try to find its corresponding name
+            if (selectedColor.startsWith('#')) {
+                const colorObj = colorPalette.find(c => c.value === selectedColor);
+                setCurrentColor(colorObj ? colorObj.name : 'Purple');
+            } else {
+                setCurrentColor(selectedColor);
+            }
         }
     }, [selectedColor]);
 
-    const handleColorSelect = (color) => {
-        setCurrentColor(color);
-        onColorChange(color);
-        if (typeof window !== 'undefined') {
-            window.localStorage.setItem('profile_color', color);
-            window.dispatchEvent(new Event('storage'));
-        }
+    const handleColorSelect = (colorName) => {
+        setCurrentColor(colorName);
+        onColorChange(colorName);
     };
 
     return (
@@ -40,11 +42,11 @@ const ColorPicker = ({ selectedColor, onColorChange, label = "Цвет проф�
             <div className="color-palette">
                 {colorPalette.map((color) => (
                     <button
-                        key={color.value}
+                        key={color.name}
                         type="button"
-                        className={`color-option ${currentColor === color.value ? 'selected' : ''}`}
+                        className={`color-option ${currentColor === color.name ? 'selected' : ''}`}
                         style={{ backgroundColor: color.value }}
-                        onClick={() => handleColorSelect(color.value)}
+                        onClick={() => handleColorSelect(color.name)}
                         title={color.name}
                         aria-label={`Выбрать цвет ${color.name}`}
                     />

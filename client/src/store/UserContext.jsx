@@ -37,11 +37,13 @@ export const UserProvider = ({ children }) => {
     };
 
     const updateProfileColor = (color) => {
-        localStorage.setItem("profile_color", color);
+        // This function is kept for compatibility but no longer stores in localStorage
+        // Color is now stored in the database
     };
 
     const getProfileColor = () => {
-        return localStorage.getItem("profile_color") || "#7a55ff";
+        // Return the color from the user object if available, otherwise default
+        return user?.color || "Purple";
     };
 
     return (

@@ -6,6 +6,7 @@ import { getDaysTogether } from "../../utils/daysTogether";
 import { useUser } from "../../store/UserContext";
 import { getApiUrl } from "../../config/apiConfig";
 import { getColorGradient, getColorShadow } from "../../utils/colorGradients";
+import { getColorValueByName } from "../../utils/colorUtils";
 
 function Profile() {
     const { user, isAuthenticated, logout, getProfileColor } = useUser();
@@ -40,22 +41,9 @@ function Profile() {
     }, [user]);
 
     useEffect(() => {
-        setProfileColor(getProfileColor());
-    }, [getProfileColor]);
-
-    useEffect(() => {
-        const handleStorageChange = () => {
-            setProfileColor(getProfileColor());
-        };
-
-        window.addEventListener('storage', handleStorageChange);
-        window.addEventListener('focus', handleStorageChange);
-
-        return () => {
-            window.removeEventListener('storage', handleStorageChange);
-            window.removeEventListener('focus', handleStorageChange);
-        };
-    }, [getProfileColor]);
+        // Use the color from user object if available, fallback to default
+        setProfileColor(user?.color || 'Purple');
+    }, [user]); // Only depend on user to avoid infinite loop
 
     useEffect(() => {
         if (!isAuthenticated || !user) return;
@@ -168,8 +156,8 @@ function Profile() {
                         <div 
                             className="profile-avatar" 
                             style={{ 
-                                background: getColorGradient(profileColor),
-                                boxShadow: getColorShadow(profileColor)
+                                background: getColorGradient(getColorValueByName(profileColor)),
+                                boxShadow: getColorShadow(getColorValueByName(profileColor))
                             }}
                         >
                             {initials}
