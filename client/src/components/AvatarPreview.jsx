@@ -2,9 +2,9 @@ import { useUser } from '../store/UserContext';
 import { getColorGradient, getColorShadow } from '../utils/colorGradients';
 import { getColorValueByName } from '../utils/colorUtils';
 
-const AvatarPreview = ({ color }) => {
+const AvatarPreview = ({ color, icon }) => {
     const { user } = useUser();
-    
+
     const initials = user?.username
         ? user.username
             .split(" ")
@@ -27,7 +27,15 @@ const AvatarPreview = ({ color }) => {
                         boxShadow: getColorShadow(colorValue)
                     }}
                 >
-                    {initials}
+                    {icon ? (
+                        <img 
+                            src={icon === '' ? `/cancel.svg` : `/profileIcons/${icon}.png`} 
+                            alt={icon === '' ? "Стандартный вид" : icon} 
+                            className="avatar-icon"
+                        />
+                    ) : (
+                        initials
+                    )}
                 </div>
             </div>
         </div>

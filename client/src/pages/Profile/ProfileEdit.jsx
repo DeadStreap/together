@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useUser } from "../../store/UserContext";
 import { getApiUrl } from "../../config/apiConfig";
 import ColorPicker from "../../components/ColorPicker";
+import IconPicker from "../../components/IconPicker";
 import AvatarPreview from "../../components/AvatarPreview";
 import { getColorValueByName, isValidColorName } from "../../utils/colorUtils";
 
@@ -12,6 +13,11 @@ function ProfileEdit() {
         username: "",
     });
     const [profileColor, setProfileColor] = useState(user?.color || 'Purple');
+    const [profileIcon, setProfileIcon] = useState(() => {
+        // Получаем иконку из localStorage, если она существует
+        const savedIcon = localStorage.getItem('profile_icon');
+        return savedIcon !== null ? savedIcon : '';
+    });
     const [error, setError] = useState(null);
     const [success, setSuccess] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
@@ -22,8 +28,11 @@ function ProfileEdit() {
             setFormData({
                 username: user.username || "",
             });
-            // Initialize profile color from user object
             setProfileColor(user?.color || 'Purple');
+            
+            // Получаем иконку из localStorage, если она существует
+            const savedIcon = localStorage.getItem('profile_icon');
+            setProfileIcon(savedIcon !== null ? savedIcon : '');
         }
     }, [user]);
 
@@ -67,6 +76,9 @@ function ProfileEdit() {
             const updatedUser = await response.json();
             console.log(updatedUser)
             login(updatedUser);
+
+            // Сохраняем иконку в localStorage
+            localStorage.setItem('profile_icon', profileIcon);
 
             setSuccess(true);
             setTimeout(() => {
@@ -132,8 +144,16 @@ function ProfileEdit() {
                         }}
                         label="Цвет профиля"
                     />
-                    
-                    <AvatarPreview color={profileColor} />
+
+                    <IconPicker
+                        selectedIcon={profileIcon}
+                        onIconChange={(icon) => {
+                            setProfileIcon(icon);
+                        }}
+                        label="Иконка профиля"
+                    />
+
+                    <AvatarPreview color={profileColor} icon={profileIcon} />
 
                     <div className="activity-form-actions">
                         <button

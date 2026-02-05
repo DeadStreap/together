@@ -104,7 +104,6 @@ class UserController {
             return res.status(400).json({ error: 'No fields to update' });
         }
 
-        // Validate color if it's being updated
         if (fields.color !== undefined) {
             const validColors = ['Purple', 'Pink', 'Blue', 'Turquoise', 'Green', 'Yellow', 'Orange', 'Red', 'Indigo', 'Purpure', 'LightBlue', 'Emerald'];
             if (!validColors.includes(fields.color)) {
