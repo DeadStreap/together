@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-const IconPicker = ({ selectedIcon, onIconChange, label = "Иконка профиля" }) => {
+const IconPicker = ({ selectedIcon, onIconChange, label = "Иконка профиля", disabled = false }) => {
     const [currentIcon, setCurrentIcon] = useState(selectedIcon || '');
 
     // Получаем список иконок из папки profileIcons
@@ -31,29 +31,31 @@ const IconPicker = ({ selectedIcon, onIconChange, label = "Иконка проф
                 <button
                     type="button"
                     className={`icon-option ${currentIcon === '' ? 'selected' : ''}`}
-                    onClick={() => handleIconSelect('')}
+                    onClick={() => !disabled && handleIconSelect('')}
                     title="Стандартный вид (первая буква)"
                     aria-label="Стандартный вид (первая буква)"
+                    disabled={disabled}
                 >
-                    <img 
-                        src="/cancel.svg" 
-                        alt="Стандартный вид" 
+                    <img
+                        src="/cancel.svg"
+                        alt="Стандартный вид"
                         className="icon-image"
                     />
                 </button>
-                
+
                 {iconList.map((icon) => (
                     <button
                         key={icon}
                         type="button"
                         className={`icon-option ${currentIcon === icon ? 'selected' : ''}`}
-                        onClick={() => handleIconSelect(icon)}
+                        onClick={() => !disabled && handleIconSelect(icon)}
                         title={icon}
                         aria-label={`Выбрать иконку ${icon}`}
+                        disabled={disabled}
                     >
-                        <img 
-                            src={`/profileIcons/${icon}.png`} 
-                            alt={icon} 
+                        <img
+                            src={`/profileIcons/${icon}.png`}
+                            alt={icon}
                             className="icon-image"
                         />
                     </button>

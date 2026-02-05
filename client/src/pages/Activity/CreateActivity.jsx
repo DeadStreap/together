@@ -5,6 +5,7 @@ import { getApiUrl } from "../../config/apiConfig";
 
 function CreateActivity() {
     const [error, setError] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
     const { user, isAuthenticated } = useUser();
     const [formData, setFormData] = useState({
@@ -12,7 +13,7 @@ function CreateActivity() {
         category: "anime",
         status: "planned",
         start_date: null,
-        shared_with_partner: true, 
+        shared_with_partner: true,
     });
 
     const API_URL = getApiUrl('/api/create/content');
@@ -27,6 +28,8 @@ function CreateActivity() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setIsLoading(true);
+        setError(null);
 
         try {
             if (!isAuthenticated || !user) {
@@ -69,6 +72,8 @@ function CreateActivity() {
             navigate("/");
         } catch (err) {
             setError(err);
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -130,6 +135,7 @@ function CreateActivity() {
                                 value={formData.title}
                                 onChange={handleChange}
                                 required
+                                disabled={isLoading}
                             />
                         </div>
 
@@ -140,6 +146,7 @@ function CreateActivity() {
                                 name="category"
                                 value={formData.category}
                                 onChange={handleChange}
+                                disabled={isLoading}
                             >
                                 <option value="anime">Аниме</option>
                                 <option value="game">Игра</option>
@@ -154,6 +161,7 @@ function CreateActivity() {
                                 name="status"
                                 value={formData.status}
                                 onChange={handleChange}
+                                disabled={isLoading}
                             >
                                 <option value="planned">Запланировано</option>
                                 <option value="inProgress">В процессе</option>
@@ -170,6 +178,7 @@ function CreateActivity() {
                                     name="start_date"
                                     value={formData.start_date || ""}
                                     onChange={handleChange}
+                                    disabled={isLoading}
                                 />
                             </div>
                         </div>
@@ -184,6 +193,7 @@ function CreateActivity() {
                                         name="end_date"
                                         value={formData.end_date || ""}
                                         onChange={handleChange}
+                                        disabled={isLoading}
                                     />
                                 </div>
                             </div>
@@ -198,6 +208,7 @@ function CreateActivity() {
                                 name="shared_with_partner"
                                 checked={formData.shared_with_partner}
                                 onChange={handleChange}
+                                disabled={isLoading}
                             />
                             <label htmlFor="shared_with_partner">
                                 Совместно с партнёром
@@ -205,8 +216,8 @@ function CreateActivity() {
                         </div>
 
                         <div className="activity-form-actions">
-                            <button type="submit" className="primary-button">
-                                Сохранить
+                            <button type="submit" className="primary-button" disabled={isLoading}>
+                                {isLoading ? 'Создание...' : 'Сохранить'}
                             </button>
                         </div>
                     </form>

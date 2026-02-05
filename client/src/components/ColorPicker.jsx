@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-const ColorPicker = ({ selectedColor, onColorChange, label = "Цвет профиля" }) => {
+const ColorPicker = ({ selectedColor, onColorChange, label = "Цвет профиля", disabled = false }) => {
     const [currentColor, setCurrentColor] = useState(selectedColor || 'Purple');
 
     // Цветовая палитра с хорошо подобранными цветами
@@ -46,9 +46,10 @@ const ColorPicker = ({ selectedColor, onColorChange, label = "Цвет проф�
                         type="button"
                         className={`color-option ${currentColor === color.name ? 'selected' : ''}`}
                         style={{ backgroundColor: color.value }}
-                        onClick={() => handleColorSelect(color.name)}
+                        onClick={() => !disabled && handleColorSelect(color.name)}
                         title={color.name}
                         aria-label={`Выбрать цвет ${color.name}`}
+                        disabled={disabled}
                     />
                 ))}
             </div>

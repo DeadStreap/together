@@ -17,11 +17,7 @@ function Profile() {
     const navigate = useNavigate();
     const params = useParams();
     const [profileColor, setProfileColor] = useState(getProfileColor());
-    const [profileIcon, setProfileIcon] = useState(() => {
-        // Получаем иконку из localStorage, если она существует
-        const savedIcon = localStorage.getItem('profile_icon');
-        return savedIcon !== null ? savedIcon : '';
-    });
+    const [profileIcon, setProfileIcon] = useState(user?.icon || '');
 
     const API_BASE_URL = getApiUrl('');
     const requestedId = params.userId ? Number(params.userId) : null;
@@ -48,18 +44,7 @@ function Profile() {
     useEffect(() => {
         const viewedUser = !requestedId || requestedId === user.id ? user : partner;
         setProfileColor(viewedUser?.color || 'Purple');
-        
-        // Для просмотра профиля партнера нужно получить его иконку из localStorage или использовать стандартную
-        // В текущей реализации иконки партнера не сохраняются в БД, поэтому используем стандартную логику
-        if (requestedId && partner && requestedId === partner.id) {
-            // Если просматриваем профиль партнера, используем стандартную иконку (пока не реализовано хранение иконок партнера)
-            // Для демонстрации будем использовать пустую иконку, но в реальности нужно будет получать иконку партнера из БД
-            setProfileIcon('');
-        } else {
-            // Для собственного профиля используем сохраненную иконку
-            const savedIcon = localStorage.getItem('profile_icon');
-            setProfileIcon(savedIcon !== null ? savedIcon : '');
-        }
+        setProfileIcon(viewedUser?.icon || '');
     }, [user, partner, requestedId]);
 
     useEffect(() => {
@@ -178,9 +163,9 @@ function Profile() {
                             }}
                         >
                             {profileIcon ? (
-                                <img 
-                                    src={profileIcon === '' ? `/cancel.svg` : `/profileIcons/${profileIcon}.png`} 
-                                    alt={profileIcon === '' ? "Стандартный вид" : profileIcon} 
+                                <img
+                                    src={`/profileIcons/${profileIcon}.png`}
+                                    alt={profileIcon}
                                     className="avatar-icon"
                                 />
                             ) : (

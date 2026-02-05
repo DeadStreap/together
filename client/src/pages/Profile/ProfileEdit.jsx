@@ -13,14 +13,11 @@ function ProfileEdit() {
         username: "",
     });
     const [profileColor, setProfileColor] = useState(user?.color || 'Purple');
-    const [profileIcon, setProfileIcon] = useState(() => {
-        // Получаем иконку из localStorage, если она существует
-        const savedIcon = localStorage.getItem('profile_icon');
-        return savedIcon !== null ? savedIcon : '';
-    });
+    const [profileIcon, setProfileIcon] = useState(user?.icon || '');
     const [error, setError] = useState(null);
     const [success, setSuccess] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+    const [isRedirecting, setIsRedirecting] = useState(false);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -29,10 +26,7 @@ function ProfileEdit() {
                 username: user.username || "",
             });
             setProfileColor(user?.color || 'Purple');
-            
-            // Получаем иконку из localStorage, если она существует
-            const savedIcon = localStorage.getItem('profile_icon');
-            setProfileIcon(savedIcon !== null ? savedIcon : '');
+            setProfileIcon(user?.icon || '');
         }
     }, [user]);
 
@@ -58,6 +52,7 @@ function ProfileEdit() {
                 id: user.id,
                 username: formData.username,
                 color: validatedColor,
+                icon: profileIcon || null,  // Send null if empty string to set icon to NULL in DB
             };
 
             const response = await fetch(getApiUrl(`/api/update/user`), {
@@ -77,10 +72,8 @@ function ProfileEdit() {
             console.log(updatedUser)
             login(updatedUser);
 
-            // Сохраняем иконку в localStorage
-            localStorage.setItem('profile_icon', profileIcon);
-
             setSuccess(true);
+            setIsRedirecting(true); // Set redirecting state to prevent further submissions
             setTimeout(() => {
                 navigate('/profile');
             }, 1500);
@@ -134,23 +127,30 @@ function ProfileEdit() {
                             value={formData.username}
                             onChange={handleChange}
                             required
+                            disabled={isLoading || isRedirecting}
                         />
                     </div>
 
                     <ColorPicker
                         selectedColor={profileColor}
                         onColorChange={(color) => {
-                            setProfileColor(color);
+                            if (!(isLoading || isRedirecting)) {
+                                setProfileColor(color);
+                            }
                         }}
                         label="Цвет профиля"
+                        disabled={isLoading || isRedirecting}
                     />
 
                     <IconPicker
                         selectedIcon={profileIcon}
                         onIconChange={(icon) => {
-                            setProfileIcon(icon);
+                            if (!(isLoading || isRedirecting)) {
+                                setProfileIcon(icon);
+                            }
                         }}
                         label="Иконка профиля"
+                        disabled={isLoading || isRedirecting}
                     />
 
                     <AvatarPreview color={profileColor} icon={profileIcon} />
@@ -160,17 +160,17 @@ function ProfileEdit() {
                             type="button"
                             onClick={() => navigate('/profile')}
                             className="secondary-button"
-                            disabled={isLoading}
+                            disabled={isLoading || isRedirecting}
                         >
                             Отмена
                         </button>
-                        
+
                         <button
                             type="submit"
                             className="primary-button"
-                            disabled={isLoading}
+                            disabled={isLoading || isRedirecting}
                         >
-                            {isLoading ? 'Сохранение...' : 'Сохранить изменения'}
+                            {(isLoading || isRedirecting) ? 'Сохранение...' : 'Сохранить изменения'}
                         </button>
                     </div>
                 </form>

@@ -16,6 +16,7 @@ function ActivityEdit() {
     });
 
     const [isLoading, setIsLoading] = useState(true);
+    const [isSaving, setIsSaving] = useState(false);
     const [error, setError] = useState(null);
 
     const GET_API_URL = getApiUrl(`/api/content/id/${ActivityId}`);
@@ -80,10 +81,10 @@ function ActivityEdit() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setIsSaving(true);
+        setError(null);
 
         try {
-            setError(null);
-
             const payload = {
                 id: ActivityId,
                 title: formData.title,
@@ -110,6 +111,8 @@ function ActivityEdit() {
         } catch (err) {
             console.error("Ошибка при обновлении активности:", err);
             setError(err);
+        } finally {
+            setIsSaving(false);
         }
     };
 
@@ -141,6 +144,7 @@ function ActivityEdit() {
                                 value={formData.title}
                                 onChange={handleChange}
                                 required
+                                disabled={isSaving}
                             />
                         </div>
 
@@ -151,6 +155,7 @@ function ActivityEdit() {
                                 name="category"
                                 value={formData.category}
                                 onChange={handleChange}
+                                disabled={isSaving}
                             >
                                 <option value="anime">Аниме</option>
                                 <option value="game">Игра</option>
@@ -165,6 +170,7 @@ function ActivityEdit() {
                                 name="status"
                                 value={formData.status}
                                 onChange={handleChange}
+                                disabled={isSaving}
                             >
                                 <option value="planned">Запланировано</option>
                                 <option value="inProgress">В процессе</option>
@@ -181,6 +187,7 @@ function ActivityEdit() {
                                     name="start_date"
                                     value={formData.start_date || ""}
                                     onChange={handleChange}
+                                    disabled={isSaving}
                                 />
                             </div>
                         </div>
@@ -194,6 +201,7 @@ function ActivityEdit() {
                                     name="end_date"
                                     value={formData.end_date || ""}
                                     onChange={handleChange}
+                                    disabled={isSaving}
                                 />
                             </div>
                         </div>
@@ -205,6 +213,7 @@ function ActivityEdit() {
                                 name="shared_with_partner"
                                 checked={formData.shared_with_partner}
                                 onChange={handleChange}
+                                disabled={isSaving}
                             />
                             <label htmlFor="shared_with_partner">
                                 Совместно с партнёром
@@ -212,8 +221,8 @@ function ActivityEdit() {
                         </div>
 
                         <div className="activity-form-actions">
-                            <button type="submit" className="primary-button">
-                                Сохранить изменения
+                            <button type="submit" className="primary-button" disabled={isSaving}>
+                                {isSaving ? 'Сохранение...' : 'Сохранить изменения'}
                             </button>
                         </div>
                     </form>
