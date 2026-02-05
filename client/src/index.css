@@ -334,7 +334,7 @@ h1 {
 .profile-avatar {
   width: 64px;
   height: 64px;
-  border-radius: 999px;
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -342,6 +342,9 @@ h1 {
   font-weight: 700;
   font-size: 26px;
   text-transform: uppercase;
+  flex-shrink: 0; /* Prevent shrinking on small screens */
+  position: relative;
+  overflow: hidden; /* Ensure the circular shape is maintained */
 }
 
 .profile-name-block {
@@ -419,6 +422,8 @@ h1 {
   gap: 10px;
   font-size: 13px;
   color: #6b7280;
+  flex-wrap: wrap; /* Allow wrapping on small screens */
+  min-height: 40px; /* Ensure minimum height */
 }
 
 .profile-link-back {
@@ -761,6 +766,29 @@ h1 {
   .loading::after {
     font-size: 18px;
   }
+
+  /* Ensure avatar remains circular on medium screens */
+  .profile-avatar {
+    width: 60px;
+    height: 60px;
+    min-width: 60px; /* Prevent shrinking */
+    min-height: 60px; /* Prevent shrinking */
+  }
+
+  /* Adjust profile footer layout on medium screens */
+  .profile-footer {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .profile-footer > div {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    width: 100%;
+    justify-content: space-between;
+  }
 }
 
 @media (max-width: 480px) {
@@ -848,6 +876,29 @@ h1 {
   .loading::after {
     font-size: 16px;
   }
+
+  /* Ensure avatar remains circular on small screens */
+  .profile-avatar {
+    width: 56px;
+    height: 56px;
+    min-width: 56px; /* Prevent shrinking */
+    min-height: 56px; /* Prevent shrinking */
+  }
+
+  /* Adjust profile footer layout on small screens */
+  .profile-footer {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .profile-footer > div {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    width: 100%;
+    justify-content: space-between;
+  }
 }
 
 
@@ -886,9 +937,49 @@ h1 {
     font-size: 14px;
   }
 
-  .item-details,
   .item-dates {
     font-size: 11px;
+  }
+
+  /* Ensure avatar remains circular on extra small screens */
+  .profile-avatar {
+    width: 52px;
+    height: 52px;
+    min-width: 52px; /* Prevent shrinking */
+    min-height: 52px; /* Prevent shrinking */
+  }
+
+  /* Adjust profile footer layout on small screens */
+  .profile-footer {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .profile-footer > div {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  /* Reduce font sizes on very small screens */
+  .profile-footer {
+    font-size: 12px;
+  }
+
+  .profile-link-back {
+    font-size: 12px;
+  }
+
+  .profile-meta {
+    font-size: 11px;
+  }
+
+  .primary-button {
+    padding: 8px 16px;
+    font-size: 12px;
   }
 }
 
@@ -1429,6 +1520,17 @@ h1 {
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
+.color-option:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: scale(1);
+}
+
+.color-option:disabled:hover {
+  transform: scale(1);
+  box-shadow: none;
+}
+
 /* Avatar Preview Styles */
 .avatar-preview {
   margin-top: 16px;
@@ -1461,6 +1563,7 @@ h1 {
   align-items: center;
   justify-content: center;
   border-radius: 50%;
+  flex-shrink: 0; /* Prevent shrinking on small screens */
 }
 
 [data-theme="dark"] .sort-button {
@@ -1635,6 +1738,17 @@ h1 {
   box-shadow: 0 0 0 2px #4b5568, 0 4px 12px rgba(0, 0, 0, 0.4);
 }
 
+[data-theme="dark"] .color-option:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: scale(1);
+}
+
+[data-theme="dark"] .color-option:disabled:hover {
+  transform: scale(1);
+  box-shadow: none;
+}
+
 
 
 [data-theme="dark"] .avatar-preview {
@@ -1654,18 +1768,21 @@ h1 {
   max-width: 100%;
   max-height: 100%;
   display: block;
+  flex-shrink: 0; /* Prevent shrinking */
 }
 
 .profile-avatar .avatar-icon {
   width: 60%;
   height: 60%;
   object-fit: contain;
+  flex-shrink: 0; /* Prevent shrinking */
 }
 
 .avatar-preview-avatar .avatar-icon {
   width: 60%;
   height: 60%;
   object-fit: contain;
+  flex-shrink: 0; /* Prevent shrinking */
 }
 
 /* Icon Picker Styles */
@@ -1726,6 +1843,17 @@ h1 {
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
+.icon-option:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: scale(1);
+}
+
+.icon-option:disabled:hover {
+  transform: scale(1);
+  box-shadow: none;
+}
+
 .icon-image {
   width: 80%;
   height: 80%;
@@ -1744,6 +1872,17 @@ h1 {
 [data-theme="dark"] .icon-option.selected {
   border-color: #ffffff;
   box-shadow: 0 0 0 2px #4b5568, 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+[data-theme="dark"] .icon-option:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: scale(1);
+}
+
+[data-theme="dark"] .icon-option:disabled:hover {
+  transform: scale(1);
+  box-shadow: none;
 }
 
 
