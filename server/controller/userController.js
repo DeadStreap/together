@@ -179,6 +179,12 @@ class UserController {
         }
 
         try {
+            const [existingUsers] = await pool.query('SELECT id FROM users WHERE username = ?', [username]);
+            
+            if (existingUsers.length > 0) {
+                return res.status(409).json({ error: 'User with this username already exists' });
+            }
+
             const partnerIdValue = partner_id !== undefined ? partner_id : null;
             const iconValue = icon !== undefined ? icon : null;
             const sql = `
