@@ -1,4 +1,9 @@
 const pool = require('../config/db');
+const crypto = require('crypto');
+
+function createMD5Hash(input) {
+    return crypto.createHash('md5').update(input).digest('hex');
+}
 
 class UserController {
 
@@ -74,14 +79,15 @@ class UserController {
             }
 
             const user = rows[0];
+            
+            const hashedPassword = createMD5Hash(password);
 
-            if (user.password !== password) {
+            if (user.password !== hashedPassword) {
                 return res.status(401).json({ error: 'Invalid password' });
             }
 
-            delete user.password;
-
-            res.json(user);
+            const { password: pwd, ...userWithoutPassword } = user;
+            res.json(userWithoutPassword);
         } catch (err) {
             console.error('DB Error:', err);
             res.status(500).json({ error: 'Server error' });
@@ -180,10 +186,12 @@ class UserController {
 
         try {
             const [existingUsers] = await pool.query('SELECT id FROM users WHERE username = ?', [username]);
-            
+
             if (existingUsers.length > 0) {
                 return res.status(409).json({ error: 'User with this username already exists' });
             }
+
+            const hashedPassword = createMD5Hash(password);
 
             const partnerIdValue = partner_id !== undefined ? partner_id : null;
             const iconValue = icon !== undefined ? icon : null;
@@ -193,12 +201,13 @@ class UserController {
                 ) VALUES (?, ?, ?, ?)
             `;
 
-            const params = [username, password, partnerIdValue, iconValue];
+            const params = [username, hashedPassword, partnerIdValue, iconValue];
 
             const [result] = await pool.query(sql, params);
 
             const [newRow] = await pool.query('SELECT * FROM users WHERE id = ?', [result.insertId]);
-            res.status(201).json(newRow[0]);
+            const { password: pwd, ...userWithoutPassword } = newRow[0];
+            res.status(201).json(userWithoutPassword);
 
         } catch (err) {
             console.error('DB Error:', err);
