@@ -642,6 +642,29 @@ h1 {
   margin-bottom: 16px;
 }
 
+/* Registration and Authorization page styles */
+.auth-link-container {
+  margin-top: 16px;
+  text-align: center;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.auth-link {
+  color: #7a55ff;
+  text-decoration: none;
+}
+
+.auth-options-container {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.auth-option-separator {
+  color: #6b7280;
+}
+
 .danger-button {
   background: #ef4444;
   box-shadow: 0 10px 25px rgba(239, 68, 68, 0.3);
