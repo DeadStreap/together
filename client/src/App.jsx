@@ -6,6 +6,7 @@ import NotFoundPage from './pages/NotFoundPage';
 import Profile from './pages/Profile/Profile';
 import ProfileEdit from './pages/Profile/ProfileEdit';
 import Authorization from './pages/Authorization';
+import Registration from './pages/Registration';
 
 import Activities from './pages/Activity/Activities';
 import ActivityById from './pages/Activity/ActivityById';
@@ -31,7 +32,7 @@ function App() {
           <Route path="/profile/:userId" element={<Profile />} />
           <Route path="/profile/edit" element={<ProfileEdit />} />
           <Route path="/authorization" element={<Authorization />} />
-          <Route path="/register" element={<Activities />} />
+          <Route path="/register" element={<Registration />} />
 
           <Route path="/activity/:ActivityId" element={<ActivityById />} />
           <Route path="/activity/:ActivityId/edit" element={<ActivityEdit />} />
