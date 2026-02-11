@@ -206,8 +206,9 @@ class UserController {
             const [result] = await pool.query(sql, params);
 
             const [newRow] = await pool.query('SELECT * FROM users WHERE id = ?', [result.insertId]);
-            const { password: pwd, ...userWithoutPassword } = newRow[0];
-            res.status(201).json(userWithoutPassword);
+            const user = newRow[0];
+            delete user.password;
+            res.status(201).json(user);
 
         } catch (err) {
             console.error('DB Error:', err);
