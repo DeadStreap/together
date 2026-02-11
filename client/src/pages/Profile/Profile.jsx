@@ -78,9 +78,15 @@ function Profile() {
                         Чтобы увидеть информацию о профиле, войдите в аккаунт.
                     </p>
                     <div className="profile-footer">
-                        <Link to="/authorization" className="profile-link-back">
-                            Войти
-                        </Link>
+                        <div className="auth-options-container">
+                            <Link to="/authorization" className="profile-link-back">
+                                Войти
+                            </Link>
+                            <span className="auth-option-separator">или</span>
+                            <Link to="/register" className="profile-link-back">
+                                Зарегистрироваться
+                            </Link>
+                        </div>
                         <div className="profile-meta">Гость</div>
                     </div>
                 </div>

@@ -125,6 +125,13 @@ function Authorization() {
                             </button>
                         </div>
                     </form>
+                    
+                    <div className="auth-link-container">
+                        Нет аккаунта?{" "}
+                        <a href="/register" className="auth-link">
+                            Зарегистрироваться
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
