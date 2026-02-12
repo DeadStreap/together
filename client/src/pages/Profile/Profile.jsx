@@ -7,9 +7,10 @@ import { useUser } from "../../store/UserContext";
 import { getApiUrl } from "../../config/apiConfig";
 import { getColorGradient, getColorShadow } from "../../utils/colorGradients";
 import { getColorValueByName } from "../../utils/colorUtils";
+import { useCoupleTokens } from "../../hooks/useCoupleTokens";
 
 function Profile() {
-    const { user, isAuthenticated, logout, getProfileColor } = useUser();
+    const { user, isAuthenticated, logout, getProfileColor, login } = useUser();
     const [error, setError] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const [partner, setPartner] = useState(null);
@@ -18,6 +19,14 @@ function Profile() {
     const params = useParams();
     const [profileColor, setProfileColor] = useState(getProfileColor());
     const [profileIcon, setProfileIcon] = useState(user?.icon || '');
+
+    const { 
+        partnerTokenInput, 
+        setPartnerTokenInput, 
+        handleGenerateToken, 
+        handleTokenRefresh, 
+        handleJoinCouple 
+    } = useCoupleTokens(user);
 
     const API_BASE_URL = getApiUrl('');
     const requestedId = params.userId ? Number(params.userId) : null;
@@ -222,30 +231,116 @@ function Profile() {
                         </div>
                     </div>
 
-                    <div className="profile-badge">
-                        <div className="profile-badge-label">
-                            <span className="profile-badge-dot" />
-                            <span>Дата начала отношений</span>
+                    {!partner && (
+                        <div className="profile-badge">
+                            <div className="profile-badge-label">
+                                <span className="profile-badge-dot" />
+                                <span>Токен пары</span>
+                            </div>
+                            <div className="profile-badge-value">
+                                {user.token ? (
+                                    <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                                        <span style={{ fontSize: "12px" }}>{user.token}</span>
+                                        <button 
+                                            className="secondary-button token-refresh-button"
+                                            onClick={async () => {
+                                                try {
+                                                    const updatedUser = await handleTokenRefresh();
+                                                    login(updatedUser);
+                                                } catch (err) {
+                                                    setError(err);
+                                                }
+                                            }}
+                                            title="Обновить токен"
+                                        >
+                                            <img 
+                                                src="/update.svg" 
+                                                alt="Обновить" 
+                                            />
+                                        </button>
+                                    </div>
+                                ) : (
+                                    <button 
+                                        className="profile-badge-link"
+                                        onClick={async () => {
+                                            try {
+                                                const updatedUser = await handleGenerateToken();
+                                                login(updatedUser);
+                                            } catch (err) {
+                                                setError(err);
+                                            }
+                                        }}
+                                    >
+                                        Сгенерировать токен пары
+                                    </button>
+                                )}
+                            </div>
                         </div>
-                        <div
-                            className={
-                                "profile-badge-value" +
-                                (!user.couple_start_date ? " muted" : "")
-                            }
-                        >
-                            {user.couple_start_date
-                                ? new Date(
-                                    user.couple_start_date
-                                ).toLocaleDateString("ru-RU", {
-                                    day: "2-digit",
-                                    month: "long",
-                                    year: "numeric",
-                                })
-                                : "Не указана"}
-                        </div>
-                    </div>
+                    )}
 
-                    {user.couple_start_date && (
+                    {!partner && (
+                        <div className="profile-badge">
+                            <div className="profile-badge-label">
+                                <span className="profile-badge-dot" />
+                                <span>Присоединиться к паре</span>
+                            </div>
+                            <div className="profile-badge-value">
+                                <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
+                                    <input
+                                        type="text"
+                                        placeholder="Введите токен партнера"
+                                        value={partnerTokenInput}
+                                        onChange={(e) => setPartnerTokenInput(e.target.value)}
+                                        className="activity-form-field couple-token-input"
+                                    />
+                                    <button
+                                        className="couple-join-button"
+                                        onClick={async () => {
+                                            try {
+                                                const updatedUser = await handleJoinCouple();
+                                                login(updatedUser);
+                                            } catch (err) {
+                                                setError(err);
+                                            }
+                                        }}
+                                        title="Присоединиться"
+                                    >
+                                        <img
+                                            src="/done.svg"
+                                            alt="Присоединиться"
+                                        />
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    {partner && (
+                        <div className="profile-badge">
+                            <div className="profile-badge-label">
+                                <span className="profile-badge-dot" />
+                                <span>Дата начала отношений</span>
+                            </div>
+                            <div
+                                className={
+                                    "profile-badge-value" +
+                                    (!user.couple_start_date ? " muted" : "")
+                                }
+                            >
+                                {user.couple_start_date
+                                    ? new Date(
+                                        user.couple_start_date
+                                    ).toLocaleDateString("ru-RU", {
+                                        day: "2-digit",
+                                        month: "long",
+                                        year: "numeric",
+                                    })
+                                    : "Не указана"}
+                            </div>
+                        </div>
+                    )}
+
+                    {user.couple_start_date && partner && (
                         <div className="profile-badge" onClick={handleDaysTogetherClick}>
                             <div className="profile-badge-label">
                                 <span className="profile-badge-dot" />
