@@ -665,6 +665,64 @@ h1 {
   color: #6b7280;
 }
 
+.couple-token-input {
+  padding: 6px 10px !important;
+  font-size: 12px !important;
+  width: 180px !important;
+  margin-bottom: 0 !important;
+}
+
+.token-refresh-button {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 4px !important;
+  min-width: auto !important;
+  width: 28px !important;
+  height: 28px !important;
+}
+
+
+.couple-join-button {
+  padding: 8px !important;
+  border-radius: 8px !important;
+  border: 1px solid #e5e7eb !important;
+  font-size: 13px !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+  background-color: #ffffff !important;
+  color: #4b5563 !important;
+  font-weight: normal !important;
+  width: 32px !important;
+  height: 32px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.couple-join-button:hover {
+  background-color: #f4f4ff !important;
+  border-color: #c7d2fe !important;
+}
+
+.couple-join-button img {
+  width: 16px !important;
+  height: 16px !important;
+  filter: brightness(1.5) saturate(150%) invert(34%) sepia(49%) saturate(302%) hue-rotate(82deg) brightness(140%) contrast(105%) !important;
+}
+
+/* Темная тема для кнопки присоединения */
+[data-theme="dark"] .couple-join-button {
+  background-color: #374151 !important;
+  border-color: #4b5563 !important;
+  color: #d1d5db !important;
+}
+
+[data-theme="dark"] .couple-join-button:hover {
+  background-color: #4b5563 !important;
+  border-color: #6b7280 !important;
+}
+
 .danger-button {
   background: #ef4444;
   box-shadow: 0 10px 25px rgba(239, 68, 68, 0.3);
