@@ -215,6 +215,138 @@ class UserController {
             res.status(500).json({ error: 'Server error' });
         }
     }
+    async generateToken(req, res) {
+        const { userId } = req.body;
+
+        if (!userId) {
+            return res.status(400).json({ error: 'User ID is required' });
+        }
+
+        try {
+            const token = Math.floor(100000 + Math.random() * 900000).toString();
+            
+            let tokenExists = true;
+            while(tokenExists) {
+                const [result] = await pool.query('SELECT id FROM users WHERE token = ?', [token]);
+                if(result.length === 0) {
+                    tokenExists = false;
+                } else {
+                    token = Math.floor(100000 + Math.random() * 900000).toString();
+                }
+            }
+            
+            const [result] = await pool.query(
+                'UPDATE users SET token = ? WHERE id = ?',
+                [token, userId]
+            );
+
+            if(result.affectedRows === 0) {
+                return res.status(404).json({ error: 'User not found' });
+            }
+
+            res.json({ token });
+        } catch (err) {
+            console.error('DB Error:', err);
+            res.status(500).json({ error: 'Server error' });
+        }
+    }
+
+    async refreshToken(req, res) {
+        const { userId } = req.body;
+
+        if (!userId) {
+            return res.status(400).json({ error: 'User ID is required' });
+        }
+
+        try {
+            const token = Math.floor(100000 + Math.random() * 900000).toString();
+            
+            let tokenExists = true;
+            while(tokenExists) {
+                const [result] = await pool.query('SELECT id FROM users WHERE token = ?', [token]);
+                if(result.length === 0) {
+                    tokenExists = false;
+                } else {
+                    token = Math.floor(100000 + Math.random() * 900000).toString();
+                }
+            }
+            
+            const [result] = await pool.query(
+                'UPDATE users SET token = ? WHERE id = ?',
+                [token, userId]
+            );
+
+            if(result.affectedRows === 0) {
+                return res.status(404).json({ error: 'User not found' });
+            }
+
+            res.json({ token });
+        } catch (err) {
+            console.error('DB Error:', err);
+            res.status(500).json({ error: 'Server error' });
+        }
+    }
+
+    async joinCouple(req, res) {
+        const { userId, partnerToken } = req.body;
+
+        if (!userId || !partnerToken) {
+            return res.status(400).json({ 
+                error: 'User ID and partner token are required' 
+            });
+        }
+
+        try {
+            const [partnerResult] = await pool.query(
+                'SELECT id FROM users WHERE token = ?',
+                [partnerToken]
+            );
+
+            if(partnerResult.length === 0) {
+                return res.status(404).json({ error: 'User with this token not found' });
+            }
+
+            const partnerId = partnerResult[0].id;
+
+            if(userId === partnerId) {
+                return res.status(400).json({ error: 'Cannot join couple with yourself' });
+            }
+
+            const [currentUserResult] = await pool.query(
+                'SELECT partner_id FROM users WHERE id = ?',
+                [userId]
+            );
+            
+            const [partnerUserResult] = await pool.query(
+                'SELECT partner_id FROM users WHERE id = ?',
+                [partnerId]
+            );
+
+            if(currentUserResult[0].partner_id || partnerUserResult[0].partner_id) {
+                return res.status(400).json({ error: 'One of the users already has a partner' });
+            }
+
+            await pool.query(
+                'UPDATE users SET partner_id = ? WHERE id = ?',
+                [partnerId, userId]
+            );
+
+            await pool.query(
+                'UPDATE users SET partner_id = ? WHERE id = ?',
+                [userId, partnerId]
+            );
+
+            await pool.query(
+                'UPDATE users SET token = NULL WHERE id IN (?, ?)',
+                [userId, partnerId]
+            );
+
+            res.json({ success: true, message: 'Successfully joined couple' });
+        } catch (err) {
+            console.error('DB Error:', err);
+            res.status(500).json({ error: 'Server error' });
+        }
+    }
 }
 
 module.exports = new UserController()
