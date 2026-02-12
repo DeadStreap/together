@@ -243,8 +243,11 @@ class UserController {
             if(result.affectedRows === 0) {
                 return res.status(404).json({ error: 'User not found' });
             }
-
-            res.json({ token });
+            
+            const [updatedUserResult] = await pool.query('SELECT * FROM users WHERE id = ?', [userId]);
+            const updatedUser = updatedUserResult[0];
+            delete updatedUser.password;
+            res.json(updatedUser);
         } catch (err) {
             console.error('DB Error:', err);
             res.status(500).json({ error: 'Server error' });
@@ -280,7 +283,10 @@ class UserController {
                 return res.status(404).json({ error: 'User not found' });
             }
 
-            res.json({ token });
+            const [updatedUserResult] = await pool.query('SELECT * FROM users WHERE id = ?', [userId]);
+            const updatedUser = updatedUserResult[0];
+            delete updatedUser.password;
+            res.json(updatedUser);
         } catch (err) {
             console.error('DB Error:', err);
             res.status(500).json({ error: 'Server error' });
