@@ -7,14 +7,18 @@ const EMPTY_STATS = {
     gamesCompletedTogether: 0,
     watchedTogether: 0,
     activitiesInProgress: 0,
-    activitiesPlanned: 0
+    activitiesPlanned: 0,
+    totalCompleted: 0,
+    completionRate: 0
 };
 
 const STAT_LABELS = {
     gamesCompletedTogether: "Игр пройдено вместе",
     watchedTogether: "Просмотрено вместе",
     activitiesInProgress: "В процессе",
-    activitiesPlanned: "Запланировано"
+    activitiesPlanned: "Запланировано",
+    totalCompleted: "Всего завершено",
+    completionRate: "% завершённых"
 };
 
 const StatisticsBlock = () => {
@@ -43,6 +47,15 @@ const StatisticsBlock = () => {
 
                 const data = await apiReq(API_URL);
 
+                const totalCompleted = data.filter(
+                    item => item.status === 'done'
+                ).length;
+
+                const totalCount = data.length;
+                const completionRate = totalCount > 0
+                    ? Math.round((totalCompleted / totalCount) * 100)
+                    : 0;
+
                 setStats({
                     gamesCompletedTogether: data.filter(
                         item => item.category === 'game' && item.status === 'done'
@@ -55,7 +68,9 @@ const StatisticsBlock = () => {
                     ).length,
                     activitiesPlanned: data.filter(
                         item => item.status === 'planned'
-                    ).length
+                    ).length,
+                    totalCompleted,
+                    completionRate
                 });
             } catch (error) {
                 console.error("Error fetching stats:", error);
@@ -79,6 +94,8 @@ const StatisticsBlock = () => {
         <div className="statistics-block">
             {renderStatItem(stats.gamesCompletedTogether, STAT_LABELS.gamesCompletedTogether)}
             {renderStatItem(stats.watchedTogether, STAT_LABELS.watchedTogether)}
+            {renderStatItem(stats.totalCompleted, STAT_LABELS.totalCompleted)}
+            {renderStatItem(`${stats.completionRate}%`, STAT_LABELS.completionRate)}
             {renderStatItem(stats.activitiesInProgress, STAT_LABELS.activitiesInProgress)}
             {renderStatItem(stats.activitiesPlanned, STAT_LABELS.activitiesPlanned)}
         </div>
