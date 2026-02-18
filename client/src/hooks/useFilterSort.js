@@ -5,7 +5,8 @@ const useFilterSort = (initialItems) => {
         category: '',
         startDate: '',
         endDate: '',
-        status: ''
+        status: '',
+        search: ''
     });
 
     const [sortConfig, setSortConfig] = useState({
@@ -46,6 +47,13 @@ const useFilterSort = (initialItems) => {
                 const itemDate = item.end_date ? new Date(item.end_date) : item.start_date ? new Date(item.start_date) : new Date(item.added_at);
                 return itemDate <= endDate;
             });
+        }
+
+        if (filters.search) {
+            const searchLower = filters.search.toLowerCase();
+            result = result.filter(item =>
+                item.title && item.title.toLowerCase().includes(searchLower)
+            );
         }
 
         // Если есть пользовательская сортировка (выбранная пользователем), применяем её
