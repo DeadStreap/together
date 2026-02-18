@@ -94,6 +94,16 @@ const FilterSortControls = ({ filters, onFilterChange, onSortChange, sortConfig 
                         />
                     </button>
                 </div>
+
+                <div className="search-container">
+                    <input
+                        type="text"
+                        value={filters.search}
+                        onChange={(e) => onFilterChange('search', e.target.value)}
+                        placeholder="Поиск"
+                        className="filter-search-input"
+                    />
+                </div>
             </div>
         </div>
     );
