@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { apiReq, apiReqWithBody } from "../../utils/apiReq";
 import { getApiUrl } from "../../config/apiConfig";
 
 function ActivityEdit() {
@@ -28,15 +29,7 @@ function ActivityEdit() {
                 setIsLoading(true);
                 setError(null);
 
-                const response = await fetch(GET_API_URL);
-
-                if (!response.ok) {
-                    throw new Error(
-                        `Ошибка сети: ${response.statusText} (${response.status})`
-                    );
-                }
-
-                const data = await response.json();
+                const data = await apiReq(GET_API_URL);
 
                 if (!Array.isArray(data) || data.length === 0) {
                     throw new Error("Активность не найдена");
@@ -95,17 +88,7 @@ function ActivityEdit() {
                 end_date: formData.end_date || null,
             };
 
-            const response = await fetch(UPDATE_API_URL, {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(payload),
-            });
-
-            if (!response.ok) {
-                throw new Error(`Ошибка сервера: ${response.status}`);
-            }
+            await apiReqWithBody(UPDATE_API_URL, 'PUT', payload);
 
             navigate(`/activity/${ActivityId}`);
         } catch (err) {
@@ -233,4 +216,3 @@ function ActivityEdit() {
 }
 
 export default ActivityEdit;
-

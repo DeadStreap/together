@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../store/UserContext";
+import { apiReqWithBody } from "../utils/apiReq";
 import { getApiUrl } from "../config/apiConfig";
 
 function Registration() {
@@ -17,7 +18,7 @@ function Registration() {
         setError(null);
 
         const trimmedUsername = username.trim();
-        
+
         if (!trimmedUsername || !password || !confirmPassword) {
             setError(new Error("Заполните все поля"));
             return;
@@ -35,37 +36,19 @@ function Registration() {
 
         try {
             setIsLoading(true);
-            const response = await fetch(getApiUrl('/api/create/user'), {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    username: trimmedUsername,
-                    password,
-                }),
+            const data = await apiReqWithBody(getApiUrl('/api/create/user'), 'POST', {
+                username: trimmedUsername,
+                password,
             });
-
-            let data = null;
-            try {
-                data = await response.json();
-            } catch (err) {
-                // ignore parse error
-            }
-
-            if (!response.ok) {
-                if (response.status === 409) {
-                    throw new Error("Пользователь с таким логином уже существует");
-                }
-                throw new Error(
-                    (data && data.error) || "Ошибка регистрации"
-                );
-            }
 
             login(data);
             navigate("/");
         } catch (err) {
-            setError(err);
+            if (err.message.includes('409')) {
+                setError(new Error("Пользователь с таким логином уже существует"));
+            } else {
+                setError(err);
+            }
         } finally {
             setIsLoading(false);
         }
@@ -143,7 +126,7 @@ function Registration() {
                             </button>
                         </div>
                     </form>
-                    
+
                     <div className="auth-link-container">
                         Уже есть аккаунт?{" "}
                         <a href="/authorization" className="auth-link">

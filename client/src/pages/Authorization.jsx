@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../store/UserContext";
+import { apiReqWithBody } from "../utils/apiReq";
 import { getApiUrl } from "../config/apiConfig";
 
 function Authorization() {
@@ -10,8 +11,6 @@ function Authorization() {
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
     const { login } = useUser();
-
-    const API_URL = getApiUrl('/auth/login');
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -25,40 +24,21 @@ function Authorization() {
 
         try {
             setIsLoading(true);
-            const response = await fetch(getApiUrl('/api/auth/user'), {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    username: trimmedUsername,
-                    password,
-                }),
+            const data = await apiReqWithBody(getApiUrl('/api/auth/user'), 'POST', {
+                username: trimmedUsername,
+                password,
             });
-
-            let data = null;
-            try {
-                data = await response.json();
-            } catch (err) {
-                // ignore parse error
-            }
-
-            if (!response.ok) {
-                if (response.status === 401) {
-                    throw new Error("Неверный пароль");
-                }
-                if (response.status === 404) {
-                    throw new Error("Пользователь не найден");
-                }
-                throw new Error(
-                    (data && data.error) || "Ошибка авторизации"
-                );
-            }
 
             login(data);
             navigate("/");
         } catch (err) {
-            setError(err);
+            if (err.message.includes('401')) {
+                setError(new Error("Неверный пароль"));
+            } else if (err.message.includes('404')) {
+                setError(new Error("Пользователь не найден"));
+            } else {
+                setError(err);
+            }
         } finally {
             setIsLoading(false);
         }
@@ -125,7 +105,7 @@ function Authorization() {
                             </button>
                         </div>
                     </form>
-                    
+
                     <div className="auth-link-container">
                         Нет аккаунта?{" "}
                         <a href="/register" className="auth-link">
@@ -139,4 +119,3 @@ function Authorization() {
 }
 
 export default Authorization;
-

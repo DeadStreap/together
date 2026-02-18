@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useUser } from "../../store/UserContext";
+import { apiReqWithBody } from "../../utils/apiReq";
 import { getApiUrl } from "../../config/apiConfig";
 
 function CreateActivity() {
@@ -57,17 +58,7 @@ function CreateActivity() {
                 payload.shared_with_partner = true;
             }
 
-            const response = await fetch(API_URL, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(payload),
-            });
-
-            if (!response.ok) {
-                throw new Error(`Ошибка сервера: ${response.status}`);
-            }
+            await apiReqWithBody(API_URL, 'POST', payload);
 
             navigate("/");
         } catch (err) {
@@ -183,7 +174,7 @@ function CreateActivity() {
                             </div>
                         </div>
 
-                        {formData.status == 'done' ?
+                        {formData.status === 'done' ? (
                             <div className="activity-form-field">
                                 <label htmlFor="end_date">Дата конца</label>
                                 <div className="date-input-wrapper">
@@ -197,9 +188,7 @@ function CreateActivity() {
                                     />
                                 </div>
                             </div>
-                            :
-                            <></>
-                        }
+                        ) : null}
 
                         <div className="activity-form-checkbox">
                             <input

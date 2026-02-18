@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../../store/UserContext";
 import { getApiUrl } from "../../config/apiConfig";
+import { apiReqWithBody } from "../../utils/apiReq";
 import ColorPicker from "../../components/ColorPicker";
 import IconPicker from "../../components/IconPicker";
 import AvatarPreview from "../../components/AvatarPreview";
@@ -45,35 +46,21 @@ function ProfileEdit() {
         setSuccess(false);
 
         try {
-            // Validate that the color is a valid color name before sending to server
             const validatedColor = isValidColorName(profileColor) ? profileColor : 'Purple';
 
             const updateData = {
                 id: user.id,
                 username: formData.username,
                 color: validatedColor,
-                icon: profileIcon || null,  // Send null if empty string to set icon to NULL in DB
+                icon: profileIcon || null,
             };
 
-            const response = await fetch(getApiUrl(`/api/update/user`), {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(updateData)
-            });
+            const updatedUser = await apiReqWithBody(getApiUrl(`/api/update/user`), 'PUT', updateData);
 
-            if (!response.ok) {
-                const errorData = await response.json().catch(() => ({}));
-                throw new Error(errorData.message || `Ошибка обновления профиля: ${response.statusText}`);
-            }
-
-            const updatedUser = await response.json();
-            console.log(updatedUser)
             login(updatedUser);
 
             setSuccess(true);
-            setIsRedirecting(true); // Set redirecting state to prevent further submissions
+            setIsRedirecting(true);
             setTimeout(() => {
                 navigate('/profile');
             }, 1500);
@@ -102,13 +89,13 @@ function ProfileEdit() {
             <div className="activity-form-wrapper">
                 <div className="profile-card">
                 <div className="item-title">Редактировать профиль</div>
-                
+
                 {error && (
                     <div className="error-message">
                         {error}
                     </div>
                 )}
-                
+
                 {success && (
                     <div className="success-message">
                         Профиль успешно обновлён!
