@@ -12,7 +12,7 @@ import Activities from './pages/Activity/Activities';
 import ActivityById from './pages/Activity/ActivityById';
 import ActivitiesTogether from './pages/Activity/ActivitiesTogether';
 import ActivitiesAlone from './pages/Activity/ActivitiesAlone';
-import ActivitiesParnter from './pages/Activity/ActivitiesParnter';
+import ActivitiesPartner from './pages/Activity/ActivitiesPartner';
 import CreateActivity from './pages/Activity/CreateActivity';
 import ActivityEdit from './pages/Activity/ActivityEdit';
 
@@ -39,7 +39,7 @@ function App() {
           <Route path="/activity" element={<Activities />} />
           <Route path="/activity/alone" element={<ActivitiesAlone />} />
           <Route path="/activity/together" element={<ActivitiesTogether />} />
-          <Route path="/activity/partner/:userId" element={<ActivitiesParnter />} />
+          <Route path="/activity/partner/:userId" element={<ActivitiesPartner />} />
           <Route path="/activity/create" element={<CreateActivity />} />
 
           <Route path="/about" element={<AboutPage />} />

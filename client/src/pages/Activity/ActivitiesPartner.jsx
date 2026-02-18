@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 
 import { apiReq } from "../../utils/apiReq";
 import { getApiUrl } from "../../config/apiConfig";
 import ActivityCard from "../../components/ActivityCard";
 
-function ActivitiesParnter() {
+function ActivitiesPartner() {
     const [contentItems, setContentItems] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -65,5 +66,5 @@ function ActivitiesParnter() {
     );
 }
 
-export default ActivitiesParnter;
+export default ActivitiesPartner;
 
