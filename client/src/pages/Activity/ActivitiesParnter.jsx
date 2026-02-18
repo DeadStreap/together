@@ -1,10 +1,8 @@
 import { useState, useEffect } from "react";
-import { Link, useParams } from "react-router-dom";
 
 import { apiReq } from "../../utils/apiReq";
 import { getApiUrl } from "../../config/apiConfig";
-import { getCategoryDisplayName } from "../../utils/displayMappings";
-import StatusIcon from "../../components/StatusIcon";
+import ActivityCard from "../../components/ActivityCard";
 
 function ActivitiesParnter() {
     const [contentItems, setContentItems] = useState([]);
@@ -57,80 +55,11 @@ function ActivitiesParnter() {
             {contentItems.length > 0 ? (
                 <ul className="content-list">
                     {contentItems.map((item) => (
-                        <li key={item.id} className="content-card" data-status={item.status}>
-                            <Link
-                                to={`/activity/${item.id}`}
-                                className="content-card-link"
-                            >
-                                <div className="item-title-card">
-                                    <StatusIcon status={item.status} />
-                                    <div className="item-title-content">
-                                        {item.title || "Без названия"}
-                                    </div>
-                                </div>
-                                <div className="item-details">
-                                    <span>Категория</span>:{" "}
-                                    {getCategoryDisplayName(item.category) || "N/A"}
-                                </div>
-                                <div className="item-details">
-                                    <span>Добавил</span>: {item.added_by || "N/A"}
-                                </div>
-                                <div className="item-dates">
-                                    <span>
-                                        <span>Добавлено</span>
-                                        <span>
-                                            {item.added_at
-                                                ? (() => {
-                                                    const date = new Date(
-                                                        item.added_at
-                                                    );
-                                                    const formattedDate =
-                                                        date.toLocaleDateString(
-                                                            "ru-RU",
-                                                            {
-                                                                day: "2-digit",
-                                                                month: "long",
-                                                                year: "numeric",
-                                                            }
-                                                        );
-                                                    const formattedTime =
-                                                        date.toLocaleTimeString(
-                                                            "ru-RU",
-                                                            {
-                                                                hour: "2-digit",
-                                                                minute: "2-digit",
-                                                            }
-                                                        );
-                                                    return `${formattedDate} ${formattedTime}`;
-                                                })()
-                                                : "не указано"}
-                                        </span>
-                                    </span>
-                                    {item.start_date ?
-                                        <span>
-                                            <span>Начато</span>
-                                            <span>
-                                                {new Date(item.start_date).toLocaleDateString()}
-                                            </span>
-                                        </span>
-                                        : <></>}
-                                    {item.end_date ?
-                                        <span>
-                                            <span>Завершено</span>
-                                            <span>
-                                                {new Date(item.end_date).toLocaleDateString()}
-                                            </span>
-                                        </span>
-                                        : <></>}
-                                </div>
-                            </Link>
-                        </li>
+                        <ActivityCard key={item.id} item={item} />
                     ))}
                 </ul>
             ) : (
-                <>
-                    <p>У партнёра пока нет одиночных активностей.</p>
-                </>
+                <p>У партнёра пока нет одиночных активностей.</p>
             )}
         </div>
     );

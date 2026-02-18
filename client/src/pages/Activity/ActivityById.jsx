@@ -4,7 +4,8 @@ import { getApiUrl } from '../../config/apiConfig';
 import { useUser } from "../../store/UserContext";
 import { getCategoryDisplayName, getStatusDisplayName } from '../../utils/displayMappings';
 import StatusIcon from '../../components/StatusIcon';
-
+import { apiReq, apiReqWithBody } from '../../utils/apiReq';
+import { formatDateTime, formatDate } from '../../utils/dateFormat';
 
 function ActivityById() {
     const [contentItems, setContentItems] = useState([]);
@@ -20,28 +21,21 @@ function ActivityById() {
     const API_URL = getApiUrl(`/api/content/id/${ActivityId}`);
 
     useEffect(() => {
-        fetch(API_URL)
-            .then((response) => {
-                if (!response.ok) {
-                    throw new Error(
-                        `Ошибка сети: ${response.statusText} (${response.status})`
-                    );
-                }
-                return response.json();
-            })
-            .then((data) => {
-                if (Array.isArray(data)) {
-                    setContentItems(data);
-                } else {
+        const fetchActivity = async () => {
+            try {
+                const data = await apiReq(API_URL);
+                if (!Array.isArray(data)) {
                     throw new Error("Некорректный формат данных от API");
                 }
+                setContentItems(data);
+            } catch (err) {
+                console.error("Ошибка при получении данных:", err);
+                setError(err);
+            } finally {
                 setIsLoading(false);
-            })
-            .catch((error) => {
-                console.error("Ошибка при получении данных:", error);
-                setError(error);
-                setIsLoading(false);
-            });
+            }
+        };
+        fetchActivity();
     }, []);
 
     const handleDelete = async () => {
@@ -49,22 +43,7 @@ function ActivityById() {
             setIsLoading(true);
             setError(null);
 
-            const response = await fetch(
-                getApiUrl('/api/delete/content'),
-                {
-                    method: "DELETE",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({ id: ActivityId }),
-                }
-            );
-
-            if (!response.ok) {
-                throw new Error(
-                    `Ошибка при удалении: ${response.statusText} (${response.status})`
-                );
-            }
+            await apiReqWithBody(getApiUrl('/api/delete/content'), 'DELETE', { id: ActivityId });
 
             navigate("/");
         } catch (err) {
@@ -105,7 +84,7 @@ function ActivityById() {
                             ← Назад к списку
                         </button>
                         <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 4 }}>
-                            {user.id == item.added_by_user_id &&
+                            {user.id == item.added_by_user_id && (
                                 <>
                                     <div style={{ display: "flex", gap: 4 }}>
                                         <Link
@@ -127,7 +106,7 @@ function ActivityById() {
                                         ID: {ActivityId}
                                     </span>
                                 </>
-                            }
+                            )}
                         </div>
                     </div>
 
@@ -151,48 +130,18 @@ function ActivityById() {
                     <div className="item-dates">
                         <span>
                             <span>Добавлено</span>
-                            <span>
-                                {item.added_at
-                                    ? (() => {
-                                        const date = new Date(item.added_at);
-                                        const formattedDate = date.toLocaleDateString(
-                                            "ru-RU",
-                                            {
-                                                day: "2-digit",
-                                                month: "long",
-                                                year: "numeric",
-                                            }
-                                        );
-                                        const formattedTime = date.toLocaleTimeString(
-                                            "ru-RU",
-                                            {
-                                                hour: "2-digit",
-                                                minute: "2-digit",
-                                            }
-                                        );
-                                        return `${formattedDate} ${formattedTime}`;
-                                    })()
-                                    : "не указано"}
-                            </span>
+                            <span>{formatDateTime(item.added_at)}</span>
                         </span>
                         <span>
                             <span>Начало</span>
-                            <span>
-                                {item.start_date
-                                    ? new Date(item.start_date).toLocaleDateString()
-                                    : "не указано"}
-                            </span>
+                            <span>{formatDate(item.start_date)}</span>
                         </span>
                         <span>
                             <span>Конец</span>
-                            <span>
-                                {item.end_date
-                                    ? new Date(item.end_date).toLocaleDateString()
-                                    : "не указано"}
-                            </span>
+                            <span>{formatDate(item.end_date)}</span>
                         </span>
                     </div>
-                    
+
                 </div>
             </div>
         </div>
