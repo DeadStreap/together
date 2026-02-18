@@ -3,7 +3,6 @@ import { useState, useEffect } from 'react';
 const ColorPicker = ({ selectedColor, onColorChange, label = "Цвет профиля", disabled = false }) => {
     const [currentColor, setCurrentColor] = useState(selectedColor || 'Purple');
 
-    // Цветовая палитра с хорошо подобранными цветами
     const colorPalette = [
         { name: 'Purple', value: '#7a55ff' },
         { name: 'Pink', value: '#ff3b8a' },
@@ -21,7 +20,6 @@ const ColorPicker = ({ selectedColor, onColorChange, label = "Цвет проф�
 
     useEffect(() => {
         if (selectedColor) {
-            // If selectedColor is a hex code, try to find its corresponding name
             if (selectedColor.startsWith('#')) {
                 const colorObj = colorPalette.find(c => c.value === selectedColor);
                 setCurrentColor(colorObj ? colorObj.name : 'Purple');
