@@ -11,6 +11,7 @@ function ActivityById() {
     const [contentItems, setContentItems] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
     const { user } = useUser();
 
@@ -169,7 +170,7 @@ function ActivityById() {
                                         </Link>
                                         <button
                                             type="button"
-                                            onClick={handleDelete}
+                                            onClick={() => setShowDeleteConfirm(true)}
                                             disabled={isLoading}
                                             className="icon-button-delete"
                                         >
@@ -218,6 +219,42 @@ function ActivityById() {
 
                 </div>
             </div>
+
+            {showDeleteConfirm && (
+                <div className="modal-overlay" onClick={() => setShowDeleteConfirm(false)}>
+                    <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+                        <div className="modal-header">
+                            <div className="modal-title">Удалить активность?</div>
+                        </div>
+                        <div className="modal-body">
+                            <p className="modal-text">
+                                {item.title}
+                            </p>
+                            <p className="modal-subtext">
+                                Это действие нельзя отменить
+                            </p>
+                        </div>
+                        <div className="modal-actions">
+                            <button
+                                type="button"
+                                onClick={() => setShowDeleteConfirm(false)}
+                                className="secondary-button"
+                                disabled={isLoading}
+                            >
+                                Отмена
+                            </button>
+                            <button
+                                type="button"
+                                onClick={handleDelete}
+                                className="primary-button danger-button"
+                                disabled={isLoading}
+                            >
+                                {isLoading ? 'Удаление...' : 'Удалить'}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }
