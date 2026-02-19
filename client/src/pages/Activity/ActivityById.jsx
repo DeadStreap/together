@@ -53,6 +53,58 @@ function ActivityById() {
         }
     };
 
+    const handleComplete = async () => {
+        try {
+            setIsLoading(true);
+            setError(null);
+
+            const today = new Date().toISOString().split('T')[0];
+
+            await apiReqWithBody(getApiUrl('/api/update/content'), 'PUT', {
+                id: ActivityId,
+                status: 'done',
+                end_date: today
+            });
+
+            setContentItems(prev => prev.map(item => ({
+                ...item,
+                status: 'done',
+                end_date: today
+            })));
+        } catch (err) {
+            console.error("Ошибка при завершении активности:", err);
+            setError(err);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const handleStartProgress = async () => {
+        try {
+            setIsLoading(true);
+            setError(null);
+
+            const today = new Date().toISOString().split('T')[0];
+
+            await apiReqWithBody(getApiUrl('/api/update/content'), 'PUT', {
+                id: ActivityId,
+                status: 'inProgress',
+                start_date: today
+            });
+
+            setContentItems(prev => prev.map(item => ({
+                ...item,
+                status: 'inProgress',
+                start_date: today
+            })));
+        } catch (err) {
+            console.error("Ошибка при начале активности:", err);
+            setError(err);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
     if (isLoading) {
         return <div className="loading">Загрузка контента...</div>;
     }
@@ -84,9 +136,31 @@ function ActivityById() {
                             ← Назад к списку
                         </button>
                         <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 4 }}>
-                            {user.id == item.added_by_user_id && (
+                            {(user.id == item.added_by_user_id || user.partner_id == item.added_by_user_id) && (
                                 <>
                                     <div style={{ display: "flex", gap: 4 }}>
+                                        {item.status === 'inProgress' && (
+                                            <button
+                                                type="button"
+                                                onClick={handleComplete}
+                                                disabled={isLoading}
+                                                className="icon-button-complete"
+                                                title="Завершить активность"
+                                            >
+                                                <img src="/done.svg" alt="Завершить" />
+                                            </button>
+                                        )}
+                                        {item.status === 'planned' && (
+                                            <button
+                                                type="button"
+                                                onClick={handleStartProgress}
+                                                disabled={isLoading}
+                                                className="icon-button-progress"
+                                                title="Начать активность"
+                                            >
+                                                <img src="/clock.svg" alt="В процессе" />
+                                            </button>
+                                        )}
                                         <Link
                                             to={`/activity/${ActivityId}/edit`}
                                             className="icon-button-edit"
