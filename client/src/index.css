@@ -1373,7 +1373,9 @@ h1 {
 
 /* Icon buttons for edit and delete */
 .icon-button-edit,
-.icon-button-delete {
+.icon-button-delete,
+.icon-button-complete,
+.icon-button-progress {
   width: 24px;
   height: 24px;
   padding: 0;
@@ -1387,12 +1389,16 @@ h1 {
 }
 
 .icon-button-edit:hover,
-.icon-button-delete:hover {
+.icon-button-delete:hover,
+.icon-button-complete:hover,
+.icon-button-progress:hover {
   opacity: 0.8;
 }
 
 .icon-button-edit img,
-.icon-button-delete img {
+.icon-button-delete img,
+.icon-button-complete img,
+.icon-button-progress img {
   width: 20px;
   height: 20px;
   filter: invert(56%) sepia(10%) saturate(88%) hue-rotate(187deg) brightness(95%) contrast(93%);
