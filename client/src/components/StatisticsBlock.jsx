@@ -9,7 +9,8 @@ const EMPTY_STATS = {
     activitiesInProgress: 0,
     activitiesPlanned: 0,
     totalCompleted: 0,
-    completionRate: 0
+    completionRate: 0,
+    completedThisMonth: 0
 };
 
 const STAT_LABELS = {
@@ -19,6 +20,21 @@ const STAT_LABELS = {
     activitiesPlanned: "Запланировано",
     totalCompleted: "Всего завершено",
     completionRate: "% завершённых"
+};
+
+const countCompletedThisMonth = (data) => {
+    const now = new Date();
+    const currentYear = now.getFullYear();
+    const currentMonth = now.getMonth();
+    
+    return data.filter(item => {
+        if (item.status !== 'done') return false;
+        if (!item.end_date) return false;
+        
+        const endDate = new Date(item.end_date);
+        return endDate.getFullYear() === currentYear &&
+               endDate.getMonth() === currentMonth;
+    }).length;
 };
 
 const StatisticsBlock = () => {
@@ -34,6 +50,10 @@ const StatisticsBlock = () => {
         if (!partnerId) return null;
         return getApiUrl(`/api/contents/together/${userId}/${partnerId}`);
     }, [isAuthenticated, user]);
+
+    const monthLabel = useMemo(() => {
+        return new Date().toLocaleDateString('ru-RU', { month: 'long' });
+    }, []);
 
     useEffect(() => {
         const fetchStats = async () => {
@@ -70,7 +90,8 @@ const StatisticsBlock = () => {
                         item => item.status === 'planned'
                     ).length,
                     totalCompleted,
-                    completionRate
+                    completionRate,
+                    completedThisMonth: countCompletedThisMonth(data)
                 });
             } catch (error) {
                 console.error("Error fetching stats:", error);
@@ -96,6 +117,7 @@ const StatisticsBlock = () => {
             {renderStatItem(stats.watchedTogether, STAT_LABELS.watchedTogether)}
             {renderStatItem(stats.totalCompleted, STAT_LABELS.totalCompleted)}
             {renderStatItem(`${stats.completionRate}%`, STAT_LABELS.completionRate)}
+            {renderStatItem(stats.completedThisMonth, `Завершено за ${monthLabel}`)}
             {renderStatItem(stats.activitiesInProgress, STAT_LABELS.activitiesInProgress)}
             {renderStatItem(stats.activitiesPlanned, STAT_LABELS.activitiesPlanned)}
         </div>
