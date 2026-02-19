@@ -6,6 +6,7 @@ import { getCategoryDisplayName, getStatusDisplayName } from '../../utils/displa
 import StatusIcon from '../../components/StatusIcon';
 import { apiReq, apiReqWithBody } from '../../utils/apiReq';
 import { formatDateTime, formatDate } from '../../utils/dateFormat';
+import { getDaysInStatus, formatDaysWord } from '../../utils/daysInStatus';
 
 function ActivityById() {
     const [contentItems, setContentItems] = useState([]);
@@ -200,6 +201,10 @@ function ActivityById() {
                     </div>
                     <div className="item-details">
                         <span>Статус</span>: {getStatusDisplayName(item.status) || "не указан"}
+                        {item.status === 'inProgress' && (<>
+                                {' '}({formatDaysWord(getDaysInStatus(item.start_date, item.status))})
+                            </>
+                        )}
                     </div>
 
                     <div className="item-dates">
