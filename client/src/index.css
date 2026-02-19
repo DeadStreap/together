@@ -286,6 +286,18 @@ h1 {
   color: #4b5563;
 }
 
+.item-details-highlight {
+  color: #fbbf24;
+}
+
+.item-details-highlight span {
+  color: #fcd34d;
+}
+
+.status-days {
+  color: #fbbf24;
+}
+
 .item-dates {
   margin-top: 6px;
   padding-top: 8px;
@@ -1559,6 +1571,18 @@ h1 {
 
 [data-theme="dark"] .item-details span {
   color: #e5e7eb;
+}
+
+[data-theme="dark"] .item-details-highlight {
+  color: #fbbf24;
+}
+
+[data-theme="dark"] .item-details-highlight span {
+  color: #fcd34d;
+}
+
+[data-theme="dark"] .status-days {
+  color: #fbbf24;
 }
 
 [data-theme="dark"] .item-dates {
