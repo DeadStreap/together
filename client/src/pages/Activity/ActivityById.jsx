@@ -7,6 +7,7 @@ import StatusIcon from '../../components/StatusIcon';
 import { apiReq, apiReqWithBody } from '../../utils/apiReq';
 import { formatDateTime, formatDate } from '../../utils/dateFormat';
 import { getDaysInStatus, formatDaysWord } from '../../utils/daysInStatus';
+import CommentSection from '../../components/CommentSection';
 
 function ActivityById() {
     const [contentItems, setContentItems] = useState([]);
@@ -224,6 +225,8 @@ function ActivityById() {
 
                 </div>
             </div>
+
+            <CommentSection contentId={ActivityId} />
 
             {showDeleteConfirm && (
                 <div className="modal-overlay" onClick={() => setShowDeleteConfirm(false)}>
