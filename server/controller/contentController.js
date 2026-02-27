@@ -27,7 +27,8 @@ class ContentController {
         const sql = `
         SELECT
             ci.*,
-            u.username AS added_by
+            u.username AS added_by,
+            (SELECT COUNT(*) FROM comments c WHERE c.content_item_id = ci.id) AS comment_count
         FROM content_items ci
         LEFT JOIN users u
             ON u.id = ci.added_by_user_id

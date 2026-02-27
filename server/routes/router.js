@@ -31,6 +31,7 @@ router.delete('/delete/couple', coupleController.deleteCouple)
 
 router.get('/comments', commentController.getComments)
 router.get('/comment/id/:id', commentController.getCommentById)
+router.get('/comments/content/:contentId', commentController.getCommentsByContentId)
 router.put('/update/comment', commentController.updateComment)
 router.post('/create/comment', commentController.createComment)
 router.delete('/delete/comment', commentController.deleteComment)
