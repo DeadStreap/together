@@ -74,7 +74,7 @@ const MonthlyStats = ({ data }) => {
                         keys={['total', 'completed']}
                         indexBy="monthName"
                         margin={chartMargin}
-                    padding={0.3}
+                    padding={0.7}
                     valueScale={{ type: 'linear' }}
                     indexScale={{ type: 'band', round: true }}
                     colors={['#7a55ff', '#4ade80']}

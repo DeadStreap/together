@@ -29,13 +29,13 @@ const CategoryStats = ({ data }) => {
     
     const isMobile = windowWidth < 768;
     const isSmallMobile = windowWidth < 480;
-    const chartWidth = isSmallMobile ? 280 : isMobile ? 320 : 420;
-    const chartHeight = isSmallMobile ? 230 : isMobile ? 260 : 300;
+    const chartWidth = isSmallMobile ? 280 : isMobile ? 320 : 450;
+    const chartHeight = isSmallMobile ? 230 : isMobile ? 260 : 320;
     const chartMargin = isSmallMobile 
         ? { top: 30, right: 50, bottom: 30, left: 50 }
         : isMobile 
             ? { top: 35, right: 60, bottom: 35, left: 60 }
-            : { top: 40, right: 70, bottom: 40, left: 70 };
+            : { top: 40, right: 60, bottom: 40, left: 60 };
 
     if (!data || data.length === 0) {
         return (
@@ -72,10 +72,7 @@ const CategoryStats = ({ data }) => {
                     borderWidth={1}
                     borderColor={{ from: 'color', modifiers: [['darker', 0.2]] }}
                     colors={{ datum: 'data.color' }}
-                    arcLinkLabelsSkipAngle={10}
-                    arcLinkLabelsTextColor={textColor}
-                    arcLinkLabelsThickness={2}
-                    arcLinkLabelsColor={{ from: 'color' }}
+                    enableArcLinkLabels={false}
                     arcLabelsSkipAngle={10}
                     arcLabelsTextColor={textColor}
                     defs={[
@@ -156,12 +153,8 @@ const CategoryStats = ({ data }) => {
                             </span>
                         </div>
                         <div className="stat-detail-values">
-                            <span className="stat-total">{item.total}</span>
-                            {item.completed > 0 && (
-                                <span className="stat-completed" title="Завершено">
-                                    ✓ {item.completed}
-                                </span>
-                            )}
+                            <span className="stat-completed">{item.completed}</span>
+                            <span className="stat-total">/{item.total}</span>
                         </div>
                     </div>
                 ))}

@@ -33,10 +33,10 @@ const CompletionRateStats = ({ data }) => {
     const chartWidth = isSmallMobile ? 340 : isMobile ? 400 : 500;
     const chartHeight = isSmallMobile ? 250 : isMobile ? 280 : 300;
     const chartMargin = isSmallMobile 
-        ? { top: 20, right: 90, bottom: 20, left: 90 }
+        ? { top: 20, right: 90, bottom: 30, left: 90 }
         : isMobile 
-            ? { top: 20, right: 95, bottom: 20, left: 95 }
-            : { top: 20, right: 100, bottom: 20, left: 100 };
+            ? { top: 20, right: 95, bottom: 35, left: 95 }
+            : { top: 20, right: 100, bottom: 40, left: 100 };
 
     if (!data || data.length === 0) {
         return (
