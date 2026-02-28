@@ -97,11 +97,11 @@ function StatsPage() {
 
         return (
             <div className="stats-grid">
-                <div className="stats-card">
+                <div className="stats-card full-width">
                     <CategoryStats data={categoryData} />
                 </div>
 
-                <div className="stats-card">
+                <div className="stats-card full-width">
                     <StatusStats data={statusData} />
                 </div>
 

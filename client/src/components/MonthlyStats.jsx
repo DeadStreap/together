@@ -28,16 +28,16 @@ const MonthlyStats = ({ data }) => {
         window.addEventListener('resize', handleResize);
         return () => window.removeEventListener('resize', handleResize);
     }, []);
-    
+
     const isMobile = windowWidth < 768;
     const isSmallMobile = windowWidth < 480;
     const chartWidth = isSmallMobile ? 400 : isMobile ? 500 : 700;
-    const chartHeight = isSmallMobile ? 250 : isMobile ? 280 : 350;
-    const chartMargin = isSmallMobile 
-        ? { top: 20, right: 20, bottom: 70, left: 50 }
-        : isMobile 
-            ? { top: 20, right: 20, bottom: 75, left: 55 }
-            : { top: 20, right: 20, bottom: 80, left: 60 };
+    const chartHeight = isSmallMobile ? 300 : isMobile ? 340 : 420;
+    const chartMargin = isSmallMobile
+        ? { top: 20, right: 20, bottom: 90, left: 50 }
+        : isMobile
+            ? { top: 20, right: 20, bottom: 95, left: 55 }
+            : { top: 20, right: 20, bottom: 100, left: 60 };
 
     if (!data || data.length === 0) {
         return (
@@ -47,17 +47,19 @@ const MonthlyStats = ({ data }) => {
         );
     }
 
-    const chartData = data.map(item => {
-        const [year, month] = item.month.split('-');
-        const monthName = MONTH_NAMES[month] || month;
+    const chartData = data
+        .filter(item => item.month_period)
+        .map(item => {
+            const [year, month] = item.month_period.split('-');
+            const monthName = MONTH_NAMES[month] || month;
 
-        return {
-            month: item.month,
-            monthName: `${monthName} ${year.slice(-2)}`,
-            total: Number(item.total),
-            completed: Number(item.completed)
-        };
-    });
+            return {
+                month: item.month_period,
+                monthName: `${monthName} ${year.slice(-2)}`,
+                total: Number(item.total) || 0,
+                completed: Number(item.completed) || 0
+            };
+        });
 
     const maxTotal = Math.max(...chartData.map(d => d.total), 1);
 
@@ -74,71 +76,71 @@ const MonthlyStats = ({ data }) => {
                         keys={['total', 'completed']}
                         indexBy="monthName"
                         margin={chartMargin}
-                    padding={0.7}
-                    valueScale={{ type: 'linear' }}
-                    indexScale={{ type: 'band', round: true }}
-                    colors={['#7a55ff', '#4ade80']}
-                    borderWidth={0}
-                    axisTop={null}
-                    axisRight={null}
-                    axisBottom={{
-                        tickSize: 5,
-                        tickPadding: 5,
-                        tickRotation: -45,
-                        legendPosition: 'middle',
-                        legendOffset: 50
-                    }}
-                    axisLeft={{
-                        tickSize: 5,
-                        tickPadding: 5,
-                        tickRotation: 0,
-                        legend: 'Количество',
-                        legendPosition: 'middle',
-                        legendOffset: -40,
-                        tickValues: 5
-                    }}
-                    enableGridY={true}
-                    gridYValues={5}
-                    enableLabel={true}
-                    labelTextColor={textColor}
-                    theme={{
-                        axis: {
-                            domain: { line: { stroke: gridColor } },
-                            ticks: { line: { stroke: gridColor }, text: { fill: textColor } },
-                            legend: { text: { fill: textColor } }
-                        },
-                        grid: { line: { stroke: gridColor } }
-                    }}
-                    isInteractive={true}
-                    animate={true}
-                    motionConfig="gentle"
-                    tooltip={({ datum }) => {
-                        if (!datum || !datum.data) return null;
-                        return (
-                            <div className="custom-tooltip">
-                                <div className="custom-tooltip-title">{datum.data.monthName}</div>
-                                <div className="custom-tooltip-row">
-                                    <span className="tooltip-indicator tooltip-indicator-added">● Добавлено:</span>
-                                    <strong>{datum.data.total}</strong>
+                        padding={0.5}
+                        valueScale={{ type: 'linear' }}
+                        indexScale={{ type: 'band', round: true }}
+                        colors={['#7a55ff', '#4ade80']}
+                        borderWidth={0}
+                        axisTop={null}
+                        axisRight={null}
+                        axisBottom={{
+                            tickSize: 5,
+                            tickPadding: 5,
+                            tickRotation: -45,
+                            legendPosition: 'middle',
+                            legendOffset: 50
+                        }}
+                        axisLeft={{
+                            tickSize: 5,
+                            tickPadding: 5,
+                            tickRotation: 0,
+                            legend: 'Количество',
+                            legendPosition: 'middle',
+                            legendOffset: -40,
+                            tickValues: 5
+                        }}
+                        enableGridY={true}
+                        gridYValues={5}
+                        enableLabel={true}
+                        labelTextColor={textColor}
+                        theme={{
+                            axis: {
+                                domain: { line: { stroke: gridColor } },
+                                ticks: { line: { stroke: gridColor }, text: { fill: textColor } },
+                                legend: { text: { fill: textColor } }
+                            },
+                            grid: { line: { stroke: gridColor } }
+                        }}
+                        isInteractive={true}
+                        animate={true}
+                        motionConfig="gentle"
+                        tooltip={({ datum }) => {
+                            if (!datum || !datum.data) return null;
+                            return (
+                                <div className="custom-tooltip">
+                                    <div className="custom-tooltip-title">{datum.data.monthName}</div>
+                                    <div className="custom-tooltip-row">
+                                        <span className="tooltip-indicator tooltip-indicator-added">● Добавлено:</span>
+                                        <strong>{datum.data.total}</strong>
+                                    </div>
+                                    <div className="custom-tooltip-row">
+                                        <span className="tooltip-indicator tooltip-indicator-completed">● Завершено:</span>
+                                        <strong>{datum.data.completed}</strong>
+                                    </div>
                                 </div>
-                                <div className="custom-tooltip-row">
-                                    <span className="tooltip-indicator tooltip-indicator-completed">● Завершено:</span>
-                                    <strong>{datum.data.completed}</strong>
-                                </div>
-                            </div>
-                        );
-                    }}
-                    legends={[
-                        {
-                            data: [
-                                { id: 'total', label: 'Добавлено', color: '#7a55ff' },
-                                { id: 'completed', label: 'Завершено', color: '#4ade80' }
-                            ],
-                            anchor: 'bottom',
-                            direction: 'row',
-                            justify: false,
-                            translateX: 0,
-                            translateY: 50,
+                            );
+                        }}
+                        legends={[
+                            {
+                                data: [
+                                    { id: 'total', label: 'Добавлено', color: '#7a55ff' },
+                                    { id: 'completed', label: 'Завершено', color: '#4ade80' }
+                                ],
+                                anchor: 'bottom',
+                                direction: 'row',
+                                justify: false,
+                                translateX: 0,
+                                translateY: 60,
                             itemsSpacing: 20,
                             itemWidth: 100,
                             itemHeight: 20,

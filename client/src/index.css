@@ -2493,39 +2493,39 @@ h1 {
 
 /* Chart sizes */
 :root {
-  --chart-pie-width: 450px;
-  --chart-pie-height: 320px;
+  --chart-pie-width: 500px;
+  --chart-pie-height: 380px;
   --chart-donut-width: 350px;
-  --chart-donut-height: 250px;
+  --chart-donut-height: 300px;
   --chart-bar-width: 700px;
-  --chart-bar-height: 350px;
-  --chart-bar-horizontal-width: 500px;
-  --chart-bar-horizontal-height: 300px;
+  --chart-bar-height: 440px;
+  --chart-bar-horizontal-width: 600px;
+  --chart-bar-horizontal-height: 380px;
 }
 
 @media (max-width: 768px) {
   :root {
-    --chart-pie-width: 320px;
-    --chart-pie-height: 260px;
+    --chart-pie-width: 400px;
+    --chart-pie-height: 320px;
     --chart-donut-width: 300px;
-    --chart-donut-height: 230px;
+    --chart-donut-height: 280px;
     --chart-bar-width: 500px;
-    --chart-bar-height: 280px;
-    --chart-bar-horizontal-width: 400px;
-    --chart-bar-horizontal-height: 280px;
+    --chart-bar-height: 400px;
+    --chart-bar-horizontal-width: 450px;
+    --chart-bar-horizontal-height: 350px;
   }
 }
 
 @media (max-width: 480px) {
   :root {
-    --chart-pie-width: 280px;
-    --chart-pie-height: 230px;
+    --chart-pie-width: 320px;
+    --chart-pie-height: 280px;
     --chart-donut-width: 260px;
-    --chart-donut-height: 200px;
+    --chart-donut-height: 260px;
     --chart-bar-width: 400px;
-    --chart-bar-height: 250px;
-    --chart-bar-horizontal-width: 340px;
-    --chart-bar-horizontal-height: 250px;
+    --chart-bar-height: 370px;
+    --chart-bar-horizontal-width: 380px;
+    --chart-bar-horizontal-height: 320px;
   }
 }
 
@@ -2567,15 +2567,23 @@ h1 {
 }
 
 .chart-container-pie {
-  height: 320px;
+  height: 400px;
+  position: relative;
+  overflow: visible;
+  display: flex;
+  justify-content: center;
 }
 
 .chart-container-donut {
-  height: 250px;
+  height: 300px;
+  position: relative;
+  overflow: visible;
+  display: flex;
+  justify-content: center;
 }
 
 .chart-container-bar {
-  height: 350px;
+  height: 420px;
   overflow-x: auto;
   overflow-y: hidden;
   position: relative;
@@ -2612,7 +2620,9 @@ h1 {
 }
 
 .chart-container-bar-horizontal {
-  height: 300px;
+  height: 380px;
+  position: relative;
+  overflow: visible;
 }
 
 [data-theme="dark"] .stats-card .stat-category,
@@ -3150,19 +3160,19 @@ h1 {
   }
 
   .chart-container-pie {
-    height: 280px;
+    height: 340px;
   }
 
   .chart-container-donut {
-    height: 230px;
+    height: 280px;
   }
 
   .chart-container-bar {
-    height: 280px;
+    height: 400px;
   }
 
   .chart-container-bar-horizontal {
-    height: 280px;
+    height: 350px;
   }
 
   .monthly-stats-summary {
@@ -3213,19 +3223,19 @@ h1 {
   }
 
   .chart-container-pie {
-    height: 250px;
+    height: 300px;
   }
 
   .chart-container-donut {
-    height: 200px;
+    height: 260px;
   }
 
   .chart-container-bar {
-    height: 250px;
+    height: 370px;
   }
 
   .chart-container-bar-horizontal {
-    height: 250px;
+    height: 320px;
   }
 
   .completion-stat-row {

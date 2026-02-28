@@ -29,13 +29,13 @@ const CategoryStats = ({ data }) => {
     
     const isMobile = windowWidth < 768;
     const isSmallMobile = windowWidth < 480;
-    const chartWidth = isSmallMobile ? 280 : isMobile ? 320 : 450;
-    const chartHeight = isSmallMobile ? 230 : isMobile ? 260 : 320;
-    const chartMargin = isSmallMobile 
-        ? { top: 30, right: 50, bottom: 30, left: 50 }
-        : isMobile 
-            ? { top: 35, right: 60, bottom: 35, left: 60 }
-            : { top: 40, right: 60, bottom: 40, left: 60 };
+    const chartWidth = isSmallMobile ? 320 : isMobile ? 400 : 500;
+    const chartHeight = isSmallMobile ? 280 : isMobile ? 320 : 380;
+    const chartMargin = isSmallMobile
+        ? { top: 30, right: 60, bottom: 50, left: 60 }
+        : isMobile
+            ? { top: 35, right: 70, bottom: 60, left: 70 }
+            : { top: 40, right: 80, bottom: 70, left: 80 };
 
     if (!data || data.length === 0) {
         return (

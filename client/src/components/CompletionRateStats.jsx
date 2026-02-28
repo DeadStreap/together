@@ -30,13 +30,13 @@ const CompletionRateStats = ({ data }) => {
     
     const isMobile = windowWidth < 768;
     const isSmallMobile = windowWidth < 480;
-    const chartWidth = isSmallMobile ? 340 : isMobile ? 400 : 500;
-    const chartHeight = isSmallMobile ? 250 : isMobile ? 280 : 300;
-    const chartMargin = isSmallMobile 
-        ? { top: 20, right: 90, bottom: 30, left: 90 }
-        : isMobile 
-            ? { top: 20, right: 95, bottom: 35, left: 95 }
-            : { top: 20, right: 100, bottom: 40, left: 100 };
+    const chartWidth = isSmallMobile ? 380 : isMobile ? 450 : 600;
+    const chartHeight = isSmallMobile ? 280 : isMobile ? 320 : 350;
+    const chartMargin = isSmallMobile
+        ? { top: 20, right: 100, bottom: 50, left: 100 }
+        : isMobile
+            ? { top: 20, right: 110, bottom: 55, left: 110 }
+            : { top: 20, right: 120, bottom: 60, left: 120 };
 
     if (!data || data.length === 0) {
         return (
