@@ -5,6 +5,7 @@ const contentController = require('../controller/contentController')
 const userController = require('../controller/userController')
 const coupleController = require('../controller/coupleController')
 const commentController = require('../controller/commentController')
+const statsController = require('../controller/statsController')
 
 router.get('/contents', contentController.getContent)
 router.get('/contents/together/:userId/:partnerId', contentController.getContentTogether)
@@ -36,5 +37,10 @@ router.get('/comments/content/:contentId', commentController.getCommentsByConten
 router.put('/update/comment', commentController.updateComment)
 router.post('/create/comment', commentController.createComment)
 router.delete('/delete/comment', commentController.deleteComment)
+
+router.get('/stats/categories/:userId/:partnerId', statsController.getCategoryStats)
+router.get('/stats/monthly/:userId/:partnerId', statsController.getMonthlyStats)
+router.get('/stats/status/:userId/:partnerId', statsController.getStatusStats)
+router.get('/stats/completion/:userId/:partnerId', statsController.getCompletionRateByCategory)
 
 module.exports = router;
