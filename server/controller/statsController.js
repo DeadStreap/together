@@ -50,16 +50,18 @@ class StatsController {
                     0 as completed
                 FROM content_items
                 WHERE (added_by_user_id = ? OR added_by_user_id = ?)
+                    AND shared_with_partner = TRUE
                 GROUP BY DATE_FORMAT(added_at, '%Y-%m')
-                
+
                 UNION ALL
-                
+
                 SELECT
                     DATE_FORMAT(end_date, '%Y-%m') as month_period,
                     0 as total,
                     COUNT(*) as completed
                 FROM content_items
                 WHERE (added_by_user_id = ? OR added_by_user_id = ?)
+                    AND shared_with_partner = TRUE
                     AND status = 'done'
                     AND end_date IS NOT NULL
                 GROUP BY DATE_FORMAT(end_date, '%Y-%m')
