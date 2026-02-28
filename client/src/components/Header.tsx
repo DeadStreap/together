@@ -42,6 +42,13 @@ const Header = () => {
                     </Link>
 
                     <Link
+                        to="/stats"
+                        className={`sidebar-link ${isActive('/stats') ? 'active' : ''}`}
+                    >
+                        Статистика
+                    </Link>
+
+                    <Link
                         to="/activity/together"
                         className={`sidebar-link ${isActive('/activity/together') ? 'active' : ''}`}
                     >

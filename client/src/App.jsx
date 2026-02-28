@@ -2,6 +2,7 @@ import { Routes, Route } from 'react-router-dom';
 
 import AboutPage from './pages/AboutPage';
 import NotFoundPage from './pages/NotFoundPage';
+import StatsPage from './pages/StatsPage';
 
 import Profile from './pages/Profile/Profile';
 import ProfileEdit from './pages/Profile/ProfileEdit';
@@ -43,6 +44,7 @@ function App() {
           <Route path="/activity/create" element={<CreateActivity />} />
 
           <Route path="/about" element={<AboutPage />} />
+          <Route path="/stats" element={<StatsPage />} />
 
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
