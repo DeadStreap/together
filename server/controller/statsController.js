@@ -40,18 +40,36 @@ class StatsController {
 
         const sql = `
             SELECT
-                DATE_FORMAT(added_at, '%Y-%m') as month,
-                COUNT(*) as total,
-                CAST(SUM(CASE WHEN status = 'done' THEN 1 ELSE 0 END) AS UNSIGNED) as completed
-            FROM content_items
-            WHERE (added_by_user_id = ? OR added_by_user_id = ?)
-                AND added_at >= DATE_SUB(NOW(), INTERVAL ? MONTH)
-            GROUP BY DATE_FORMAT(added_at, '%Y-%m')
-            ORDER BY month ASC
+                added_month,
+                SUM(total) as total,
+                SUM(completed) as completed
+            FROM (
+                SELECT
+                    DATE_FORMAT(added_at, '%Y-%m') as added_month,
+                    COUNT(*) as total,
+                    0 as completed
+                FROM content_items
+                WHERE (added_by_user_id = ? OR added_by_user_id = ?)
+                GROUP BY DATE_FORMAT(added_at, '%Y-%m')
+                
+                UNION ALL
+                
+                SELECT
+                    DATE_FORMAT(end_date, '%Y-%m') as completed_month,
+                    0 as total,
+                    COUNT(*) as completed
+                FROM content_items
+                WHERE (added_by_user_id = ? OR added_by_user_id = ?)
+                    AND status = 'done'
+                    AND end_date IS NOT NULL
+                GROUP BY DATE_FORMAT(end_date, '%Y-%m')
+            ) as combined
+            GROUP BY added_month
+            ORDER BY added_month ASC
         `;
 
         try {
-            const [result] = await pool.query(sql, [userId, partnerId, months]);
+            const [result] = await pool.query(sql, [userId, partnerId, userId, partnerId]);
             res.json(result);
         } catch (err) {
             console.error("DB Error:", err);
