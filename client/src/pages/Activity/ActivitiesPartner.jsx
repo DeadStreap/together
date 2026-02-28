@@ -12,20 +12,15 @@ function ActivitiesPartner() {
 
     const { userId } = useParams();
 
-    const API_URL = getApiUrl('/api/contents');
-
     useEffect(() => {
         const fetchData = async () => {
             try {
                 setIsLoading(true);
+                const API_URL = getApiUrl(`/api/contents/user/${userId}`);
                 const data = await apiReq(API_URL);
 
-                const partnerId = Number(userId);
-
                 const filteredData = data.filter(
-                    (item) =>
-                        item.shared_with_partner == false &&
-                        item.added_by_user_id == partnerId
+                    (item) => item.shared_with_partner == false
                 );
                 setContentItems(filteredData);
             } catch (err) {

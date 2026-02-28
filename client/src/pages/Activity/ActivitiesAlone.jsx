@@ -14,13 +14,10 @@ function ActivitiesAlone() {
 
     const { user, isAuthenticated } = useUser();
 
-    const API_URL = getApiUrl('/api/contents');
-
     useEffect(() => {
         const fetchData = async () => {
             try {
                 setIsLoading(true);
-                const data = await apiReq(API_URL);
 
                 if (!isAuthenticated || !user) {
                     setContentItems([]);
@@ -28,12 +25,11 @@ function ActivitiesAlone() {
                     return;
                 }
 
-                const currentId = user.id;
+                const API_URL = getApiUrl(`/api/contents/user/${user.id}`);
+                const data = await apiReq(API_URL);
 
                 const filteredData = data.filter(
-                    (item) =>
-                        item.shared_with_partner == false &&
-                        item.added_by_user_id == currentId
+                    (item) => item.shared_with_partner == false
                 );
                 setContentItems(filteredData);
             } catch (err) {

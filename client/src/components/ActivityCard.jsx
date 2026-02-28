@@ -8,6 +8,7 @@ const ActivityCard = ({ item, showFullDates = false }) => {
     const hasStartDate = item.start_date || showFullDates;
     const hasEndDate = item.end_date || showFullDates;
     const daysInStatus = getDaysInStatus(item.start_date, item.status);
+    const commentCount = item.comment_count || 0;
 
     return (
         <li className="content-card" data-status={item.status}>
@@ -44,6 +45,12 @@ const ActivityCard = ({ item, showFullDates = false }) => {
                         <span>
                             <span>{showFullDates ? 'Завершено' : 'Завершено'}</span>
                             <span>{formatDate(item.end_date)}</span>
+                        </span>
+                    )}
+                    {commentCount > 0 && (
+                        <span>
+                            <span>Комментариев</span>
+                            <span>{commentCount}</span>
                         </span>
                     )}
                 </div>
