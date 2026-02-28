@@ -8,7 +8,7 @@ import StatusStats from '../components/StatusStats';
 import CompletionRateStats from '../components/CompletionRateStats';
 
 function StatsPage() {
-    const { user, isAuthenticated } = useUser();
+    const { user, isInitializing, isAuthenticated } = useUser();
     const [categoryData, setCategoryData] = useState(null);
     const [monthlyData, setMonthlyData] = useState(null);
     const [statusData, setStatusData] = useState(null);
@@ -18,6 +18,10 @@ function StatsPage() {
 
     useEffect(() => {
         const fetchStats = async () => {
+            if (isInitializing) {
+                return;
+            }
+
             if (!isAuthenticated || !user || !user.partner_id) {
                 setIsLoading(false);
                 return;
@@ -43,7 +47,7 @@ function StatsPage() {
         };
 
         fetchStats();
-    }, [isAuthenticated, user]);
+    }, [isAuthenticated, user, isInitializing]);
 
     const renderContent = () => {
         if (!isAuthenticated || !user) {

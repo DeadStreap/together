@@ -15,7 +15,7 @@ function ActivityById() {
     const [error, setError] = useState(null);
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
-    const { user } = useUser();
+    const { user, isInitializing } = useUser();
 
     const params = useParams();
     const navigate = useNavigate();
@@ -26,6 +26,9 @@ function ActivityById() {
     useEffect(() => {
         const fetchActivity = async () => {
             try {
+                if (isInitializing) {
+                    return;
+                }
                 const data = await apiReq(API_URL);
                 if (!Array.isArray(data)) {
                     throw new Error("Некорректный формат данных от API");
@@ -39,7 +42,7 @@ function ActivityById() {
             }
         };
         fetchActivity();
-    }, []);
+    }, [isInitializing]);
 
     const handleDelete = async () => {
         try {

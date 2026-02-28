@@ -4,6 +4,7 @@ const UserContext = createContext(null);
 
 export const UserProvider = ({ children }) => {
     const [user, setUser] = useState(null);
+    const [isInitializing, setIsInitializing] = useState(true);
 
     useEffect(() => {
         try {
@@ -13,6 +14,8 @@ export const UserProvider = ({ children }) => {
             }
         } catch (e) {
             console.error("Failed to read user from storage", e);
+        } finally {
+            setIsInitializing(false);
         }
     }, []);
 
@@ -48,7 +51,7 @@ export const UserProvider = ({ children }) => {
 
     return (
         <UserContext.Provider
-            value={{ user, isAuthenticated: !!user, login, logout, updateProfileColor, getProfileColor }}
+            value={{ user, isInitializing, isAuthenticated: !!user, login, logout, updateProfileColor, getProfileColor }}
         >
             {children}
         </UserContext.Provider>

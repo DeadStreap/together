@@ -5,7 +5,7 @@ import { getApiUrl } from '../config/apiConfig';
 import CommentItem from './CommentItem';
 
 const CommentSection = ({ contentId }) => {
-    const { user } = useUser();
+    const { user, isInitializing } = useUser();
     const [comments, setComments] = useState([]);
     const [newCommentText, setNewCommentText] = useState('');
     const [isLoading, setIsLoading] = useState(true);
@@ -13,8 +13,11 @@ const CommentSection = ({ contentId }) => {
     const [error, setError] = useState(null);
 
     useEffect(() => {
+        if (isInitializing) {
+            return;
+        }
         fetchComments();
-    }, [contentId]);
+    }, [contentId, isInitializing]);
 
     const fetchComments = async () => {
         try {

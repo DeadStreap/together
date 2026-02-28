@@ -41,7 +41,7 @@ const StatisticsBlock = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [stats, setStats] = useState(EMPTY_STATS);
 
-    const { user, isAuthenticated } = useUser();
+    const { user, isInitializing, isAuthenticated } = useUser();
 
     const API_URL = useMemo(() => {
         if (!isAuthenticated || !user) return null;
@@ -49,7 +49,7 @@ const StatisticsBlock = () => {
         const partnerId = user.partner_id;
         if (!partnerId) return null;
         return getApiUrl(`/api/contents/together/${userId}/${partnerId}`);
-    }, [isAuthenticated, user]);
+    }, [isAuthenticated, user, isInitializing]);
 
     const monthLabel = useMemo(() => {
         return new Date().toLocaleDateString('ru-RU', { month: 'long' });
@@ -59,6 +59,10 @@ const StatisticsBlock = () => {
         const fetchStats = async () => {
             try {
                 setIsLoading(true);
+
+                if (isInitializing) {
+                    return;
+                }
 
                 if (!API_URL) {
                     setStats(EMPTY_STATS);
@@ -102,7 +106,7 @@ const StatisticsBlock = () => {
         };
 
         fetchStats();
-    }, [API_URL]);
+    }, [API_URL, isInitializing]);
 
     const renderStatItem = (value, label) => (
         <div className="stat-item">

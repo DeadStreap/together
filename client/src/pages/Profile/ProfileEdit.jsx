@@ -9,7 +9,7 @@ import AvatarPreview from "../../components/AvatarPreview";
 import { getColorValueByName, isValidColorName } from "../../utils/colorUtils";
 
 function ProfileEdit() {
-    const { user, login, updateProfileColor, getProfileColor } = useUser();
+    const { user, isInitializing, login, updateProfileColor, getProfileColor } = useUser();
     const [formData, setFormData] = useState({
         username: "",
     });

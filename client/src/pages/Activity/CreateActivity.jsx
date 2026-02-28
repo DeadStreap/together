@@ -8,7 +8,7 @@ function CreateActivity() {
     const [error, setError] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
-    const { user, isAuthenticated } = useUser();
+    const { user, isInitializing, isAuthenticated } = useUser();
     const [formData, setFormData] = useState({
         title: "",
         category: "anime",

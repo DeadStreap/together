@@ -12,12 +12,16 @@ function ActivitiesAlone() {
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    const { user, isAuthenticated } = useUser();
+    const { user, isInitializing, isAuthenticated } = useUser();
 
     useEffect(() => {
         const fetchData = async () => {
             try {
                 setIsLoading(true);
+
+                if (isInitializing) {
+                    return;
+                }
 
                 if (!isAuthenticated || !user) {
                     setContentItems([]);
@@ -39,7 +43,7 @@ function ActivitiesAlone() {
             }
         };
         fetchData();
-    }, [isAuthenticated, user]);
+    }, [isAuthenticated, user, isInitializing]);
 
     const { filters, sortConfig, filteredContent, handleFilterChange, handleSortChange, totalItemsCount } = useFilterSort(contentItems);
 

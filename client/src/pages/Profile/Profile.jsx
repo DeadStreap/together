@@ -10,7 +10,7 @@ import { getColorValueByName } from "../../utils/colorUtils";
 import { useCoupleTokens } from "../../hooks/useCoupleTokens";
 
 function Profile() {
-    const { user, isAuthenticated, logout, getProfileColor, login } = useUser();
+    const { user, isInitializing, isAuthenticated, logout, getProfileColor, login } = useUser();
     const [error, setError] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const [partner, setPartner] = useState(null);
@@ -20,12 +20,12 @@ function Profile() {
     const [profileColor, setProfileColor] = useState(getProfileColor());
     const [profileIcon, setProfileIcon] = useState(user?.icon || '');
 
-    const { 
-        partnerTokenInput, 
-        setPartnerTokenInput, 
-        handleGenerateToken, 
-        handleTokenRefresh, 
-        handleJoinCouple 
+    const {
+        partnerTokenInput,
+        setPartnerTokenInput,
+        handleGenerateToken,
+        handleTokenRefresh,
+        handleJoinCouple
     } = useCoupleTokens(user);
 
     const API_BASE_URL = getApiUrl('');
@@ -33,6 +33,9 @@ function Profile() {
 
     useEffect(() => {
         const fetchPartner = async () => {
+            if (isInitializing) {
+                return;
+            }
             if (!user || !user.partner_id) return;
             try {
                 setIsLoading(true);
@@ -48,7 +51,7 @@ function Profile() {
         };
 
         fetchPartner();
-    }, [user]);
+    }, [user, isInitializing]);
 
     useEffect(() => {
         const viewedUser = !requestedId || requestedId === user.id ? user : partner;
