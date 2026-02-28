@@ -39,10 +39,10 @@ class StatsController {
         const { months = 6 } = req.query;
 
         const sql = `
-            SELECT 
+            SELECT
                 DATE_FORMAT(added_at, '%Y-%m') as month,
                 COUNT(*) as total,
-                SUM(CASE WHEN status = 'done' THEN 1 ELSE 0 END) as completed
+                CAST(SUM(CASE WHEN status = 'done' THEN 1 ELSE 0 END) AS UNSIGNED) as completed
             FROM content_items
             WHERE (added_by_user_id = ? OR added_by_user_id = ?)
                 AND added_at >= DATE_SUB(NOW(), INTERVAL ? MONTH)
@@ -98,14 +98,14 @@ class StatsController {
         const partnerId = req.params.partnerId;
 
         const sql = `
-            SELECT 
+            SELECT
                 category,
                 COUNT(*) as total,
-                SUM(CASE WHEN status = 'done' THEN 1 ELSE 0 END) as completed,
-                ROUND(
-                    SUM(CASE WHEN status = 'done' THEN 1 ELSE 0 END) * 100.0 / COUNT(*), 
+                CAST(SUM(CASE WHEN status = 'done' THEN 1 ELSE 0 END) AS UNSIGNED) as completed,
+                CAST(ROUND(
+                    SUM(CASE WHEN status = 'done' THEN 1 ELSE 0 END) * 100.0 / COUNT(*),
                     1
-                ) as completion_rate
+                ) AS DECIMAL(5,1)) as completion_rate
             FROM content_items
             WHERE (added_by_user_id = ? OR added_by_user_id = ?)
                 AND shared_with_partner = TRUE
