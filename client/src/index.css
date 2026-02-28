@@ -2493,8 +2493,8 @@ h1 {
 
 /* Chart sizes */
 :root {
-  --chart-pie-width: 420px;
-  --chart-pie-height: 300px;
+  --chart-pie-width: 450px;
+  --chart-pie-height: 320px;
   --chart-donut-width: 350px;
   --chart-donut-height: 250px;
   --chart-bar-width: 700px;
@@ -2578,6 +2578,7 @@ h1 {
   height: 350px;
   overflow-x: auto;
   overflow-y: hidden;
+  position: relative;
 }
 
 .chart-container-bar::-webkit-scrollbar {
@@ -2822,7 +2823,7 @@ h1 {
 
 .stat-detail-values {
   display: flex;
-  gap: 12px;
+  gap: 4px;
   align-items: center;
 }
 
@@ -2838,8 +2839,7 @@ h1 {
 
 .stat-completed {
   color: #10b981;
-  font-size: 13px;
-  font-weight: 500;
+  font-weight: 600;
 }
 
 [data-theme="dark"] .stat-completed {
