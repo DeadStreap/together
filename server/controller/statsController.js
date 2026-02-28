@@ -40,12 +40,12 @@ class StatsController {
 
         const sql = `
             SELECT
-                added_month,
+                month_period,
                 SUM(total) as total,
                 SUM(completed) as completed
             FROM (
                 SELECT
-                    DATE_FORMAT(added_at, '%Y-%m') as added_month,
+                    DATE_FORMAT(added_at, '%Y-%m') as month_period,
                     COUNT(*) as total,
                     0 as completed
                 FROM content_items
@@ -55,7 +55,7 @@ class StatsController {
                 UNION ALL
                 
                 SELECT
-                    DATE_FORMAT(end_date, '%Y-%m') as completed_month,
+                    DATE_FORMAT(end_date, '%Y-%m') as month_period,
                     0 as total,
                     COUNT(*) as completed
                 FROM content_items
@@ -64,8 +64,9 @@ class StatsController {
                     AND end_date IS NOT NULL
                 GROUP BY DATE_FORMAT(end_date, '%Y-%m')
             ) as combined
-            GROUP BY added_month
-            ORDER BY added_month ASC
+            WHERE month_period IS NOT NULL
+            GROUP BY month_period
+            ORDER BY month_period ASC
         `;
 
         try {
