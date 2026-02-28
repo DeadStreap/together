@@ -23,7 +23,7 @@ const CompletionRateStats = ({ data }) => {
 
     return (
         <div className="stats-card-content">
-            <h3 className="stats-card-title">% завершённых по категориям</h3>
+            <h3 className="stats-card-title">Завершено по категориям</h3>
 
             <div className="completion-stats-details">
                 {data.map(item => {
