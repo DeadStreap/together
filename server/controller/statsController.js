@@ -11,12 +11,12 @@ class StatsController {
         }
 
         const sql = `
-            SELECT 
+            SELECT
                 category,
                 COUNT(*) as total,
-                SUM(CASE WHEN status = 'done' THEN 1 ELSE 0 END) as completed,
-                SUM(CASE WHEN status = 'inProgress' THEN 1 ELSE 0 END) as in_progress,
-                SUM(CASE WHEN status = 'planned' THEN 1 ELSE 0 END) as planned
+                CAST(SUM(CASE WHEN status = 'done' THEN 1 ELSE 0 END) AS UNSIGNED) as completed,
+                CAST(SUM(CASE WHEN status = 'inProgress' THEN 1 ELSE 0 END) AS UNSIGNED) as in_progress,
+                CAST(SUM(CASE WHEN status = 'planned' THEN 1 ELSE 0 END) AS UNSIGNED) as planned
             FROM content_items
             WHERE (added_by_user_id = ? OR added_by_user_id = ?)
                 AND shared_with_partner = TRUE
