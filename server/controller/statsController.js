@@ -143,6 +143,38 @@ class StatsController {
             res.status(500).json({ error: err.message });
         }
     }
+
+    async getCompletionCurve(req, res) {
+        const userId = req.params.userId;
+        const partnerId = req.params.partnerId;
+
+        const sql = `
+            SELECT 
+                completion_date,
+                completed_count,
+                SUM(completed_count) OVER (ORDER BY completion_date ASC) as cumulative_count
+            FROM (
+                SELECT 
+                    DATE(end_date) as completion_date,
+                    COUNT(*) as completed_count
+                FROM content_items
+                WHERE (added_by_user_id = ? OR added_by_user_id = ?)
+                    AND shared_with_partner = TRUE
+                    AND status = 'done'
+                    AND end_date IS NOT NULL
+                GROUP BY DATE(end_date)
+                ORDER BY completion_date ASC
+            ) as daily_completions
+        `;
+
+        try {
+            const [result] = await pool.query(sql, [userId, partnerId]);
+            res.json(result);
+        } catch (err) {
+            console.error("DB Error:", err);
+            res.status(500).json({ error: err.message });
+        }
+    }
 }
 
 module.exports = new StatsController();

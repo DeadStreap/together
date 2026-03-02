@@ -42,5 +42,6 @@ router.get('/stats/categories/:userId/:partnerId', statsController.getCategorySt
 router.get('/stats/monthly/:userId/:partnerId', statsController.getMonthlyStats)
 router.get('/stats/status/:userId/:partnerId', statsController.getStatusStats)
 router.get('/stats/completion/:userId/:partnerId', statsController.getCompletionRateByCategory)
+router.get('/stats/completion-curve/:userId/:partnerId', statsController.getCompletionCurve);
 
 module.exports = router;
