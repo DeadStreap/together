@@ -3012,7 +3012,17 @@ h1 {
 }
 
 .completion-stat-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   overflow: hidden;
+}
+
+.completion-stat-color-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
 }
 
 .completion-stat-category {

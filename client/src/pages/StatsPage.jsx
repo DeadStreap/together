@@ -5,14 +5,12 @@ import { getApiUrl } from '../config/apiConfig';
 import CategoryStats from '../components/CategoryStats';
 import MonthlyStats from '../components/MonthlyStats';
 import StatusStats from '../components/StatusStats';
-import CompletionRateStats from '../components/CompletionRateStats';
 
 function StatsPage() {
     const { user, isInitializing, isAuthenticated } = useUser();
     const [categoryData, setCategoryData] = useState(null);
     const [monthlyData, setMonthlyData] = useState(null);
     const [statusData, setStatusData] = useState(null);
-    const [completionData, setCompletionData] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
 
@@ -32,12 +30,10 @@ function StatsPage() {
                 const categories = await apiReq(getApiUrl(`/api/stats/categories/${user.id}/${user.partner_id}`));
                 const monthly = await apiReq(getApiUrl(`/api/stats/monthly/${user.id}/${user.partner_id}?months=12`));
                 const status = await apiReq(getApiUrl(`/api/stats/status/${user.id}/${user.partner_id}`));
-                const completion = await apiReq(getApiUrl(`/api/stats/completion/${user.id}/${user.partner_id}`));
 
                 setCategoryData(categories);
                 setMonthlyData(monthly);
                 setStatusData(status);
-                setCompletionData(completion);
             } catch (err) {
                 console.error("Error fetching stats:", err);
                 setError(err.message || 'Ошибка при загрузке статистики');
@@ -111,10 +107,6 @@ function StatsPage() {
 
                 <div className="stats-card full-width">
                     <MonthlyStats data={monthlyData} />
-                </div>
-
-                <div className="stats-card full-width">
-                    <CompletionRateStats data={completionData} />
                 </div>
             </div>
         );

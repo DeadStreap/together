@@ -26,7 +26,7 @@ const CategoryStats = ({ data }) => {
         window.addEventListener('resize', handleResize);
         return () => window.removeEventListener('resize', handleResize);
     }, []);
-    
+
     const isMobile = windowWidth < 768;
     const isSmallMobile = windowWidth < 480;
     const chartWidth = isSmallMobile ? 320 : isMobile ? 400 : 500;
@@ -140,24 +140,41 @@ const CategoryStats = ({ data }) => {
                 />
             </div>
 
-            <div className="stats-details">
-                {data.map(item => (
-                    <div key={item.category} className="stat-detail-row">
-                        <div className="stat-detail-left">
-                            <span
-                                className="stat-color-dot"
-                                style={{ backgroundColor: CATEGORY_COLORS[item.category] || '#999' }}
-                            />
-                            <span className="stat-category">
-                                {CATEGORY_NAMES[item.category] || item.category}
-                            </span>
+            <div className="completion-stats-details">
+                {data.map(item => {
+                    const rate = item.total > 0 ? Math.round((item.completed / item.total) * 100) : 0;
+                    return (
+                        <div key={item.category} className="completion-stat-row">
+                            <div className="completion-stat-left">
+                                <span
+                                    className="completion-stat-color-dot"
+                                    style={{ backgroundColor: CATEGORY_COLORS[item.category] || '#999' }}
+                                />
+                                <span className="completion-stat-category">
+                                    {CATEGORY_NAMES[item.category] || item.category}
+                                </span>
+                            </div>
+                            <div className="completion-stat-progress">
+                                <div className="completion-stat-bar">
+                                    <div
+                                        className="completion-stat-fill"
+                                        style={{
+                                            width: `${rate}%`,
+                                            backgroundColor: CATEGORY_COLORS[item.category] || '#999'
+                                        }}
+                                    />
+                                </div>
+                                <span className="completion-stat-percent">
+                                    {rate}%
+                                </span>
+                            </div>
+                            <div className="completion-stat-values">
+                                <span className="completion-stat-completed">{item.completed}</span>
+                                <span className="completion-stat-total">/{item.total}</span>
+                            </div>
                         </div>
-                        <div className="stat-detail-values">
-                            <span className="stat-completed">{item.completed}</span>
-                            <span className="stat-total">/{item.total}</span>
-                        </div>
-                    </div>
-                ))}
+                    );
+                })}
             </div>
         </div>
     );
