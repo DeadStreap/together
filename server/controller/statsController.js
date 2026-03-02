@@ -12,16 +12,16 @@ class StatsController {
 
         const sql = `
             SELECT
+                id,
                 category,
-                COUNT(*) as total,
-                CAST(SUM(CASE WHEN status = 'done' THEN 1 ELSE 0 END) AS UNSIGNED) as completed,
-                CAST(SUM(CASE WHEN status = 'inProgress' THEN 1 ELSE 0 END) AS UNSIGNED) as in_progress,
-                CAST(SUM(CASE WHEN status = 'planned' THEN 1 ELSE 0 END) AS UNSIGNED) as planned
+                status,
+                added_at,
+                start_date,
+                end_date
             FROM content_items
             WHERE (added_by_user_id = ? OR added_by_user_id = ?)
                 AND shared_with_partner = TRUE
-            GROUP BY category
-            ORDER BY total DESC
+            ORDER BY category, added_at DESC
         `;
 
         try {
@@ -36,7 +36,6 @@ class StatsController {
     async getMonthlyStats(req, res) {
         const userId = req.params.userId;
         const partnerId = req.params.partnerId;
-        const { months = 6 } = req.query;
 
         const sql = `
             SELECT
@@ -85,29 +84,21 @@ class StatsController {
         const partnerId = req.params.partnerId;
 
         const sql = `
-            SELECT 
+            SELECT
+                id,
                 status,
-                COUNT(*) as count
+                added_at,
+                start_date,
+                end_date
             FROM content_items
             WHERE (added_by_user_id = ? OR added_by_user_id = ?)
                 AND shared_with_partner = TRUE
-            GROUP BY status
+            ORDER BY added_at DESC
         `;
 
         try {
             const [result] = await pool.query(sql, [userId, partnerId]);
-            
-            const stats = {
-                planned: 0,
-                inProgress: 0,
-                done: 0
-            };
-            
-            result.forEach(row => {
-                stats[row.status] = row.count;
-            });
-            
-            res.json(stats);
+            res.json(result);
         } catch (err) {
             console.error("DB Error:", err);
             res.status(500).json({ error: err.message });
