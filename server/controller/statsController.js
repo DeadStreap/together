@@ -5,27 +5,46 @@ class StatsController {
     async getCategoryStats(req, res) {
         const userId = req.params.userId;
         const partnerId = req.params.partnerId;
+        const { startDate, endDate } = req.query;
 
         if (!userId || !partnerId) {
             return res.status(400).json({ error: "User ID and Partner ID are required" });
         }
 
+        let dateFilter = '';
+        const params = [userId, partnerId];
+
+        if (startDate || endDate) {
+            dateFilter = 'AND (';
+            const conditions = [];
+            if (startDate) {
+                conditions.push('(added_at >= ? OR start_date >= ?)');
+                params.push(startDate, startDate);
+            }
+            if (endDate) {
+                conditions.push('(added_at <= ? OR start_date <= ?)');
+                params.push(endDate, endDate);
+            }
+            dateFilter += conditions.join(' AND ') + ')';
+        }
+
         const sql = `
             SELECT
-                id,
                 category,
-                status,
-                added_at,
-                start_date,
-                end_date
+                COUNT(*) as total,
+                CAST(SUM(CASE WHEN status = 'done' THEN 1 ELSE 0 END) AS UNSIGNED) as completed,
+                CAST(SUM(CASE WHEN status = 'inProgress' THEN 1 ELSE 0 END) AS UNSIGNED) as in_progress,
+                CAST(SUM(CASE WHEN status = 'planned' THEN 1 ELSE 0 END) AS UNSIGNED) as planned
             FROM content_items
             WHERE (added_by_user_id = ? OR added_by_user_id = ?)
                 AND shared_with_partner = TRUE
-            ORDER BY category, added_at DESC
+                ${dateFilter}
+            GROUP BY category
+            ORDER BY total DESC
         `;
 
         try {
-            const [result] = await pool.query(sql, [userId, partnerId]);
+            const [result] = await pool.query(sql, params);
             res.json(result);
         } catch (err) {
             console.error("DB Error:", err);
@@ -82,23 +101,54 @@ class StatsController {
     async getStatusStats(req, res) {
         const userId = req.params.userId;
         const partnerId = req.params.partnerId;
+        const { startDate, endDate } = req.query;
+
+        if (!userId || !partnerId) {
+            return res.status(400).json({ error: "User ID and Partner ID are required" });
+        }
+
+        let dateFilter = '';
+        const params = [userId, partnerId];
+
+        if (startDate || endDate) {
+            dateFilter = 'AND (';
+            const conditions = [];
+            if (startDate) {
+                conditions.push('(added_at >= ? OR start_date >= ?)');
+                params.push(startDate, startDate);
+            }
+            if (endDate) {
+                conditions.push('(added_at <= ? OR start_date <= ?)');
+                params.push(endDate, endDate);
+            }
+            dateFilter += conditions.join(' AND ') + ')';
+        }
 
         const sql = `
             SELECT
-                id,
                 status,
-                added_at,
-                start_date,
-                end_date
+                COUNT(*) as count
             FROM content_items
             WHERE (added_by_user_id = ? OR added_by_user_id = ?)
                 AND shared_with_partner = TRUE
-            ORDER BY added_at DESC
+                ${dateFilter}
+            GROUP BY status
         `;
 
         try {
-            const [result] = await pool.query(sql, [userId, partnerId]);
-            res.json(result);
+            const [result] = await pool.query(sql, params);
+
+            const stats = {
+                planned: 0,
+                inProgress: 0,
+                done: 0
+            };
+
+            result.forEach(row => {
+                stats[row.status] = row.count;
+            });
+
+            res.json(stats);
         } catch (err) {
             console.error("DB Error:", err);
             res.status(500).json({ error: err.message });
