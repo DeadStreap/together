@@ -1,6 +1,7 @@
 import { Bar } from '@nivo/bar';
 import { useTheme } from '../store/ThemeContext';
 import { useState, useEffect } from 'react';
+import { getChartSize } from '../config/chartConfig';
 
 const MONTH_NAMES = {
     '01': 'Янв',
@@ -29,15 +30,7 @@ const MonthlyStats = ({ data }) => {
         return () => window.removeEventListener('resize', handleResize);
     }, []);
 
-    const isMobile = windowWidth < 768;
-    const isSmallMobile = windowWidth < 480;
-    const chartWidth = isSmallMobile ? 400 : isMobile ? 500 : 700;
-    const chartHeight = isSmallMobile ? 300 : isMobile ? 340 : 420;
-    const chartMargin = isSmallMobile
-        ? { top: 20, right: 20, bottom: 90, left: 50 }
-        : isMobile
-            ? { top: 20, right: 20, bottom: 95, left: 55 }
-            : { top: 20, right: 20, bottom: 100, left: 60 };
+    const chartSize = getChartSize('bar', windowWidth);
 
     if (!data || data.length === 0) {
         return (
@@ -61,21 +54,19 @@ const MonthlyStats = ({ data }) => {
             };
         });
 
-    const maxTotal = Math.max(...chartData.map(d => d.total), 1);
-
     return (
         <div className="stats-card-content">
             <h3 className="stats-card-title">Активности по месяцам</h3>
             
             <div className="chart-container chart-container-bar" style={{ overflowX: 'auto' }}>
-                <div style={{ width: `${chartWidth}px`, minWidth: '100%' }}>
+                <div style={{ width: `${chartSize.width}px`, minWidth: '100%' }}>
                     <Bar
                         data={chartData}
-                        width={chartWidth}
-                        height={chartHeight}
+                        width={chartSize.width}
+                        height={chartSize.height}
                         keys={['total', 'completed']}
                         indexBy="monthName"
-                        margin={chartMargin}
+                        margin={chartSize.margin}
                         padding={0.5}
                         valueScale={{ type: 'linear' }}
                         indexScale={{ type: 'band', round: true }}

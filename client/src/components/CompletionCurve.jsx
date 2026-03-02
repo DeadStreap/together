@@ -1,6 +1,7 @@
 import { Line } from '@nivo/line';
 import { useTheme } from '../store/ThemeContext';
 import { useState, useEffect } from 'react';
+import { getChartSize } from '../config/chartConfig';
 
 const CompletionCurve = ({ data }) => {
     const { theme } = useTheme();
@@ -14,15 +15,7 @@ const CompletionCurve = ({ data }) => {
         return () => window.removeEventListener('resize', handleResize);
     }, []);
 
-    const isMobile = windowWidth < 768;
-    const isSmallMobile = windowWidth < 480;
-    const chartWidth = isSmallMobile ? 320 : isMobile ? 420 : 600;
-    const chartHeight = isSmallMobile ? 240 : isMobile ? 280 : 340;
-    const chartMargin = isSmallMobile
-        ? { top: 20, right: 20, bottom: 50, left: 50 }
-        : isMobile
-            ? { top: 20, right: 25, bottom: 55, left: 55 }
-            : { top: 20, right: 30, bottom: 60, left: 60 };
+    const chartSize = getChartSize('line', windowWidth);
 
     if (!data || data.length === 0) {
         return (
@@ -83,15 +76,15 @@ const CompletionCurve = ({ data }) => {
             </div>
 
             <div className="chart-container chart-container-line" style={{ overflowX: 'auto' }}>
-                <div style={{ width: `${chartWidth}px`, minWidth: '100%' }}>
+                <div style={{ width: `${chartSize.width}px`, minWidth: '100%' }}>
                     <Line
                         data={[{
                             id: 'completed',
                             data: chartData
                         }]}
-                        width={chartWidth}
-                        height={chartHeight}
-                        margin={chartMargin}
+                        width={chartSize.width}
+                        height={chartSize.height}
+                        margin={chartSize.margin}
                         xScale={{
                             type: 'time',
                             format: 'native',

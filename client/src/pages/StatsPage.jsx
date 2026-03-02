@@ -29,10 +29,14 @@ function StatsPage() {
 
             try {
                 setError(null);
-                const categories = await apiReq(getApiUrl(`/api/stats/categories/${user.id}/${user.partner_id}`));
-                const monthly = await apiReq(getApiUrl(`/api/stats/monthly/${user.id}/${user.partner_id}?months=12`));
-                const status = await apiReq(getApiUrl(`/api/stats/status/${user.id}/${user.partner_id}`));
-                const completionCurve = await apiReq(getApiUrl(`/api/stats/completion-curve/${user.id}/${user.partner_id}`));
+                
+                // Параллельная загрузка всех данных через Promise.all
+                const [categories, monthly, status, completionCurve] = await Promise.all([
+                    apiReq(getApiUrl(`/api/stats/categories/${user.id}/${user.partner_id}`)),
+                    apiReq(getApiUrl(`/api/stats/monthly/${user.id}/${user.partner_id}?months=12`)),
+                    apiReq(getApiUrl(`/api/stats/status/${user.id}/${user.partner_id}`)),
+                    apiReq(getApiUrl(`/api/stats/completion-curve/${user.id}/${user.partner_id}`))
+                ]);
 
                 setCategoryData(categories);
                 setMonthlyData(monthly);

@@ -1,6 +1,7 @@
 import { Pie } from '@nivo/pie';
 import { useTheme } from '../store/ThemeContext';
 import { useState, useEffect } from 'react';
+import { getChartSize } from '../config/chartConfig';
 
 const CATEGORY_COLORS = {
     anime: '#7a55ff',
@@ -27,15 +28,7 @@ const CategoryStats = ({ data }) => {
         return () => window.removeEventListener('resize', handleResize);
     }, []);
 
-    const isMobile = windowWidth < 768;
-    const isSmallMobile = windowWidth < 480;
-    const chartWidth = isSmallMobile ? 320 : isMobile ? 400 : 500;
-    const chartHeight = isSmallMobile ? 280 : isMobile ? 320 : 380;
-    const chartMargin = isSmallMobile
-        ? { top: 30, right: 60, bottom: 50, left: 60 }
-        : isMobile
-            ? { top: 35, right: 70, bottom: 60, left: 70 }
-            : { top: 40, right: 80, bottom: 70, left: 80 };
+    const chartSize = getChartSize('pieLarge', windowWidth);
 
     if (!data || data.length === 0) {
         return (
@@ -62,9 +55,9 @@ const CategoryStats = ({ data }) => {
             <div className="chart-container chart-container-pie">
                 <Pie
                     data={chartData}
-                    width={chartWidth}
-                    height={chartHeight}
-                    margin={chartMargin}
+                    width={chartSize.width}
+                    height={chartSize.height}
+                    margin={chartSize.margin}
                     innerRadius={0.5}
                     padAngle={0.7}
                     cornerRadius={3}

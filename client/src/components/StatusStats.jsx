@@ -1,6 +1,7 @@
 import { Pie } from '@nivo/pie';
 import { useTheme } from '../store/ThemeContext';
 import { useState, useEffect } from 'react';
+import { getChartSize } from '../config/chartConfig';
 
 const STATUS_CONFIG = {
     planned: {
@@ -27,16 +28,8 @@ const StatusStats = ({ data }) => {
         window.addEventListener('resize', handleResize);
         return () => window.removeEventListener('resize', handleResize);
     }, []);
-    
-    const isMobile = windowWidth < 768;
-    const isSmallMobile = windowWidth < 480;
-    const chartWidth = isSmallMobile ? 260 : isMobile ? 300 : 350;
-    const chartHeight = isSmallMobile ? 200 : isMobile ? 230 : 250;
-    const chartMargin = isSmallMobile 
-        ? { top: 20, right: 60, bottom: 20, left: 60 }
-        : isMobile 
-            ? { top: 20, right: 70, bottom: 20, left: 70 }
-            : { top: 20, right: 80, bottom: 20, left: 80 };
+
+    const chartSize = getChartSize('pie', windowWidth);
 
     if (!data || (data.planned === 0 && data.inProgress === 0 && data.done === 0)) {
         return (
@@ -89,9 +82,9 @@ const StatusStats = ({ data }) => {
             <div className="chart-container chart-container-donut">
                 <Pie
                     data={chartData}
-                    width={chartWidth}
-                    height={chartHeight}
-                    margin={chartMargin}
+                    width={chartSize.width}
+                    height={chartSize.height}
+                    margin={chartSize.margin}
                     innerRadius={0.6}
                     padAngle={0.7}
                     cornerRadius={3}
