@@ -64,6 +64,12 @@ function Activities() {
 
     const inProgressItems = contentItems.filter(item => item.status === 'inProgress');
 
+    const completedItems = contentItems
+        .filter(item => item.status === 'done')
+        .slice()
+        .sort((a, b) => new Date(b.end_date || b.added_at) - new Date(a.end_date || a.added_at))
+        .slice(0, 5);
+
     const recentItems = contentItems
         .slice()
         .sort((a, b) => new Date(b.added_at) - new Date(a.added_at))
@@ -85,6 +91,21 @@ function Activities() {
             ) : (
                 <div className="no-in-progress-items">
                     <h1>Сейчас у вас нет активностей в процессе</h1>
+                </div>
+            )}
+
+            {completedItems.length > 0 ? (
+                <div className="recently-completed-section">
+                    <h1>Завершено недавно</h1>
+                    <ul className="content-list">
+                        {completedItems.map((item) => (
+                            <ActivityCard key={`completed-${item.id}`} item={item} />
+                        ))}
+                    </ul>
+                </div>
+            ) : (
+                <div className="no-completed-items">
+                    <h1>Пока ничего не завершено</h1>
                 </div>
             )}
 
