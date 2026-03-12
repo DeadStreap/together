@@ -1433,7 +1433,8 @@ h1 {
 
 /* Section margins */
 .in-progress-section,
-.recently-added-section {
+.recently-added-section,
+.recently-completed-section {
   margin-bottom: 24px;
 }
 
