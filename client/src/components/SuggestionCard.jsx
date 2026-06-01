@@ -8,7 +8,7 @@ const STATUS_LABELS = {
 
 const SuggestionCard = ({ suggestion, mode, onAccept, onDecline }) => {
     return (
-        <div className={`suggestion-card suggestion-card--${mode}`}>
+        <div className="suggestion-card">
             <div className="suggestion-card-body">
                 <div className="suggestion-card-category">{getCategoryDisplayName(suggestion.category)}</div>
                 <div className="suggestion-card-title">{suggestion.title}</div>
