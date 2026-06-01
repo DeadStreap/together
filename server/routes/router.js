@@ -6,6 +6,7 @@ const userController = require('../controller/userController')
 const coupleController = require('../controller/coupleController')
 const commentController = require('../controller/commentController')
 const statsController = require('../controller/statsController')
+const suggestionController = require('../controller/suggestionController')
 
 router.get('/contents', contentController.getContent)
 router.get('/contents/together/:userId/:partnerId', contentController.getContentTogether)
@@ -43,5 +44,10 @@ router.get('/stats/monthly/:userId/:partnerId', statsController.getMonthlyStats)
 router.get('/stats/status/:userId/:partnerId', statsController.getStatusStats)
 router.get('/stats/completion/:userId/:partnerId', statsController.getCompletionRateByCategory)
 router.get('/stats/completion-curve/:userId/:partnerId', statsController.getCompletionCurve);
+
+router.get('/suggestions/:userId', suggestionController.getSuggestions)
+router.post('/create/suggestion', suggestionController.createSuggestion)
+router.put('/accept/suggestion/:id', suggestionController.acceptSuggestion)
+router.delete('/decline/suggestion/:id', suggestionController.declineSuggestion)
 
 module.exports = router;
