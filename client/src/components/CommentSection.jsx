@@ -93,18 +93,23 @@ const CommentSection = ({ contentId }) => {
             </div>
 
             <form onSubmit={(e) => { e.preventDefault(); handleAddComment(); }} className="comment-form">
-                <input
-                    type="text"
-                    value={newCommentText}
-                    onChange={(e) => {
-                        setNewCommentText(e.target.value);
-                        if (error) setError(null);
-                    }}
-                    placeholder="Напишите комментарий..."
-                    className="comment-form-input"
-                    maxLength={400}
-                    disabled={isSubmitting}
-                />
+                <div className="comment-form-input-wrapper">
+                    <input
+                        type="text"
+                        value={newCommentText}
+                        onChange={(e) => {
+                            setNewCommentText(e.target.value);
+                            if (error) setError(null);
+                        }}
+                        placeholder="Напишите комментарий..."
+                        className="comment-form-input"
+                        maxLength={400}
+                        disabled={isSubmitting}
+                    />
+                    <span className="comment-char-counter">
+                        {newCommentText.length}/400
+                    </span>
+                </div>
                 <button
                     type="submit"
                     className="comment-submit-button"

@@ -1344,6 +1344,94 @@ h1 {
   justify-content: center;
 }
 
+/* Pagination */
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  margin-top: 24px;
+  padding-bottom: 8px;
+}
+
+.pagination-btn {
+  min-width: 36px;
+  height: 36px;
+  padding: 0 10px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #4b5563;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pagination-btn:hover:not(:disabled) {
+  background: #f4f4ff;
+  border-color: #c7d2fe;
+  color: #7a55ff;
+}
+
+.pagination-btn:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.pagination-btn--active {
+  background: #7a55ff;
+  border-color: #7a55ff;
+  color: #ffffff;
+}
+
+.pagination-btn--active:hover:not(:disabled) {
+  background: #6a45ee;
+  border-color: #6a45ee;
+  color: #ffffff;
+}
+
+.pagination-ellipsis {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #9ca3af;
+  font-size: 14px;
+}
+
+[data-theme="dark"] .pagination-btn {
+  background: #1a1a2e;
+  border-color: #3d3d5c;
+  color: #d1d5db;
+}
+
+[data-theme="dark"] .pagination-btn:hover:not(:disabled) {
+  background: #242442;
+  border-color: #6a45ee;
+  color: #a78bfa;
+}
+
+[data-theme="dark"] .pagination-btn--active {
+  background: #7a55ff;
+  border-color: #7a55ff;
+  color: #ffffff;
+}
+
+[data-theme="dark"] .pagination-btn--active:hover:not(:disabled) {
+  background: #6a45ee;
+  border-color: #6a45ee;
+  color: #ffffff;
+}
+
+[data-theme="dark"] .pagination-ellipsis {
+  color: #6b7280;
+}
+
 /* Statistics block styles */
 .statistics-block {
   display: grid;
@@ -2153,17 +2241,33 @@ h1 {
   position: relative;
 }
 
+.comment-form-input-wrapper {
+  position: relative;
+  width: 100%;
+}
+
 .comment-form-input {
   width: 100%;
   border-radius: 10px;
   border: 1px solid #e5e7eb;
-  padding: 10px 40px 10px 12px;
+  padding: 10px 40px 10px 52px;
   font-family: inherit;
   font-size: 14px;
   transition: border-color 0.15s ease, box-shadow 0.15s ease;
   background-color: #ffffff;
   min-height: 44px;
   height: 44px;
+}
+
+.comment-char-counter {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 11px;
+  color: #9ca3af;
+  pointer-events: none;
+  user-select: none;
 }
 
 .comment-form-input:focus {
@@ -2401,6 +2505,10 @@ h1 {
 }
 
 [data-theme="dark"] .comment-form-input::placeholder {
+  color: #6b7280;
+}
+
+[data-theme="dark"] .comment-char-counter {
   color: #6b7280;
 }
 

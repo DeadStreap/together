@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { useUser } from '../store/UserContext';
 import { apiReq } from '../utils/apiReq';
 import { getApiUrl } from '../config/apiConfig';
@@ -58,7 +59,7 @@ function StatsPage() {
             return (
                 <div className="stats-auth-required">
                     <p>Войдите в систему, чтобы увидеть статистику вашей пары</p>
-                    <a href="/authorization" className="primary-button">Войти</a>
+                    <Link to="/authorization" className="primary-button">Войти</Link>
                 </div>
             );
         }
@@ -97,7 +98,7 @@ function StatsPage() {
                     <div className="stats-empty-icon">📈</div>
                     <h2>Пока нет данных</h2>
                     <p>Добавьте ваши совместные активности, чтобы увидеть красивую статистику</p>
-                    <a href="/activity/create" className="primary-button">Добавить активность</a>
+                    <Link to="/activity/create" className="primary-button">Добавить активность</Link>
                 </div>
             );
         }

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useUser } from "../store/UserContext";
 import { apiReqWithBody } from "../utils/apiReq";
 import { getApiUrl } from "../config/apiConfig";
@@ -129,9 +129,9 @@ function Registration() {
 
                     <div className="auth-link-container">
                         Уже есть аккаунт?{" "}
-                        <a href="/authorization" className="auth-link">
+                        <Link to="/authorization" className="auth-link">
                             Войти
-                        </a>
+                        </Link>
                     </div>
                 </div>
             </div>

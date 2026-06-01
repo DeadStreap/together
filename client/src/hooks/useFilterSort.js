@@ -35,8 +35,8 @@ const useFilterSort = (initialItems) => {
         if (filters.startDate) {
             const startDate = new Date(filters.startDate);
             result = result.filter(item => {
-                const itemDate = item.start_date ? new Date(item.start_date) : new Date(item.added_at);
-                return itemDate >= startDate;
+                if (!item.start_date) return false;
+                return new Date(item.start_date) >= startDate;
             });
         }
 
@@ -44,8 +44,8 @@ const useFilterSort = (initialItems) => {
             const endDate = new Date(filters.endDate);
             endDate.setHours(23, 59, 59, 999);
             result = result.filter(item => {
-                const itemDate = item.end_date ? new Date(item.end_date) : item.start_date ? new Date(item.start_date) : new Date(item.added_at);
-                return itemDate <= endDate;
+                if (!item.end_date) return false;
+                return new Date(item.end_date) <= endDate;
             });
         }
 
