@@ -16,6 +16,8 @@ import ActivitiesAlone from './pages/Activity/ActivitiesAlone';
 import ActivitiesPartner from './pages/Activity/ActivitiesPartner';
 import CreateActivity from './pages/Activity/CreateActivity';
 import ActivityEdit from './pages/Activity/ActivityEdit';
+import Suggestions from './pages/Suggestions/Suggestions';
+import CreateSuggestion from './pages/Suggestions/CreateSuggestion';
 
 
 import { Header } from './components/Header'
@@ -45,6 +47,9 @@ function App() {
 
           <Route path="/about" element={<AboutPage />} />
           <Route path="/stats" element={<StatsPage />} />
+
+          <Route path="/suggestions" element={<Suggestions />} />
+          <Route path="/suggestions/create" element={<CreateSuggestion />} />
 
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
