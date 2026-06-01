@@ -76,13 +76,6 @@ function ActivitiesTogether() {
                 sortConfig={sortConfig}
             />
 
-            {!isAuthenticated || !user ? (
-                <p>
-                    Чтобы увидеть совместные активности, нужно авторизоваться и
-                    быть в паре.
-                </p>
-            ) : null}
-
             {filteredContent.length > 0 ? (
                 <ul className="content-list">
                     {filteredContent.map((item) => (
@@ -90,10 +83,10 @@ function ActivitiesTogether() {
                     ))}
                 </ul>
             ) : (
-                <>
+                <div className="empty-state">
+                    <div className="empty-state-title">Нет активностей</div>
                     <p>Не добавлено ни одной активности или нет совпадений по фильтрам</p>
-                    <p>Добавить?</p>
-                </>
+                </div>
             )}
         </div>
     );

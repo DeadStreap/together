@@ -55,7 +55,10 @@ function ActivitiesPartner() {
                     ))}
                 </ul>
             ) : (
-                <p>У партнёра пока нет одиночных активностей.</p>
+                <div className="empty-state">
+                    <div className="empty-state-title">Нет активностей</div>
+                    <p>У партнёра пока нет одиночных активностей</p>
+                </div>
             )}
         </div>
     );

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { apiReq, apiReqWithBody } from "../../utils/apiReq";
 import { getApiUrl } from "../../config/apiConfig";
 
@@ -13,7 +13,7 @@ function ActivityEdit() {
         status: "planned",
         start_date: "",
         end_date: "",
-        shared_with_partner: true,
+        shared_with_partner: false,
     });
 
     const [isLoading, setIsLoading] = useState(true);
@@ -50,7 +50,7 @@ function ActivityEdit() {
                     shared_with_partner:
                         typeof item.shared_with_partner === "boolean"
                             ? item.shared_with_partner
-                            : true,
+                            : false,
                 });
 
                 setIsLoading(false);
@@ -204,6 +204,13 @@ function ActivityEdit() {
                         </div>
 
                         <div className="activity-form-actions">
+                            <Link
+                                to={`/activity/${ActivityId}`}
+                                className="secondary-button"
+                                style={{ textDecoration: "none" }}
+                            >
+                                Отменить
+                            </Link>
                             <button type="submit" className="primary-button" disabled={isSaving}>
                                 {isSaving ? 'Сохранение...' : 'Сохранить изменения'}
                             </button>

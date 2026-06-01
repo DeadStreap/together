@@ -70,12 +70,6 @@ function ActivitiesAlone() {
                 sortConfig={sortConfig}
             />
 
-            {!isAuthenticated || !user ? (
-                <p>
-                    Чтобы увидеть одиночные активности, нужно авторизоваться.
-                </p>
-            ) : null}
-
             {filteredContent.length > 0 ? (
                 <ul className="content-list">
                     {filteredContent.map((item) => (
@@ -83,10 +77,10 @@ function ActivitiesAlone() {
                     ))}
                 </ul>
             ) : (
-                <>
-                    <p>Не добавлено ни одной активности</p>
-                    <p>Добавить?</p>
-                </>
+                <div className="empty-state">
+                    <div className="empty-state-title">Нет одиночных активностей</div>
+                    <p>Добавьте первую!</p>
+                </div>
             )}
         </div>
     );

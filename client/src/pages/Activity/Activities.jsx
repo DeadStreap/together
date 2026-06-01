@@ -89,8 +89,9 @@ function Activities() {
                     </ul>
                 </div>
             ) : (
-                <div className="no-in-progress-items">
-                    <h1>Сейчас у вас нет активностей в процессе</h1>
+                <div className="empty-state">
+                    <div className="empty-state-title">Нет активностей в процессе</div>
+                    <p>Начните что-нибудь новое!</p>
                 </div>
             )}
 
@@ -104,8 +105,9 @@ function Activities() {
                     </ul>
                 </div>
             ) : (
-                <div className="no-completed-items">
-                    <h1>Пока ничего не завершено</h1>
+                <div className="empty-state">
+                    <div className="empty-state-title">Пока ничего не завершено</div>
+                    <p>Как только активность будет выполнена, она появится здесь</p>
                 </div>
             )}
 
@@ -119,8 +121,9 @@ function Activities() {
                     </ul>
                 </div>
             ) : (
-                <div className="no-recent-items">
-                    <h1>Пока ничего не добавлено</h1>
+                <div className="empty-state">
+                    <div className="empty-state-title">Пока ничего не добавлено</div>
+                    <p>Добавьте первую совместную активность!</p>
                 </div>
             )}
         </div>
