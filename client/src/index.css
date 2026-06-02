@@ -2996,9 +2996,7 @@ h1 {
   font-size: 15px;
   font-weight: 600;
   color: #111827;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  word-break: break-word;
 }
 
 .suggestion-card-username {
