@@ -18,6 +18,7 @@ import CreateActivity from './pages/Activity/CreateActivity';
 import ActivityEdit from './pages/Activity/ActivityEdit';
 import Suggestions from './pages/Suggestions/Suggestions';
 import CreateSuggestion from './pages/Suggestions/CreateSuggestion';
+import Calendar from './pages/Activity/Calendar';
 
 
 import { Header } from './components/Header'
@@ -44,6 +45,8 @@ function App() {
           <Route path="/activity/together" element={<ActivitiesTogether />} />
           <Route path="/activity/partner/:userId" element={<ActivitiesPartner />} />
           <Route path="/activity/create" element={<CreateActivity />} />
+
+          <Route path="/calendar" element={<Calendar />} />
 
           <Route path="/about" element={<AboutPage />} />
           <Route path="/stats" element={<StatsPage />} />

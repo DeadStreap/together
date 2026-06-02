@@ -49,6 +49,13 @@ const Header = () => {
                     </Link>
 
                     <Link
+                        to="/calendar"
+                        className={`sidebar-link ${isActive('/calendar') ? 'active' : ''}`}
+                    >
+                        Календарь
+                    </Link>
+
+                    <Link
                         to="/activity/together"
                         className={`sidebar-link ${isActive('/activity/together') ? 'active' : ''}`}
                     >

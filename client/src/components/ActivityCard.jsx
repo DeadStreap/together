@@ -4,7 +4,7 @@ import { getCategoryDisplayName } from '../utils/displayMappings';
 import { formatDateTime, formatDate } from '../utils/dateFormat';
 import { getDaysInStatus, formatDaysWord } from '../utils/daysInStatus';
 
-const ActivityCard = ({ item, showFullDates = false }) => {
+const ActivityCard = ({ item, showFullDates = false, hideMeta = false }) => {
     const hasStartDate = item.start_date || showFullDates;
     const hasEndDate = item.end_date || showFullDates;
     const daysInStatus = getDaysInStatus(item.start_date, item.status);
@@ -22,19 +22,23 @@ const ActivityCard = ({ item, showFullDates = false }) => {
                 <div className="item-details">
                     <span>Категория</span>: {getCategoryDisplayName(item.category) || "N/A"}
                 </div>
-                <div className="item-details">
-                    <span>Добавил</span>: {item.added_by || "N/A"}
-                </div>
+                {!hideMeta && (
+                    <div className="item-details">
+                        <span>Добавил</span>: {item.added_by || "N/A"}
+                    </div>
+                )}
                 {item.status === 'inProgress' && daysInStatus !== null && (
                     <div className="item-details item-details-highlight">
                         <span>В процессе</span>: {formatDaysWord(daysInStatus)}
                     </div>
                 )}
                 <div className="item-dates">
-                    <span>
-                        <span>Добавлено</span>
-                        <span>{formatDateTime(item.added_at)}</span>
-                    </span>
+                    {!hideMeta && (
+                        <span>
+                            <span>Добавлено</span>
+                            <span>{formatDateTime(item.added_at)}</span>
+                        </span>
+                    )}
                     {hasStartDate && (
                         <span>
                             <span>{showFullDates ? 'Начато' : 'Начато'}</span>
