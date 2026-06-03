@@ -4,7 +4,16 @@ import { getCategoryDisplayName } from '../utils/displayMappings';
 import { formatDateTime, formatDate } from '../utils/dateFormat';
 import { getDaysInStatus, formatDaysWord } from '../utils/daysInStatus';
 
-const ActivityCard = ({ item, showFullDates = false, hideMeta = false }) => {
+const getDuration = (start, end) => {
+  if (!start || !end) return '';
+  const s = new Date(start), e = new Date(end);
+  s.setHours(0, 0, 0, 0); e.setHours(0, 0, 0, 0);
+  const days = Math.floor((e - s) / (1000 * 60 * 60 * 24)) + 1;
+  if (days < 1) return '';
+  return ` (${formatDaysWord(days)})`;
+};
+
+const ActivityCard = ({ item, showFullDates = false, hideMeta = false, hideEndDate = false }) => {
     const hasStartDate = item.start_date || showFullDates;
     const hasEndDate = item.end_date || showFullDates;
     const daysInStatus = getDaysInStatus(item.start_date, item.status);
@@ -41,13 +50,16 @@ const ActivityCard = ({ item, showFullDates = false, hideMeta = false }) => {
                     )}
                     {hasStartDate && (
                         <span>
-                            <span>{showFullDates ? 'Начато' : 'Начато'}</span>
-                            <span>{formatDate(item.start_date)}</span>
+                            <span>Начато</span>
+                            <span>
+                                {formatDate(item.start_date)}
+                                {hideEndDate && item.start_date && item.end_date && getDuration(item.start_date, item.end_date)}
+                            </span>
                         </span>
                     )}
-                    {hasEndDate && (
+                    {hasEndDate && !hideEndDate && (
                         <span>
-                            <span>{showFullDates ? 'Завершено' : 'Завершено'}</span>
+                            <span>Завершено</span>
                             <span>{formatDate(item.end_date)}</span>
                         </span>
                     )}

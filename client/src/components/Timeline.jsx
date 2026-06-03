@@ -75,7 +75,7 @@ const Timeline = ({ activities, visibleCount, onLoadMore }) => {
                 </div>
                 <div className="timeline-cards">
                   {days[dayKey].map((item) => (
-                    <ActivityCard key={item.id} item={item} showFullDates hideMeta />
+                    <ActivityCard key={item.id} item={item} showFullDates hideMeta hideEndDate />
                   ))}
                 </div>
               </div>
