@@ -47,10 +47,7 @@ function ActivityEdit() {
                     end_date: item.end_date
                         ? new Date(item.end_date).toISOString().slice(0, 10)
                         : "",
-                    shared_with_partner:
-                        typeof item.shared_with_partner === "boolean"
-                            ? item.shared_with_partner
-                            : false,
+                    shared_with_partner: Boolean(item.shared_with_partner),
                 });
 
                 setIsLoading(false);
