@@ -712,18 +712,17 @@ h1 {
   margin-bottom: 4px;
   letter-spacing: -0.2px;
   color: var(--text);
-  display: flex;
-  align-items: center;
+  overflow: hidden;
 }
 
 .item-title-card .status-icon-container {
-  flex-shrink: 0;
+  float: left;
   margin-right: 3px;
-  display: flex;
+  margin-top: 5px;
 }
 
 .item-title-content {
-  flex: 1;
+  display: inline;
   word-break: break-word;
   overflow-wrap: break-word;
 }
