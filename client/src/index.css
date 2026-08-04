@@ -3137,6 +3137,10 @@ button.profile-badge:not(:disabled):hover {
     font-size: 16px;
   }
 
+  .item-title-card .status-icon-container {
+    margin-top: 4px;
+  }
+
   .item-details,
   .item-dates {
     font-size: 12px;
@@ -3304,6 +3308,10 @@ button.profile-badge:not(:disabled):hover {
   .item-title,
   .item-title-card {
     font-size: 14px;
+  }
+
+  .item-title-card .status-icon-container {
+    margin-top: 2px;
   }
 
   .item-dates {
