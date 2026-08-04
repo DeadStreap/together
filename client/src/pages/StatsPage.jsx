@@ -7,8 +7,10 @@ import CategoryStats from '../components/CategoryStats';
 import MonthlyStats from '../components/MonthlyStats';
 import StatusStats from '../components/StatusStats';
 import CompletionCurve from '../components/CompletionCurve';
+import { usePageTitle } from '../hooks/usePageTitle';
 
 function StatsPage() {
+    usePageTitle('Статистика');
     const { user, isInitializing, isAuthenticated } = useUser();
     const [categoryData, setCategoryData] = useState(null);
     const [monthlyData, setMonthlyData] = useState(null);

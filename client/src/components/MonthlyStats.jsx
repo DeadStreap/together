@@ -1,7 +1,7 @@
 import { Bar } from '@nivo/bar';
 import { useTheme } from '../store/ThemeContext';
-import { useState, useEffect } from 'react';
-import { getChartSize } from '../config/chartConfig';
+import { useChartSize } from '../hooks/useChartSize';
+import { getChartTheme } from '../config/chartConfig';
 
 const MONTH_NAMES = {
     '01': 'Янв',
@@ -20,17 +20,8 @@ const MONTH_NAMES = {
 
 const MonthlyStats = ({ data }) => {
     const { theme } = useTheme();
-    const textColor = theme === 'dark' ? '#e5e7eb' : '#374151';
-    const gridColor = theme === 'dark' ? '#4a5568' : '#e5e7eb';
-    const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 768);
-
-    useEffect(() => {
-        const handleResize = () => setWindowWidth(window.innerWidth);
-        window.addEventListener('resize', handleResize);
-        return () => window.removeEventListener('resize', handleResize);
-    }, []);
-
-    const chartSize = getChartSize('bar', windowWidth);
+    const { textColor, gridColor } = getChartTheme(theme);
+    const chartSize = useChartSize('bar');
 
     if (!data || data.length === 0) {
         return (

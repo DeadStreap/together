@@ -6,7 +6,7 @@ const STATUS_LABELS = {
     declined: 'Отклонено',
 };
 
-const SuggestionCard = ({ suggestion, mode, onAccept, onDecline }) => {
+const SuggestionCard = ({ suggestion, mode, onAccept, onDecline, isPending = false }) => {
     return (
         <div className="suggestion-card">
             <div className="suggestion-card-body">
@@ -31,12 +31,14 @@ const SuggestionCard = ({ suggestion, mode, onAccept, onDecline }) => {
                     <button
                         className="suggestion-card-btn suggestion-card-btn--accept"
                         onClick={() => onAccept?.(suggestion.id)}
+                        disabled={isPending}
                     >
-                        Принять
+                        {isPending ? 'Ожидание...' : 'Принять'}
                     </button>
                     <button
                         className="suggestion-card-btn suggestion-card-btn--decline"
                         onClick={() => onDecline?.(suggestion.id)}
+                        disabled={isPending}
                     >
                         Отклонить
                     </button>

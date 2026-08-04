@@ -2,13 +2,15 @@ import { useState } from 'react';
 import { formatDate } from '../utils/dateFormat';
 import { getColorGradient, getColorShadow } from '../utils/colorGradients';
 import { getColorValueByName } from '../utils/colorUtils';
-import { apiReq, apiReqWithBody } from '../utils/apiReq';
+import { apiReqWithBody } from '../utils/apiReq';
 import { getApiUrl } from '../config/apiConfig';
+import ConfirmDialog from './ConfirmDialog';
 
 const CommentItem = ({ comment, currentUserId, onEdit, onDelete }) => {
     const [isEditing, setIsEditing] = useState(false);
     const [editText, setEditText] = useState(comment.comment_text);
     const [isSaving, setIsSaving] = useState(false);
+    const [isDeleting, setIsDeleting] = useState(false);
     const [error, setError] = useState(null);
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
@@ -60,13 +62,6 @@ const CommentItem = ({ comment, currentUserId, onEdit, onDelete }) => {
         }
     };
 
-    const handleKeyDown = (e) => {
-        if (e.key === 'Enter' && !e.shiftKey) {
-            e.preventDefault();
-            handleSave();
-        }
-    };
-
     const handleEditKeyDown = (e) => {
         if (e.key === 'Enter' && !e.shiftKey) {
             e.preventDefault();
@@ -78,6 +73,8 @@ const CommentItem = ({ comment, currentUserId, onEdit, onDelete }) => {
 
     const handleDelete = async () => {
         try {
+            setIsDeleting(true);
+            setError(null);
             await apiReqWithBody(
                 getApiUrl('/api/delete/comment'),
                 'DELETE',
@@ -91,6 +88,7 @@ const CommentItem = ({ comment, currentUserId, onEdit, onDelete }) => {
             setShowDeleteConfirm(false);
         } catch (err) {
             setError(err.message || 'Ошибка при удалении');
+            setIsDeleting(false);
         }
     };
 
@@ -193,41 +191,19 @@ const CommentItem = ({ comment, currentUserId, onEdit, onDelete }) => {
             </div>
 
             {showDeleteConfirm && (
-                <div className="modal-overlay" onClick={() => setShowDeleteConfirm(false)}>
-                    <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-                        <div className="modal-header">
-                            <div className="modal-title">Удалить комментарий?</div>
-                        </div>
-                        <div className="modal-body">
-                            <p className="modal-text">
-                                {comment.comment_text.length > 100
-                                    ? comment.comment_text.slice(0, 100) + '...'
-                                    : comment.comment_text}
-                            </p>
-                            <p className="modal-subtext">
-                                Это действие нельзя отменить
-                            </p>
-                        </div>
-                        <div className="modal-actions">
-                            <button
-                                type="button"
-                                onClick={() => setShowDeleteConfirm(false)}
-                                className="secondary-button"
-                                disabled={isSaving}
-                            >
-                                Отмена
-                            </button>
-                            <button
-                                type="button"
-                                onClick={handleDelete}
-                                className="primary-button danger-button"
-                                disabled={isSaving}
-                            >
-                                {isSaving ? 'Удаление...' : 'Удалить'}
-                            </button>
-                        </div>
-                    </div>
-                </div>
+                <ConfirmDialog
+                    title="Удалить комментарий?"
+                    text={comment.comment_text.length > 100
+                        ? comment.comment_text.slice(0, 100) + '...'
+                        : comment.comment_text}
+                    subtext="Это действие нельзя отменить"
+                    confirmLabel="Удалить"
+                    pendingLabel="Удаление..."
+                    danger
+                    isPending={isDeleting}
+                    onCancel={() => setShowDeleteConfirm(false)}
+                    onConfirm={handleDelete}
+                />
             )}
         </>
     );

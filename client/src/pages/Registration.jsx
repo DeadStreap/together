@@ -3,8 +3,10 @@ import { Link, useNavigate } from "react-router-dom";
 import { useUser } from "../store/UserContext";
 import { apiReqWithBody } from "../utils/apiReq";
 import { getApiUrl } from "../config/apiConfig";
+import { usePageTitle } from "../hooks/usePageTitle";
 
 function Registration() {
+    usePageTitle('Регистрация');
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");

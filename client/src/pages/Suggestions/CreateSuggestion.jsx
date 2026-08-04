@@ -3,8 +3,10 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useUser } from '../../store/UserContext';
 import { apiReqWithBody } from '../../utils/apiReq';
 import { getApiUrl } from '../../config/apiConfig';
+import { usePageTitle } from '../../hooks/usePageTitle';
 
 function CreateSuggestion() {
+    usePageTitle('Новое предложение');
     const { user } = useUser();
     const navigate = useNavigate();
     const [title, setTitle] = useState('');

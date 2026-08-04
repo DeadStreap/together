@@ -1,7 +1,7 @@
 import { Pie } from '@nivo/pie';
 import { useTheme } from '../store/ThemeContext';
-import { useState, useEffect } from 'react';
-import { getChartSize } from '../config/chartConfig';
+import { useChartSize } from '../hooks/useChartSize';
+import { getChartTheme } from '../config/chartConfig';
 
 const STATUS_CONFIG = {
     planned: {
@@ -20,16 +20,8 @@ const STATUS_CONFIG = {
 
 const StatusStats = ({ data }) => {
     const { theme } = useTheme();
-    const textColor = theme === 'dark' ? '#e5e7eb' : '#374151';
-    const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 768);
-
-    useEffect(() => {
-        const handleResize = () => setWindowWidth(window.innerWidth);
-        window.addEventListener('resize', handleResize);
-        return () => window.removeEventListener('resize', handleResize);
-    }, []);
-
-    const chartSize = getChartSize('pie', windowWidth);
+    const { textColor } = getChartTheme(theme);
+    const chartSize = useChartSize('pie');
 
     if (!data || (data.planned === 0 && data.inProgress === 0 && data.done === 0)) {
         return (

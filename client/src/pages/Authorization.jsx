@@ -3,8 +3,10 @@ import { useNavigate } from "react-router-dom";
 import { useUser } from "../store/UserContext";
 import { apiReqWithBody } from "../utils/apiReq";
 import { getApiUrl } from "../config/apiConfig";
+import { usePageTitle } from "../hooks/usePageTitle";
 
 function Authorization() {
+    usePageTitle('Авторизация');
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState(null);

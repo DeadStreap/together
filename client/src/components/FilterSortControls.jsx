@@ -1,10 +1,19 @@
+import StatusIcon from './StatusIcon';
+
 const FilterSortControls = ({ filters, onFilterChange, onSortChange, sortConfig }) => {
+    const statusButtons = [
+        { status: 'done', label: 'Завершено' },
+        { status: 'inProgress', label: 'В процессе' },
+        { status: 'planned', label: 'Запланировано' },
+    ];
+
     return (
         <div className="filters-container">
             <div className="filter-grid">
                 <div>
-                    <label className="filter-label">Фильтр по категории:</label>
+                    <label htmlFor="category-filter" className="filter-label">Фильтр по категории:</label>
                     <select
+                        id="category-filter"
                         value={filters.category}
                         onChange={(e) => onFilterChange('category', e.target.value)}
                         className="filter-select"
@@ -45,58 +54,37 @@ const FilterSortControls = ({ filters, onFilterChange, onSortChange, sortConfig 
                     <button
                         onClick={() => onSortChange('added_at')}
                         className={`sort-button ${(sortConfig.key === 'added_at' && sortConfig.isUserSelected) ? 'sort-button-active' : ''}`}
+                        aria-pressed={sortConfig.key === 'added_at' && sortConfig.isUserSelected}
                     >
                         Дата {(sortConfig.key === 'added_at' && sortConfig.isUserSelected) && (sortConfig.direction === 'asc' ? '↑' : '↓')}
                     </button>
                     <button
                         onClick={() => onSortChange('title')}
                         className={`sort-button ${(sortConfig.key === 'title' && sortConfig.isUserSelected) ? 'sort-button-active' : ''}`}
+                        aria-pressed={sortConfig.key === 'title' && sortConfig.isUserSelected}
                     >
                         Название {(sortConfig.key === 'title' && sortConfig.isUserSelected) && (sortConfig.direction === 'asc' ? '↑' : '↓')}
                     </button>
                 </div>
 
-                <div className="status-filter-buttons-container">
-                    <button
-                        onClick={() => onFilterChange('status', filters.status === 'done' ? '' : 'done')}
-                        className={`sort-button ${filters.status === 'done' ? 'sort-button-active' : ''}`}
-                        title="Завершено"
-                    >
-                        <img
-                            src="/done.svg"
-                            alt="Завершено"
-                            className="status-icon done"
-                            style={{ width: '16px', height: '16px' }}
-                        />
-                    </button>
-                    <button
-                        onClick={() => onFilterChange('status', filters.status === 'inProgress' ? '' : 'inProgress')}
-                        className={`sort-button ${filters.status === 'inProgress' ? 'sort-button-active' : ''}`}
-                        title="В процессе"
-                    >
-                        <img
-                            src="/clock.svg"
-                            alt="В процессе"
-                            className="status-icon in-progress"
-                            style={{ width: '16px', height: '16px' }}
-                        />
-                    </button>
-                    <button
-                        onClick={() => onFilterChange('status', filters.status === 'planned' ? '' : 'planned')}
-                        className={`sort-button ${filters.status === 'planned' ? 'sort-button-active' : ''}`}
-                        title="Запланировано"
-                    >
-                        <img
-                            src="/dock.svg"
-                            alt="Запланировано"
-                            className="status-icon planned"
-                            style={{ width: '16px', height: '16px' }}
-                        />
-                    </button>
+                <div className="status-filter-buttons-container" role="group" aria-label="Фильтр по статусу">
+                    {statusButtons.map(({ status, label }) => (
+                        <button
+                            key={status}
+                            onClick={() => onFilterChange('status', filters.status === status ? '' : status)}
+                            className={`sort-button ${filters.status === status ? 'sort-button-active' : ''}`}
+                            aria-label={`Фильтр: ${label}`}
+                            aria-pressed={filters.status === status}
+                        >
+                            <StatusIcon status={status} />
+                        </button>
+                    ))}
                 </div>
 
                 <div className="search-container">
+                    <label htmlFor="search-input" className="filter-search-label">Поиск по названию</label>
                     <input
+                        id="search-input"
                         type="text"
                         value={filters.search}
                         onChange={(e) => onFilterChange('search', e.target.value)}

@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 
 import { apiReq } from "../../utils/apiReq";
 import { useUser } from "../../store/UserContext";
@@ -7,8 +8,10 @@ import FilterSortControls from "../../components/FilterSortControls";
 import Pagination from "../../components/Pagination";
 import { getApiUrl } from "../../config/apiConfig";
 import ActivityCard from "../../components/ActivityCard";
+import { usePageTitle } from "../../hooks/usePageTitle";
 
 function ActivitiesAlone() {
+    usePageTitle('Одиночные активности');
     const [contentItems, setContentItems] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -78,6 +81,30 @@ function ActivitiesAlone() {
         );
     }
 
+    if (!isAuthenticated || !user) {
+        return (
+            <div className="tasks-container create-activity-page">
+                <div className="content-card content-card--detail activity-form-wrapper">
+                    <div className="content-card-link">
+                        <div className="item-title">Войдите в Together</div>
+                        <p className="form-hint">
+                            Чтобы видеть одиночные активности, войдите в аккаунт.
+                        </p>
+                        <div className="activity-form-actions">
+                            <Link
+                                to="/authorization"
+                                className="primary-button"
+                                style={{ textDecoration: "none", textAlign: "center" }}
+                            >
+                                Перейти к авторизации
+                            </Link>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
     return (
         <div className="tasks-container">
             <h1>Мои одиночные активности ({totalItemsCount})</h1>
@@ -97,6 +124,7 @@ function ActivitiesAlone() {
                 </ul>
             ) : (
                 <div className="empty-state">
+                    <div className="empty-state-icon">🌱</div>
                     <div className="empty-state-title">Нет одиночных активностей</div>
                     <p>Добавьте первую!</p>
                 </div>

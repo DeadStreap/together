@@ -20,6 +20,11 @@ const CommentSection = ({ contentId }) => {
     }, [contentId, isInitializing]);
 
     const fetchComments = async () => {
+        if (!user) {
+            setComments([]);
+            setIsLoading(false);
+            return;
+        }
         try {
             setIsLoading(true);
             setError(null);
@@ -84,6 +89,19 @@ const CommentSection = ({ contentId }) => {
 
     if (isLoading) {
         return <div className="comments-loading">Загрузка комментариев...</div>;
+    }
+
+    if (!user) {
+        return (
+            <div className="comment-section">
+                <div className="comment-section-title">
+                    Комментарии
+                </div>
+                <div className="comments-empty">
+                    Войдите в аккаунт, чтобы видеть и оставлять комментарии
+                </div>
+            </div>
+        );
     }
 
     return (

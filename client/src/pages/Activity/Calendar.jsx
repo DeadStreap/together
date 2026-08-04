@@ -5,10 +5,12 @@ import { apiReq } from '../../utils/apiReq';
 import { getApiUrl } from '../../config/apiConfig';
 import Timeline from '../../components/Timeline';
 import { MonthNavigation } from '../../components/MonthNavigation';
+import { usePageTitle } from '../../hooks/usePageTitle';
 
 const PAGE_SIZE = 20;
 
 function Calendar() {
+  usePageTitle('Календарь');
   const { user, isInitializing, isAuthenticated } = useUser();
   const [allActivities, setAllActivities] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -18,6 +20,7 @@ function Calendar() {
     const now = new Date();
     return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
   })();
+  const [currentMonth, setCurrentMonth] = useState(initialMonth);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -59,7 +62,13 @@ function Calendar() {
   const availableMonths = [...new Set(allActivities.map((a) => a.end_date.slice(0, 7)))].sort();
 
   const scrollToMonth = (monthKey) => {
-    setVisibleCount(PAGE_SIZE);
+    const targetIndex = allActivities.findIndex(
+      (a) => a.end_date && a.end_date.slice(0, 7) === monthKey
+    );
+    if (targetIndex === -1) return;
+
+    setCurrentMonth(monthKey);
+    setVisibleCount((prev) => Math.max(prev, targetIndex + 1));
 
     requestAnimationFrame(() => {
       const el = document.querySelector(`[data-month="${monthKey}"]`);
@@ -108,7 +117,7 @@ function Calendar() {
   return (
     <div className="calendar-page">
       <MonthNavigation
-        currentMonth={initialMonth}
+        currentMonth={currentMonth}
         availableMonths={availableMonths}
         onPick={scrollToMonth}
       />

@@ -65,9 +65,9 @@ const Timeline = ({ activities, visibleCount, onLoadMore }) => {
 
         return (
           <div key={monthKey} className="timeline-month-group" data-month={monthKey}>
-            <div className="timeline-month-marker">
+            <h2 className="timeline-month-marker">
               <span className="timeline-month-label">{getMonthYearLabel(monthKey)}</span>
-            </div>
+            </h2>
             {dayKeys.map((dayKey) => (
               <div key={dayKey} className="timeline-day-group">
                 <div className="timeline-day-marker">

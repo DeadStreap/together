@@ -1,12 +1,15 @@
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 
 import { apiReq } from '../../utils/apiReq';
 import { getApiUrl } from '../../config/apiConfig';
 import StatisticsBlock from '../../components/StatisticsBlock';
 import { useUser } from '../../store/UserContext';
 import ActivityCard from '../../components/ActivityCard';
+import { usePageTitle } from '../../hooks/usePageTitle';
 
 function Activities() {
+    usePageTitle('Главная');
     const [contentItems, setContentItems] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -57,7 +60,31 @@ function Activities() {
     if (error) {
         return (
             <div className="error">
-                Ошибка: {error.message || "Неизвестная ошибка"}
+                Ошибка: {error}
+            </div>
+        );
+    }
+
+    if (!isAuthenticated || !user) {
+        return (
+            <div className="tasks-container create-activity-page">
+                <div className="content-card content-card--detail activity-form-wrapper">
+                    <div className="content-card-link">
+                        <div className="item-title">Войдите в Together</div>
+                        <p className="form-hint">
+                            Чтобы видеть совместные активности, войдите в аккаунт или создайте новый.
+                        </p>
+                        <div className="activity-form-actions">
+                            <Link
+                                to="/authorization"
+                                className="primary-button"
+                                style={{ textDecoration: "none", textAlign: "center" }}
+                            >
+                                Перейти к авторизации
+                            </Link>
+                        </div>
+                    </div>
+                </div>
             </div>
         );
     }
@@ -90,6 +117,7 @@ function Activities() {
                 </div>
             ) : (
                 <div className="empty-state">
+                    <div className="empty-state-icon">💫</div>
                     <div className="empty-state-title">Нет активностей в процессе</div>
                     <p>Начните что-нибудь новое!</p>
                 </div>
@@ -106,6 +134,7 @@ function Activities() {
                 </div>
             ) : (
                 <div className="empty-state">
+                    <div className="empty-state-icon">🎉</div>
                     <div className="empty-state-title">Пока ничего не завершено</div>
                     <p>Как только активность будет выполнена, она появится здесь</p>
                 </div>
@@ -122,6 +151,7 @@ function Activities() {
                 </div>
             ) : (
                 <div className="empty-state">
+                    <div className="empty-state-icon">✨</div>
                     <div className="empty-state-title">Пока ничего не добавлено</div>
                     <p>Добавьте первую совместную активность!</p>
                 </div>

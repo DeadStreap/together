@@ -1,6 +1,8 @@
 import { Link } from 'react-router-dom';
+import { usePageTitle } from '../hooks/usePageTitle';
 
 const NotFoundPage = () => {
+    usePageTitle('Страница не найдена');
     return (
         <div className="tasks-container">
             <div className="content-card content-card--detail activity-form-wrapper">

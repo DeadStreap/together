@@ -5,8 +5,10 @@ import { apiReq } from "../../utils/apiReq";
 import { getApiUrl } from "../../config/apiConfig";
 import Pagination from "../../components/Pagination";
 import ActivityCard from "../../components/ActivityCard";
+import { usePageTitle } from "../../hooks/usePageTitle";
 
 function ActivitiesPartner() {
+    usePageTitle('Активности партнёра');
     const [contentItems, setContentItems] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);

@@ -39,3 +39,12 @@ export const getChartSize = (type, windowWidth) => {
     if (isMobile) return sizes.mobile;
     return sizes.desktop;
 };
+
+// Тема для диаграмм Nivo, адаптированная под светлую/тёмную тему
+export const getChartTheme = (theme) => {
+    const dark = theme === 'dark';
+    return {
+        textColor: dark ? '#e5e7eb' : '#374151',
+        gridColor: dark ? '#4a5568' : '#e5e7eb',
+    };
+};

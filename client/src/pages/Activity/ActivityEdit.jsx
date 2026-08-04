@@ -2,8 +2,10 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { apiReq, apiReqWithBody } from "../../utils/apiReq";
 import { getApiUrl } from "../../config/apiConfig";
+import { usePageTitle } from "../../hooks/usePageTitle";
 
 function ActivityEdit() {
+    usePageTitle('Редактирование активности');
     const { ActivityId } = useParams();
     const navigate = useNavigate();
 
@@ -19,6 +21,7 @@ function ActivityEdit() {
     const [isLoading, setIsLoading] = useState(true);
     const [isSaving, setIsSaving] = useState(false);
     const [error, setError] = useState(null);
+    const [loadError, setLoadError] = useState(null);
 
     const GET_API_URL = getApiUrl(`/api/content/id/${ActivityId}`);
     const UPDATE_API_URL = getApiUrl('/api/update/content');
@@ -53,7 +56,7 @@ function ActivityEdit() {
                 setIsLoading(false);
             } catch (err) {
                 console.error("Ошибка при загрузке активности:", err);
-                setError(err);
+                setLoadError(err);
                 setIsLoading(false);
             }
         };
@@ -100,10 +103,10 @@ function ActivityEdit() {
         return <div className="loading">Загрузка активности...</div>;
     }
 
-    if (error) {
+    if (loadError) {
         return (
             <div className="error">
-                Ошибка: {error.message || "Неизвестная ошибка"}
+                Ошибка: {loadError.message || "Неизвестная ошибка"}
             </div>
         );
     }
@@ -115,6 +118,11 @@ function ActivityEdit() {
                     <div className="item-title">Редактировать активность</div>
 
                     <form onSubmit={handleSubmit} className="activity-form">
+                        {error && (
+                            <div className="error-message" style={{ fontSize: 13, marginTop: 4 }}>
+                                {error.message || "Неизвестная ошибка"}
+                            </div>
+                        )}
                         <div className="activity-form-field">
                             <label htmlFor="title">Название</label>
                             <input

@@ -3,12 +3,14 @@ import { Link, useNavigate } from "react-router-dom";
 import { useUser } from "../../store/UserContext";
 import { apiReqWithBody } from "../../utils/apiReq";
 import { getApiUrl } from "../../config/apiConfig";
+import { usePageTitle } from "../../hooks/usePageTitle";
 
 function CreateActivity() {
+    usePageTitle('Новая активность');
     const [error, setError] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
-    const { user, isInitializing, isAuthenticated } = useUser();
+    const { user, isAuthenticated } = useUser();
     const [formData, setFormData] = useState({
         title: "",
         category: "anime",
@@ -102,14 +104,6 @@ function CreateActivity() {
         );
     }
 
-    if (error) {
-        return (
-            <div className="error">
-                Ошибка: {error.message || "Неизвестная ошибка"}
-            </div>
-        );
-    }
-
     return (
         <div className="tasks-container create-activity-page">
             <div className="content-card content-card--detail activity-form-wrapper">
@@ -117,6 +111,12 @@ function CreateActivity() {
                     <div className="item-title">Новая активность</div>
 
                     <form onSubmit={handleSubmit} className="activity-form">
+                        {error && (
+                            <div className="error-message" style={{ fontSize: 13, marginTop: 4 }}>
+                                {error.message || "Неизвестная ошибка"}
+                            </div>
+                        )}
+
                         <div className="activity-form-field">
                             <label htmlFor="title">Название</label>
                             <input

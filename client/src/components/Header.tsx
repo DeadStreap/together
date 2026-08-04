@@ -6,7 +6,7 @@ const Header = () => {
     const { theme, toggleTheme } = useTheme();
 
     const isActive = (path: string) => location.pathname === path;
-    const isProfileActive = location.pathname === '/profile';
+    const isProfileActive = location.pathname === '/profile' || location.pathname.startsWith('/profile/');
 
     return (
         <aside className="sidebar">
@@ -33,10 +33,11 @@ const Header = () => {
                     </button>
                 </div>
 
-                <nav className="sidebar-nav">
+                <nav className="sidebar-nav" aria-label="Основная навигация">
                     <Link
                         to="/"
                         className={`sidebar-link ${isActive('/') ? 'active' : ''}`}
+                        aria-current={isActive('/') ? 'page' : undefined}
                     >
                         Главная
                     </Link>
@@ -44,6 +45,7 @@ const Header = () => {
                     <Link
                         to="/stats"
                         className={`sidebar-link ${isActive('/stats') ? 'active' : ''}`}
+                        aria-current={isActive('/stats') ? 'page' : undefined}
                     >
                         Статистика
                     </Link>
@@ -51,6 +53,7 @@ const Header = () => {
                     <Link
                         to="/calendar"
                         className={`sidebar-link ${isActive('/calendar') ? 'active' : ''}`}
+                        aria-current={isActive('/calendar') ? 'page' : undefined}
                     >
                         Календарь
                     </Link>
@@ -58,6 +61,7 @@ const Header = () => {
                     <Link
                         to="/activity/together"
                         className={`sidebar-link ${isActive('/activity/together') ? 'active' : ''}`}
+                        aria-current={isActive('/activity/together') ? 'page' : undefined}
                     >
                         Вместе
                     </Link>
@@ -65,6 +69,7 @@ const Header = () => {
                     <Link
                         to="/activity/alone"
                         className={`sidebar-link ${isActive('/activity/alone') ? 'active' : ''}`}
+                        aria-current={isActive('/activity/alone') ? 'page' : undefined}
                     >
                         Одиночные
                     </Link>
@@ -72,6 +77,7 @@ const Header = () => {
                     <Link
                         to="/activity/create"
                         className={`sidebar-link ${isActive('/activity/create') ? 'active' : ''}`}
+                        aria-current={isActive('/activity/create') ? 'page' : undefined}
                     >
                         Добавить
                     </Link>
@@ -79,6 +85,7 @@ const Header = () => {
                     <Link
                         to="/suggestions"
                         className={`sidebar-link ${isActive('/suggestions') || isActive('/suggestions/create') ? 'active' : ''}`}
+                        aria-current={isActive('/suggestions') || isActive('/suggestions/create') ? 'page' : undefined}
                     >
                         Предложения
                     </Link>
@@ -86,6 +93,7 @@ const Header = () => {
                     <Link
                         to="/about"
                         className={`sidebar-link ${isActive('/about') ? 'active' : ''}`}
+                        aria-current={isActive('/about') ? 'page' : undefined}
                     >
                         О проекте
                     </Link>
@@ -98,6 +106,7 @@ const Header = () => {
                 <Link
                     to="/profile"
                     className={`sidebar-link sidebar-link-profile ${isProfileActive ? 'active' : ''}`}
+                    aria-current={isProfileActive ? 'page' : undefined}
                 >
                     Мой профиль
                 </Link>

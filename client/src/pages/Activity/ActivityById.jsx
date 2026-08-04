@@ -8,12 +8,16 @@ import { apiReq, apiReqWithBody } from '../../utils/apiReq';
 import { formatDateTime, formatDate } from '../../utils/dateFormat';
 import { getDaysInStatus, formatDaysWord } from '../../utils/daysInStatus';
 import CommentSection from '../../components/CommentSection';
+import ConfirmDialog from '../../components/ConfirmDialog';
+import { usePageTitle } from '../../hooks/usePageTitle';
 
 function ActivityById() {
+    usePageTitle('Активность');
     const [contentItems, setContentItems] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+    const [isDeleting, setIsDeleting] = useState(false);
 
     const { user, isInitializing } = useUser();
 
@@ -46,7 +50,7 @@ function ActivityById() {
 
     const handleDelete = async () => {
         try {
-            setIsLoading(true);
+            setIsDeleting(true);
             setError(null);
 
             await apiReqWithBody(getApiUrl('/api/delete/content'), 'DELETE', { id: ActivityId });
@@ -55,7 +59,7 @@ function ActivityById() {
         } catch (err) {
             console.error("Ошибка при удалении активности:", err);
             setError(err);
-            setIsLoading(false);
+            setIsDeleting(false);
         }
     };
 
@@ -142,7 +146,7 @@ function ActivityById() {
                             ← Назад к списку
                         </button>
                         <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 4 }}>
-                            {(user.id == item.added_by_user_id || user.partner_id == item.added_by_user_id) && (
+                            {(user && (user.id == item.added_by_user_id || user.partner_id == item.added_by_user_id)) && (
                                 <>
                                     <div style={{ display: "flex", gap: 4 }}>
                                         {item.status === 'inProgress' && (
@@ -153,7 +157,7 @@ function ActivityById() {
                                                 className="icon-button-complete"
                                                 title="Завершить активность"
                                             >
-                                                <img src="/done.svg" alt="Завершить" />
+                                                <img src="/done.svg" alt="Завершить активность" />
                                             </button>
                                         )}
                                         {item.status === 'planned' && (
@@ -164,14 +168,14 @@ function ActivityById() {
                                                 className="icon-button-progress"
                                                 title="Начать активность"
                                             >
-                                                <img src="/clock.svg" alt="В процессе" />
+                                                <img src="/clock.svg" alt="Начать активность" />
                                             </button>
                                         )}
                                         <Link
                                             to={`/activity/${ActivityId}/edit`}
                                             className="icon-button-edit"
                                         >
-                                            <img src="/edit.svg" alt="Edit" />
+                                            <img src="/edit.svg" alt="Редактировать" />
                                         </Link>
                                         <button
                                             type="button"
@@ -179,7 +183,7 @@ function ActivityById() {
                                             disabled={isLoading}
                                             className="icon-button-delete"
                                         >
-                                            <img src="/trash.svg" alt="Delete" />
+                                            <img src="/trash.svg" alt="Удалить" />
                                         </button>
                                     </div>
                                     <span style={{ fontSize: 12, color: "#9ca3af" }}>
@@ -232,39 +236,17 @@ function ActivityById() {
             <CommentSection contentId={ActivityId} />
 
             {showDeleteConfirm && (
-                <div className="modal-overlay" onClick={() => setShowDeleteConfirm(false)}>
-                    <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-                        <div className="modal-header">
-                            <div className="modal-title">Удалить активность?</div>
-                        </div>
-                        <div className="modal-body">
-                            <p className="modal-text">
-                                {item.title}
-                            </p>
-                            <p className="modal-subtext">
-                                Это действие нельзя отменить
-                            </p>
-                        </div>
-                        <div className="modal-actions">
-                            <button
-                                type="button"
-                                onClick={() => setShowDeleteConfirm(false)}
-                                className="secondary-button"
-                                disabled={isLoading}
-                            >
-                                Отмена
-                            </button>
-                            <button
-                                type="button"
-                                onClick={handleDelete}
-                                className="primary-button danger-button"
-                                disabled={isLoading}
-                            >
-                                {isLoading ? 'Удаление...' : 'Удалить'}
-                            </button>
-                        </div>
-                    </div>
-                </div>
+                <ConfirmDialog
+                    title="Удалить активность?"
+                    text={item.title}
+                    subtext="Это действие нельзя отменить"
+                    confirmLabel="Удалить"
+                    pendingLabel="Удаление..."
+                    danger
+                    isPending={isDeleting}
+                    onCancel={() => setShowDeleteConfirm(false)}
+                    onConfirm={handleDelete}
+                />
             )}
         </div>
     );

@@ -6,10 +6,12 @@ import { apiReqWithBody } from "../../utils/apiReq";
 import ColorPicker from "../../components/ColorPicker";
 import IconPicker from "../../components/IconPicker";
 import AvatarPreview from "../../components/AvatarPreview";
-import { getColorValueByName, isValidColorName } from "../../utils/colorUtils";
+import { isValidColorName } from "../../utils/colorUtils";
+import { usePageTitle } from "../../hooks/usePageTitle";
 
 function ProfileEdit() {
-    const { user, isInitializing, login, updateProfileColor, getProfileColor } = useUser();
+    usePageTitle('Редактирование профиля');
+    const { user, login } = useUser();
     const [formData, setFormData] = useState({
         username: "",
     });

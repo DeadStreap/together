@@ -1,7 +1,7 @@
 import { Pie } from '@nivo/pie';
 import { useTheme } from '../store/ThemeContext';
-import { useState, useEffect } from 'react';
-import { getChartSize } from '../config/chartConfig';
+import { useChartSize } from '../hooks/useChartSize';
+import { getChartTheme } from '../config/chartConfig';
 
 const CATEGORY_COLORS = {
     anime: '#7a55ff',
@@ -19,16 +19,8 @@ const CATEGORY_NAMES = {
 
 const CategoryStats = ({ data }) => {
     const { theme } = useTheme();
-    const textColor = theme === 'dark' ? '#e5e7eb' : '#374151';
-    const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 768);
-
-    useEffect(() => {
-        const handleResize = () => setWindowWidth(window.innerWidth);
-        window.addEventListener('resize', handleResize);
-        return () => window.removeEventListener('resize', handleResize);
-    }, []);
-
-    const chartSize = getChartSize('pieLarge', windowWidth);
+    const { textColor } = getChartTheme(theme);
+    const chartSize = useChartSize('pieLarge');
 
     if (!data || data.length === 0) {
         return (

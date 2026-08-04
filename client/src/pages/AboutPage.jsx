@@ -1,4 +1,7 @@
+import { usePageTitle } from '../hooks/usePageTitle';
+
 function AboutPage() {
+  usePageTitle('О проекте');
   return (
     <div className="about-page">
       <h2>О проекте</h2>

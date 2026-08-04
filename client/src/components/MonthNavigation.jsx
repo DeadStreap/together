@@ -13,6 +13,7 @@ const MonthNavigation = ({ currentMonth, availableMonths = [], onPick }) => {
     return parseInt(y, 10);
   });
   const panelRef = useRef(null);
+  const triggerRef = useRef(null);
 
   useEffect(() => {
     const handleClickOutside = (e) => {
@@ -20,8 +21,18 @@ const MonthNavigation = ({ currentMonth, availableMonths = [], onPick }) => {
         setIsOpen(false);
       }
     };
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        setIsOpen(false);
+        triggerRef.current?.focus();
+      }
+    };
     document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('keydown', handleKeyDown);
+    };
   }, []);
 
   const getMonthLabel = (monthKey) => {
@@ -34,23 +45,39 @@ const MonthNavigation = ({ currentMonth, availableMonths = [], onPick }) => {
     return `${year}-${m}`;
   });
 
+  const close = () => {
+    setIsOpen(false);
+    triggerRef.current?.focus();
+  };
+
   return (
     <div className="month-navigation" ref={panelRef}>
       <button
+        ref={triggerRef}
         className="month-nav-trigger"
         onClick={() => setIsOpen(!isOpen)}
+        aria-expanded={isOpen}
+        aria-haspopup="grid"
       >
         {getMonthLabel(currentMonth)}
       </button>
 
       {isOpen && (
-        <div className="month-grid-panel">
+        <div className="month-grid-panel" role="grid" aria-label="Выбор месяца">
           <div className="month-grid-header">
-            <button className="month-grid-year-btn" onClick={() => setYear(y => y - 1)}>
+            <button
+              className="month-grid-year-btn"
+              onClick={() => setYear(y => y - 1)}
+              aria-label="Предыдущий год"
+            >
               ←
             </button>
             <span className="month-grid-year">{year}</span>
-            <button className="month-grid-year-btn" onClick={() => setYear(y => y + 1)}>
+            <button
+              className="month-grid-year-btn"
+              onClick={() => setYear(y => y + 1)}
+              aria-label="Следующий год"
+            >
               →
             </button>
           </div>
@@ -58,12 +85,14 @@ const MonthNavigation = ({ currentMonth, availableMonths = [], onPick }) => {
             {months.map((m) => (
               <button
                 key={m}
+                role="gridcell"
                 className={`month-grid-month ${m === currentMonth ? 'month-grid-month--active' : ''} ${!availableMonths.includes(m) ? 'month-grid-month--inactive' : ''}`}
                 disabled={!availableMonths.includes(m)}
+                aria-pressed={m === currentMonth}
                 onClick={() => {
                   if (availableMonths.includes(m)) {
                     onPick(m);
-                    setIsOpen(false);
+                    close();
                   }
                 }}
               >

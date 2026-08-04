@@ -15,22 +15,25 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
     }
 
     return (
-        <div className="pagination">
+        <nav className="pagination" aria-label="Пагинация">
             <button
                 className="pagination-btn"
                 onClick={() => onPageChange(currentPage - 1)}
                 disabled={currentPage === 1}
+                aria-label="Предыдущая страница"
             >
                 ‹
             </button>
             {pages.map((page, idx) =>
                 page === '...' ? (
-                    <span key={`ellipsis-${idx}`} className="pagination-ellipsis">…</span>
+                    <span key={`ellipsis-${idx}`} className="pagination-ellipsis" aria-hidden="true">…</span>
                 ) : (
                     <button
                         key={page}
                         className={`pagination-btn ${page === currentPage ? 'pagination-btn--active' : ''}`}
                         onClick={() => onPageChange(page)}
+                        aria-current={page === currentPage ? 'page' : undefined}
+                        aria-label={`Страница ${page}`}
                     >
                         {page}
                     </button>
@@ -40,10 +43,11 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
                 className="pagination-btn"
                 onClick={() => onPageChange(currentPage + 1)}
                 disabled={currentPage === totalPages}
+                aria-label="Следующая страница"
             >
                 ›
             </button>
-        </div>
+        </nav>
     );
 };
 

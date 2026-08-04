@@ -8,8 +8,10 @@ import { getApiUrl } from "../../config/apiConfig";
 import { getColorGradient, getColorShadow } from "../../utils/colorGradients";
 import { getColorValueByName } from "../../utils/colorUtils";
 import { useCoupleTokens } from "../../hooks/useCoupleTokens";
+import { usePageTitle } from "../../hooks/usePageTitle";
 
 function Profile() {
+    usePageTitle('Профиль');
     const { user, isInitializing, isAuthenticated, logout, getProfileColor, login } = useUser();
     const [error, setError] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
@@ -213,11 +215,10 @@ function Profile() {
                 </div>
 
                 <div className="profile-badges">
-                    <div
+                    <button
+                        type="button"
                         className="profile-badge"
-                        style={{
-                            cursor: partner ? "pointer" : "default",
-                        }}
+                        disabled={!partner}
                         onClick={partner ? handleStatusClick : undefined}
                     >
                         <div className="profile-badge-label">
@@ -232,7 +233,7 @@ function Profile() {
                         >
                             {pairStatusText}
                         </div>
-                    </div>
+                    </button>
 
                     {!partner && (
                         <div className="profile-badge">
@@ -344,15 +345,21 @@ function Profile() {
                     )}
 
                     {user.couple_start_date && partner && (
-                        <div className="profile-badge" onClick={handleDaysTogetherClick}>
-                            <div className="profile-badge-label">
-                                <span className="profile-badge-dot" />
-                                <span>Уже вместе</span>
-                            </div>
-                            <div className="profile-badge-value">
-                                {getDaysTogether(user, daysFormat)}
-                            </div>
+                    <button
+                        type="button"
+                        className="profile-badge"
+                        onClick={handleDaysTogetherClick}
+                        title="Переключить формат счётчика"
+                        aria-label={`Уже вместе ${getDaysTogether(user, daysFormat)}. Нажмите, чтобы переключить формат`}
+                    >
+                        <div className="profile-badge-label">
+                            <span className="profile-badge-dot" />
+                            <span>Уже вместе</span>
                         </div>
+                        <div className="profile-badge-value">
+                            {getDaysTogether(user, daysFormat)}
+                        </div>
+                    </button>
                     )}
                 </div>
 

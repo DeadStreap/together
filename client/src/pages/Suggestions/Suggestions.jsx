@@ -4,12 +4,15 @@ import { useUser } from '../../store/UserContext';
 import { apiReq, apiReqWithBody } from '../../utils/apiReq';
 import { getApiUrl } from '../../config/apiConfig';
 import SuggestionCard from '../../components/SuggestionCard';
+import { usePageTitle } from '../../hooks/usePageTitle';
 
 function Suggestions() {
+    usePageTitle('Предложения');
     const { user, isInitializing, isAuthenticated } = useUser();
     const [suggestions, setSuggestions] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [pendingId, setPendingId] = useState(null);
 
     useEffect(() => {
         if (isInitializing) return;
@@ -37,19 +40,27 @@ function Suggestions() {
 
     const handleAccept = async (id) => {
         try {
+            setPendingId(id);
+            setError(null);
             await apiReqWithBody(getApiUrl(`/api/accept/suggestion/${id}`), 'PUT', { user_id: user.id });
             setSuggestions((prev) => prev.filter((s) => s.id !== id));
         } catch (err) {
             setError(err.message || 'Ошибка при принятии предложения');
+        } finally {
+            setPendingId(null);
         }
     };
 
     const handleDecline = async (id) => {
         try {
+            setPendingId(id);
+            setError(null);
             await apiReqWithBody(getApiUrl(`/api/decline/suggestion/${id}`), 'DELETE', { user_id: user.id });
             setSuggestions((prev) => prev.filter((s) => s.id !== id));
         } catch (err) {
             setError(err.message || 'Ошибка при отклонении предложения');
+        } finally {
+            setPendingId(null);
         }
     };
 
@@ -88,16 +99,13 @@ function Suggestions() {
         );
     }
 
-    if (error) {
-        return (
-            <div className="tasks-container">
-                <div className="error">Ошибка: {error}</div>
-            </div>
-        );
-    }
-
     return (
         <div className="tasks-container">
+            {error && (
+                <div className="error-message" style={{ marginBottom: 12 }}>
+                    {error}
+                </div>
+            )}
             <div className="suggestions-header">
                 <h1>Предложения</h1>
                 <Link to="/suggestions/create" className="primary-button" style={{ textDecoration: 'none' }}>
@@ -121,6 +129,7 @@ function Suggestions() {
                                         key={s.id}
                                         suggestion={s}
                                         mode="incoming"
+                                        isPending={pendingId === s.id}
                                         onAccept={handleAccept}
                                         onDecline={handleDecline}
                                     />
