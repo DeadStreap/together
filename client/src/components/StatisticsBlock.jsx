@@ -110,7 +110,7 @@ const StatisticsBlock = () => {
 
     const renderStatItem = (value, label) => (
         <div className="stat-item">
-            <div className="stat-value">{isLoading ? "—" : value}</div>
+            <div className="stat-value">{isLoading ? "-" : value}</div>
             <div className="stat-label">{label}</div>
         </div>
     );
