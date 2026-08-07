@@ -23,7 +23,7 @@ router.put('/update/user', userController.updateUser)
 router.post('/create/user', userController.createUser)
 router.delete('/delete/user', userController.deleteUser)
 router.put('/user/generate-token', userController.generateToken)
-router.put('/user/refresh-token', userController.refreshToken)
+router.put('/user/refresh-token', userController.generateToken)
 router.put('/user/join-couple', userController.joinCouple)
 
 router.get('/couples', coupleController.getCouples)

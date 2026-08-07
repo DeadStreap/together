@@ -223,7 +223,7 @@ class UserController {
         }
 
         try {
-            const token = Math.floor(100000 + Math.random() * 900000).toString();
+            let token = Math.floor(100000 + Math.random() * 900000).toString();
             
             let tokenExists = true;
             while(tokenExists) {
@@ -244,45 +244,6 @@ class UserController {
                 return res.status(404).json({ error: 'User not found' });
             }
             
-            const [updatedUserResult] = await pool.query('SELECT * FROM users WHERE id = ?', [userId]);
-            const updatedUser = updatedUserResult[0];
-            delete updatedUser.password;
-            res.json(updatedUser);
-        } catch (err) {
-            console.error('DB Error:', err);
-            res.status(500).json({ error: 'Server error' });
-        }
-    }
-
-    async refreshToken(req, res) {
-        const { userId } = req.body;
-
-        if (!userId) {
-            return res.status(400).json({ error: 'User ID is required' });
-        }
-
-        try {
-            const token = Math.floor(100000 + Math.random() * 900000).toString();
-            
-            let tokenExists = true;
-            while(tokenExists) {
-                const [result] = await pool.query('SELECT id FROM users WHERE token = ?', [token]);
-                if(result.length === 0) {
-                    tokenExists = false;
-                } else {
-                    token = Math.floor(100000 + Math.random() * 900000).toString();
-                }
-            }
-            
-            const [result] = await pool.query(
-                'UPDATE users SET token = ? WHERE id = ?',
-                [token, userId]
-            );
-
-            if(result.affectedRows === 0) {
-                return res.status(404).json({ error: 'User not found' });
-            }
-
             const [updatedUserResult] = await pool.query('SELECT * FROM users WHERE id = ?', [userId]);
             const updatedUser = updatedUserResult[0];
             delete updatedUser.password;
