@@ -18,7 +18,7 @@ class ContentController {
             res.json(result);
         } catch (err) {
             console.error('DB Error:', err);
-            res.status(500).json({ error: err.message });
+            res.status(500).json({ error: 'Server error' });
         }
     }
 
@@ -44,7 +44,7 @@ class ContentController {
             res.json(result);
         } catch (err) {
             console.error("DB Error:", err);
-            res.status(500).json({ error: err.message });
+            res.status(500).json({ error: 'Server error' });
         }
     }
 
@@ -203,7 +203,7 @@ class ContentController {
             res.json(result);
         } catch (err) {
             console.error("DB Error:", err);
-            res.status(500).json({ error: err.message });
+            res.status(500).json({ error: 'Server error' });
         }
     }
 

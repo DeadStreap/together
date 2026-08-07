@@ -17,7 +17,15 @@ export async function apiReq(url, options = {}) {
     const response = await fetch(url, mergedOptions);
 
     if (!response.ok) {
-        throw new Error(`Ошибка сети: ${response.statusText} (${response.status})`);
+        let message = `Ошибка сети: ${response.statusText} (${response.status})`;
+        let data = null;
+        try {
+            data = await response.json();
+        } catch {
+            data = null;
+        }
+        if (data && data.error) message = data.error;
+        throw new Error(message);
     }
 
     const contentType = response.headers.get('content-type');

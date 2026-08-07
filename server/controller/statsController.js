@@ -29,14 +29,13 @@ class StatsController {
             res.json(result);
         } catch (err) {
             console.error("DB Error:", err);
-            res.status(500).json({ error: err.message });
+            res.status(500).json({ error: 'Server error' });
         }
     }
 
     async getMonthlyStats(req, res) {
         const userId = req.params.userId;
         const partnerId = req.params.partnerId;
-        const { months = 6 } = req.query;
 
         const sql = `
             SELECT
@@ -76,7 +75,7 @@ class StatsController {
             res.json(result);
         } catch (err) {
             console.error("DB Error:", err);
-            res.status(500).json({ error: err.message });
+            res.status(500).json({ error: 'Server error' });
         }
     }
 
@@ -110,7 +109,7 @@ class StatsController {
             res.json(stats);
         } catch (err) {
             console.error("DB Error:", err);
-            res.status(500).json({ error: err.message });
+            res.status(500).json({ error: 'Server error' });
         }
     }
 
@@ -140,7 +139,7 @@ class StatsController {
             res.json(result);
         } catch (err) {
             console.error("DB Error:", err);
-            res.status(500).json({ error: err.message });
+            res.status(500).json({ error: 'Server error' });
         }
     }
 
@@ -172,7 +171,7 @@ class StatsController {
             res.json(result);
         } catch (err) {
             console.error("DB Error:", err);
-            res.status(500).json({ error: err.message });
+            res.status(500).json({ error: 'Server error' });
         }
     }
 }

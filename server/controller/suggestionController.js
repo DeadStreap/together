@@ -26,7 +26,7 @@ class SuggestionController {
             res.json(rows);
         } catch (err) {
             console.error('DB Error:', err);
-            res.status(500).json({ error: err.message });
+            res.status(500).json({ error: 'Server error' });
         }
     }
 
@@ -79,7 +79,7 @@ class SuggestionController {
             res.status(201).json(newRow[0]);
         } catch (err) {
             console.error('DB Error:', err);
-            res.status(500).json({ error: err.message });
+            res.status(500).json({ error: 'Server error' });
         }
     }
 
@@ -139,7 +139,7 @@ class SuggestionController {
             });
         } catch (err) {
             console.error('DB Error:', err);
-            res.status(500).json({ error: err.message });
+            res.status(500).json({ error: 'Server error' });
         }
     }
 
@@ -183,7 +183,7 @@ class SuggestionController {
             res.json({ message: 'Suggestion declined' });
         } catch (err) {
             console.error('DB Error:', err);
-            res.status(500).json({ error: err.message });
+            res.status(500).json({ error: 'Server error' });
         }
     }
 }
