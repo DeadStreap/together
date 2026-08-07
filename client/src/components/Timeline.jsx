@@ -1,16 +1,6 @@
 import { useRef, useEffect } from 'react';
 import ActivityCard from './ActivityCard';
-
-const MONTH_NAMES = {
-  '01': 'Янв', '02': 'Фев', '03': 'Мар', '04': 'Апр',
-  '05': 'Май', '06': 'Июн', '07': 'Июл', '08': 'Авг',
-  '09': 'Сен', '10': 'Окт', '11': 'Ноя', '12': 'Дек'
-};
-
-const getMonthYearLabel = (monthKey) => {
-  const [year, month] = monthKey.split('-');
-  return `${MONTH_NAMES[month] || month} ${year}`;
-};
+import { getMonthLabel } from '../utils/monthUtils';
 
 const formatDayMonth = (dateStr) => {
   const d = new Date(dateStr);
@@ -66,7 +56,7 @@ const Timeline = ({ activities, visibleCount, onLoadMore }) => {
         return (
           <div key={monthKey} className="timeline-month-group" data-month={monthKey}>
             <h2 className="timeline-month-marker">
-              <span className="timeline-month-label">{getMonthYearLabel(monthKey)}</span>
+                  <span className="timeline-month-label">{getMonthLabel(monthKey)}</span>
             </h2>
             {dayKeys.map((dayKey) => (
               <div key={dayKey} className="timeline-day-group">

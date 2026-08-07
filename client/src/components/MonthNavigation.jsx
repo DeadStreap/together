@@ -1,10 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-
-const MONTH_NAMES = [
-  'Январь', 'Февраль', 'Март', 'Апрель',
-  'Май', 'Июнь', 'Июль', 'Август',
-  'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'
-];
+import { getMonthName } from '../utils/monthUtils';
 
 const MonthNavigation = ({ currentMonth, availableMonths = [], onPick }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -35,11 +30,6 @@ const MonthNavigation = ({ currentMonth, availableMonths = [], onPick }) => {
     };
   }, []);
 
-  const getMonthLabel = (monthKey) => {
-    const [, m] = monthKey.split('-');
-    return MONTH_NAMES[parseInt(m, 10) - 1];
-  };
-
   const months = Array.from({ length: 12 }, (_, i) => {
     const m = String(i + 1).padStart(2, '0');
     return `${year}-${m}`;
@@ -59,7 +49,7 @@ const MonthNavigation = ({ currentMonth, availableMonths = [], onPick }) => {
         aria-expanded={isOpen}
         aria-haspopup="grid"
       >
-        {getMonthLabel(currentMonth)}
+        {getMonthName(currentMonth)}
       </button>
 
       {isOpen && (
@@ -96,7 +86,7 @@ const MonthNavigation = ({ currentMonth, availableMonths = [], onPick }) => {
                   }
                 }}
               >
-                {getMonthLabel(m)}
+                {getMonthName(m)}
               </button>
             ))}
           </div>

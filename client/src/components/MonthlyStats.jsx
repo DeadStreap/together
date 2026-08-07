@@ -2,21 +2,7 @@ import { Bar } from '@nivo/bar';
 import { useTheme } from '../store/ThemeContext';
 import { useChartSize } from '../hooks/useChartSize';
 import { getChartTheme } from '../config/chartConfig';
-
-const MONTH_NAMES = {
-    '01': 'Янв',
-    '02': 'Фев',
-    '03': 'Мар',
-    '04': 'Апр',
-    '05': 'Май',
-    '06': 'Июн',
-    '07': 'Июл',
-    '08': 'Авг',
-    '09': 'Сен',
-    '10': 'Окт',
-    '11': 'Ноя',
-    '12': 'Дек'
-};
+import { getMonthShort } from '../utils/monthUtils';
 
 const MonthlyStats = ({ data }) => {
     const { theme } = useTheme();
@@ -35,7 +21,7 @@ const MonthlyStats = ({ data }) => {
         .filter(item => item.month_period)
         .map(item => {
             const [year, month] = item.month_period.split('-');
-            const monthName = MONTH_NAMES[month] || month;
+            const monthName = getMonthShort(item.month_period) || month;
 
             return {
                 month: item.month_period,
