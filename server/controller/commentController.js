@@ -3,13 +3,8 @@ const pool = require('../config/db');
 class CommentController {
 
     async getComments(req, res) {
-        try {
-            const [result] = await pool.query('SELECT * FROM comments');
-            res.json(result);
-        } catch (err) {
-            console.error('DB Error:', err);
-            res.status(500).json({ error: err.message });
-        }
+        const [result] = await pool.query('SELECT * FROM comments');
+        res.json(result);
     }
 
     async getCommentById(req, res) {
@@ -21,16 +16,11 @@ class CommentController {
 
         const sql = 'SELECT * FROM comments WHERE id = ?';
 
-        try {
-            const [rows] = await pool.query(sql, [id]);
-            if (rows.length === 0) {
-                res.status(404).json('Not found');
-            } else {
-                res.json(rows[0]);
-            }
-        } catch (error) {
-            console.error(error);
-            res.status(500).send('Server error');
+        const [rows] = await pool.query(sql, [id]);
+        if (rows.length === 0) {
+            res.status(404).json('Not found');
+        } else {
+            res.json(rows[0]);
         }
     }
 
@@ -46,37 +36,36 @@ class CommentController {
             return res.status(400).json({ error: 'User ID is required' });
         }
 
-        try {
-            const [contentResult] = await pool.query(
-                'SELECT added_by_user_id FROM content_items WHERE id = ?',
-                [contentId]
-            );
+        const [contentResult] = await pool.query(
+            'SELECT added_by_user_id FROM content_items WHERE id = ?',
+            [contentId]
+        );
 
-            if (contentResult.length === 0) {
-                return res.status(404).json({ error: 'Content not found' });
-            }
+        if (contentResult.length === 0) {
+            return res.status(404).json({ error: 'Content not found' });
+        }
 
-            const contentOwnerId = contentResult[0].added_by_user_id;
+        const contentOwnerId = contentResult[0].added_by_user_id;
 
-            const [userResult] = await pool.query(
-                'SELECT partner_id FROM users WHERE id = ?',
-                [userId]
-            );
+        const [userResult] = await pool.query(
+            'SELECT partner_id FROM users WHERE id = ?',
+            [userId]
+        );
 
-            if (userResult.length === 0) {
-                return res.status(404).json({ error: 'User not found' });
-            }
+        if (userResult.length === 0) {
+            return res.status(404).json({ error: 'User not found' });
+        }
 
-            const userPartnerId = userResult[0].partner_id;
+        const userPartnerId = userResult[0].partner_id;
 
-            const isOwner = parseInt(userId) === contentOwnerId;
-            const isPartner = userPartnerId && parseInt(userPartnerId) === contentOwnerId;
+        const isOwner = parseInt(userId) === contentOwnerId;
+        const isPartner = userPartnerId && parseInt(userPartnerId) === contentOwnerId;
 
-            if (!isOwner && !isPartner) {
-                return res.status(403).json({ error: 'Access denied' });
-            }
+        if (!isOwner && !isPartner) {
+            return res.status(403).json({ error: 'Access denied' });
+        }
 
-            const sql = `
+        const sql = `
                 SELECT 
                     c.*,
                     u.username,
@@ -88,12 +77,8 @@ class CommentController {
                 ORDER BY c.created_at DESC
             `;
 
-            const [comments] = await pool.query(sql, [contentId]);
-            res.json(comments);
-        } catch (err) {
-            console.error('DB Error:', err);
-            res.status(500).json({ error: err.message });
-        }
+        const [comments] = await pool.query(sql, [contentId]);
+        res.json(comments);
     }
 
     async updateComment(req, res) {
@@ -107,22 +92,17 @@ class CommentController {
             return res.status(400).json({ error: 'User ID is required' });
         }
 
-        try {
-            const [existingComment] = await pool.query(
-                'SELECT user_id FROM comments WHERE id = ?',
-                [id]
-            );
+        const [existingComment] = await pool.query(
+            'SELECT user_id FROM comments WHERE id = ?',
+            [id]
+        );
 
-            if (existingComment.length === 0) {
-                return res.status(404).json({ error: 'Comment not found' });
-            }
+        if (existingComment.length === 0) {
+            return res.status(404).json({ error: 'Comment not found' });
+        }
 
-            if (existingComment[0].user_id !== user_id) {
-                return res.status(403).json({ error: 'You can only edit your own comments' });
-            }
-        } catch (err) {
-            console.error('DB Error:', err);
-            return res.status(500).json({ error: 'Server error' });
+        if (existingComment[0].user_id !== user_id) {
+            return res.status(403).json({ error: 'You can only edit your own comments' });
         }
 
         const updates = [];
@@ -142,18 +122,17 @@ class CommentController {
 
         params.push(id);
 
-        try {
-            const [result] = await pool.query(
-                `UPDATE comments SET ${updates.join(', ')} WHERE id = ?`,
-                params
-            );
+        const [result] = await pool.query(
+            `UPDATE comments SET ${updates.join(', ')} WHERE id = ?`,
+            params
+        );
 
-            if (result.affectedRows === 0) {
-                return res.status(404).json({ error: 'Comment not found' });
-            }
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ error: 'Comment not found' });
+        }
 
-            const [updated] = await pool.query(
-                `
+        const [updated] = await pool.query(
+            `
                 SELECT 
                     c.*,
                     u.username,
@@ -163,14 +142,9 @@ class CommentController {
                 LEFT JOIN users u ON u.id = c.user_id
                 WHERE c.id = ?
                 `,
-                [id]
-            );
-            res.json(updated[0]);
-
-        } catch (err) {
-            console.error('DB Error:', err);
-            res.status(500).json({ error: 'Server error' });
-        }
+            [id]
+        );
+        res.json(updated[0]);
     }
 
     async deleteComment(req, res) {
@@ -184,32 +158,26 @@ class CommentController {
             return res.status(400).json({ error: 'User ID is required' });
         }
 
-        try {
-            const [existingComment] = await pool.query(
-                'SELECT user_id FROM comments WHERE id = ?',
-                [id]
-            );
+        const [existingComment] = await pool.query(
+            'SELECT user_id FROM comments WHERE id = ?',
+            [id]
+        );
 
-            if (existingComment.length === 0) {
-                return res.status(404).json({ error: 'Comment not found' });
-            }
-
-            if (existingComment[0].user_id !== user_id) {
-                return res.status(403).json({ error: 'You can only delete your own comments' });
-            }
-
-            const [result] = await pool.query('DELETE FROM comments WHERE id = ?', [id]);
-
-            if (result.affectedRows === 0) {
-                return res.status(404).json({ error: 'Comment not found' });
-            }
-
-            res.status(204).send();
-
-        } catch (err) {
-            console.error('DB Error:', err);
-            res.status(500).json({ error: 'Server error' });
+        if (existingComment.length === 0) {
+            return res.status(404).json({ error: 'Comment not found' });
         }
+
+        if (existingComment[0].user_id !== user_id) {
+            return res.status(403).json({ error: 'You can only delete your own comments' });
+        }
+
+        const [result] = await pool.query('DELETE FROM comments WHERE id = ?', [id]);
+
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ error: 'Comment not found' });
+        }
+
+        res.status(204).send();
     }
 
     async createComment(req, res) {
@@ -232,48 +200,47 @@ class CommentController {
             return res.status(400).json({ error: 'Comment text must not exceed 400 characters' });
         }
 
-        try {
-            const [contentResult] = await pool.query(
-                'SELECT added_by_user_id FROM content_items WHERE id = ?',
-                [content_item_id]
-            );
+        const [contentResult] = await pool.query(
+            'SELECT added_by_user_id FROM content_items WHERE id = ?',
+            [content_item_id]
+        );
 
-            if (contentResult.length === 0) {
-                return res.status(404).json({ error: 'Content not found' });
-            }
+        if (contentResult.length === 0) {
+            return res.status(404).json({ error: 'Content not found' });
+        }
 
-            const contentOwnerId = contentResult[0].added_by_user_id;
+        const contentOwnerId = contentResult[0].added_by_user_id;
 
-            const [userResult] = await pool.query(
-                'SELECT partner_id FROM users WHERE id = ?',
-                [user_id]
-            );
+        const [userResult] = await pool.query(
+            'SELECT partner_id FROM users WHERE id = ?',
+            [user_id]
+        );
 
-            if (userResult.length === 0) {
-                return res.status(404).json({ error: 'User not found' });
-            }
+        if (userResult.length === 0) {
+            return res.status(404).json({ error: 'User not found' });
+        }
 
-            const userPartnerId = userResult[0].partner_id;
+        const userPartnerId = userResult[0].partner_id;
 
-            const isOwner = parseInt(user_id) === contentOwnerId;
-            const isPartner = userPartnerId && parseInt(userPartnerId) === contentOwnerId;
+        const isOwner = parseInt(user_id) === contentOwnerId;
+        const isPartner = userPartnerId && parseInt(userPartnerId) === contentOwnerId;
 
-            if (!isOwner && !isPartner) {
-                return res.status(403).json({ error: 'Access denied' });
-            }
+        if (!isOwner && !isPartner) {
+            return res.status(403).json({ error: 'Access denied' });
+        }
 
-            const sql = `
+        const sql = `
                 INSERT INTO comments (
                     content_item_id, user_id, comment_text
                 ) VALUES (?, ?, ?)
             `;
 
-            const params = [content_item_id, user_id, trimmedText];
+        const params = [content_item_id, user_id, trimmedText];
 
-            const [result] = await pool.query(sql, params);
+        const [result] = await pool.query(sql, params);
 
-            const [newRow] = await pool.query(
-                `
+        const [newRow] = await pool.query(
+            `
                 SELECT 
                     c.*,
                     u.username,
@@ -283,14 +250,9 @@ class CommentController {
                 LEFT JOIN users u ON u.id = c.user_id
                 WHERE c.id = ?
                 `,
-                [result.insertId]
-            );
-            res.status(201).json(newRow[0]);
-
-        } catch (err) {
-            console.error('DB Error:', err);
-            res.status(500).json({ error: 'Server error' });
-        }
+            [result.insertId]
+        );
+        res.status(201).json(newRow[0]);
     }
 }
 

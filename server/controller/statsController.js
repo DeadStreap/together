@@ -24,13 +24,8 @@ class StatsController {
             ORDER BY total DESC
         `;
 
-        try {
-            const [result] = await pool.query(sql, [userId, partnerId]);
-            res.json(result);
-        } catch (err) {
-            console.error("DB Error:", err);
-            res.status(500).json({ error: 'Server error' });
-        }
+        const [result] = await pool.query(sql, [userId, partnerId]);
+        res.json(result);
     }
 
     async getMonthlyStats(req, res) {
@@ -70,13 +65,8 @@ class StatsController {
             ORDER BY month_period ASC
         `;
 
-        try {
-            const [result] = await pool.query(sql, [userId, partnerId, userId, partnerId]);
-            res.json(result);
-        } catch (err) {
-            console.error("DB Error:", err);
-            res.status(500).json({ error: 'Server error' });
-        }
+        const [result] = await pool.query(sql, [userId, partnerId, userId, partnerId]);
+        res.json(result);
     }
 
     async getStatusStats(req, res) {
@@ -93,24 +83,19 @@ class StatsController {
             GROUP BY status
         `;
 
-        try {
-            const [result] = await pool.query(sql, [userId, partnerId]);
-            
-            const stats = {
-                planned: 0,
-                inProgress: 0,
-                done: 0
-            };
-            
-            result.forEach(row => {
-                stats[row.status] = row.count;
-            });
-            
-            res.json(stats);
-        } catch (err) {
-            console.error("DB Error:", err);
-            res.status(500).json({ error: 'Server error' });
-        }
+        const [result] = await pool.query(sql, [userId, partnerId]);
+        
+        const stats = {
+            planned: 0,
+            inProgress: 0,
+            done: 0
+        };
+        
+        result.forEach(row => {
+            stats[row.status] = row.count;
+        });
+        
+        res.json(stats);
     }
 
     async getCompletionRateByCategory(req, res) {
@@ -134,13 +119,8 @@ class StatsController {
             ORDER BY completion_rate DESC
         `;
 
-        try {
-            const [result] = await pool.query(sql, [userId, partnerId]);
-            res.json(result);
-        } catch (err) {
-            console.error("DB Error:", err);
-            res.status(500).json({ error: 'Server error' });
-        }
+        const [result] = await pool.query(sql, [userId, partnerId]);
+        res.json(result);
     }
 
     async getCompletionCurve(req, res) {
@@ -166,13 +146,8 @@ class StatsController {
             ) as daily_completions
         `;
 
-        try {
-            const [result] = await pool.query(sql, [userId, partnerId]);
-            res.json(result);
-        } catch (err) {
-            console.error("DB Error:", err);
-            res.status(500).json({ error: 'Server error' });
-        }
+        const [result] = await pool.query(sql, [userId, partnerId]);
+        res.json(result);
     }
 }
 

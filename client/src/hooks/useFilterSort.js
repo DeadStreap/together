@@ -56,47 +56,24 @@ const useFilterSort = (initialItems) => {
             );
         }
 
-        // Если есть пользовательская сортировка (выбранная пользователем), применяем её
         if (sortConfig.key && sortConfig.direction && sortConfig.isUserSelected) {
+            const dir = sortConfig.direction === 'asc' ? 1 : -1;
             result.sort((a, b) => {
+                const va = a[sortConfig.key], vb = b[sortConfig.key];
                 if (sortConfig.key.includes('_date')) {
-                    const dateA = a[sortConfig.key] ? new Date(a[sortConfig.key]).getTime() : 0;
-                    const dateB = b[sortConfig.key] ? new Date(b[sortConfig.key]).getTime() : 0;
-
-                    if (dateA < dateB) {
-                        return sortConfig.direction === 'asc' ? -1 : 1;
-                    }
-                    if (dateA > dateB) {
-                        return sortConfig.direction === 'asc' ? 1 : -1;
-                    }
-                    return 0;
-                } else {
-                    const valueA = a[sortConfig.key] ? a[sortConfig.key].toString().toLowerCase() : '';
-                    const valueB = b[sortConfig.key] ? b[sortConfig.key].toString().toLowerCase() : '';
-
-                    if (valueA < valueB) {
-                        return sortConfig.direction === 'asc' ? -1 : 1;
-                    }
-                    if (valueA > valueB) {
-                        return sortConfig.direction === 'asc' ? 1 : -1;
-                    }
-                    return 0;
+                    const da = va ? new Date(va).getTime() : 0;
+                    const db = vb ? new Date(vb).getTime() : 0;
+                    return (da - db) * dir;
                 }
+                const sa = va ? String(va).toLowerCase() : '';
+                const sb = vb ? String(vb).toLowerCase() : '';
+                return sa < sb ? -dir : sa > sb ? dir : 0;
             });
         } else {
-            // Если нет пользовательской сортировки или используется дефолтная, сортируем по умолчанию по дате добавления (по убыванию)
-            result.sort((a, b) => {
-                const dateA = a['added_at'] ? new Date(a['added_at']).getTime() : 0;
-                const dateB = b['added_at'] ? new Date(b['added_at']).getTime() : 0;
-
-                if (dateA < dateB) {
-                    return 1; // по убыванию
-                }
-                if (dateA > dateB) {
-                    return -1; // по убыванию
-                }
-                return 0;
-            });
+            result.sort((a, b) =>
+                (b['added_at'] ? new Date(b['added_at']).getTime() : 0) -
+                (a['added_at'] ? new Date(a['added_at']).getTime() : 0)
+            );
         }
 
         setFilteredContent(result);

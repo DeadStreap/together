@@ -13,13 +13,8 @@ class ContentController {
             ON u.id = ci.added_by_user_id
     `;
 
-        try {
-            const [result] = await pool.query(sql);
-            res.json(result);
-        } catch (err) {
-            console.error('DB Error:', err);
-            res.status(500).json({ error: 'Server error' });
-        }
+        const [result] = await pool.query(sql);
+        res.json(result);
     }
 
     async getContentByUserId(req, res) {
@@ -39,13 +34,8 @@ class ContentController {
             WHERE ci.added_by_user_id = ?
         `;
 
-        try {
-            const [result] = await pool.query(sql, [userId]);
-            res.json(result);
-        } catch (err) {
-            console.error("DB Error:", err);
-            res.status(500).json({ error: 'Server error' });
-        }
+        const [result] = await pool.query(sql, [userId]);
+        res.json(result);
     }
 
 
@@ -62,17 +52,12 @@ class ContentController {
         WHERE ci.id = ?
     `;
 
-        try {
-            const [rows] = await pool.query(sql, [id]);
+        const [rows] = await pool.query(sql, [id]);
 
-            if (rows.length === 0) {
-                res.status(404).json({ error: 'Not found' });
-            } else {
-                res.json(rows);
-            }
-        } catch (error) {
-            console.error('DB Error:', error);
-            res.status(500).json({ error: 'Server error' });
+        if (rows.length === 0) {
+            res.status(404).json({ error: 'Not found' });
+        } else {
+            res.json(rows);
         }
     }
 
@@ -93,26 +78,20 @@ class ContentController {
             return res.status(400).json({ error: 'No fields to update' });
         }
 
-        try {
-            const params = Object.values(fields).filter(v => v !== undefined);
-            params.push(id);
+        const params = Object.values(fields).filter(v => v !== undefined);
+        params.push(id);
 
-            const [result] = await pool.query(
-                `UPDATE content_items SET ${updates.join(', ')} WHERE id = ?`,
-                params
-            );
+        const [result] = await pool.query(
+            `UPDATE content_items SET ${updates.join(', ')} WHERE id = ?`,
+            params
+        );
 
-            if (result.affectedRows === 0) {
-                return res.status(404).json({ error: 'Content not found' });
-            }
-
-            const [updated] = await pool.query('SELECT * FROM content_items WHERE id = ?', [id]);
-            res.json(updated[0]);
-
-        } catch (err) {
-            console.error('DB Error:', err);
-            res.status(500).json({ error: 'Server error' });
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ error: 'Content not found' });
         }
+
+        const [updated] = await pool.query('SELECT * FROM content_items WHERE id = ?', [id]);
+        res.json(updated[0]);
     }
 
 
@@ -123,19 +102,13 @@ class ContentController {
             return res.status(400).json({ error: 'ID is required in body' });
         }
 
-        try {
-            const [result] = await pool.query('DELETE FROM content_items WHERE id = ?', [id]);
+        const [result] = await pool.query('DELETE FROM content_items WHERE id = ?', [id]);
 
-            if (result.affectedRows === 0) {
-                return res.status(404).json({ error: 'Content not found' });
-            }
-
-            res.status(204).send();
-
-        } catch (err) {
-            console.error('DB Error:', err);
-            res.status(500).json({ error: 'Server error' });
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ error: 'Content not found' });
         }
+
+        res.status(204).send();
     }
 
 
@@ -149,29 +122,23 @@ class ContentController {
             });
         }
 
-        try {
-            const statusValue = status !== undefined ? status : '';
-            const sharedWithPartnerValue = shared_with_partner !== undefined ? shared_with_partner : false;
-            const sql = `
+        const statusValue = status !== undefined ? status : '';
+        const sharedWithPartnerValue = shared_with_partner !== undefined ? shared_with_partner : false;
+        const sql = `
             INSERT INTO content_items (
                 title, category, added_by_user_id, shared_with_partner, status, start_date, end_date
             ) VALUES (?, ?, ?, ?, ?, ?, ?)
         `;
 
-            const params = [
-                title, category, added_by_user_id,
-                sharedWithPartnerValue, statusValue, start_date, end_date
-            ];
+        const params = [
+            title, category, added_by_user_id,
+            sharedWithPartnerValue, statusValue, start_date, end_date
+        ];
 
-            const [result] = await pool.query(sql, params);
+        const [result] = await pool.query(sql, params);
 
-            const [newRow] = await pool.query('SELECT * FROM content_items WHERE id = ?', [result.insertId]);
-            res.status(201).json(newRow[0]);
-
-        } catch (err) {
-            console.error('DB Error:', err);
-            res.status(500).json({ error: 'Server error' });
-        }
+        const [newRow] = await pool.query('SELECT * FROM content_items WHERE id = ?', [result.insertId]);
+        res.status(201).json(newRow[0]);
     }
 
 
@@ -198,13 +165,8 @@ class ContentController {
                 AND ci.shared_with_partner = TRUE
         `;
 
-        try {
-            const [result] = await pool.query(sql, [userId, partnerId]);
-            res.json(result);
-        } catch (err) {
-            console.error("DB Error:", err);
-            res.status(500).json({ error: 'Server error' });
-        }
+        const [result] = await pool.query(sql, [userId, partnerId]);
+        res.json(result);
     }
 
 

@@ -10,6 +10,11 @@ app.use(cors());
 app.use(express.json());
 app.use('/api', Router);
 
+app.use((err, req, res, next) => {
+    console.error('DB Error:', err);
+    res.status(500).json({ error: 'Server error' });
+});
+
 app.listen(PORT, (err) => {
     if(err){
         console.log(err)

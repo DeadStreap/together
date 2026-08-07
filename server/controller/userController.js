@@ -1,6 +1,16 @@
 const pool = require('../config/db');
 const crypto = require('crypto');
 
+const USER_WITH_COUPLE_SQL = `
+    SELECT
+        u.*,
+        c.id AS couple_id,
+        c.start_date AS couple_start_date
+    FROM users u
+    LEFT JOIN couples c
+        ON (c.first_user_id = u.id OR c.second_user_id = u.id)
+`;
+
 function createMD5Hash(input) {
     return crypto.createHash('md5').update(input).digest('hex');
 }
@@ -8,13 +18,8 @@ function createMD5Hash(input) {
 class UserController {
 
     async getUsers(req, res) {
-        try {
-            const [result] = await pool.query('SELECT * FROM users');
-            res.json(result);
-        } catch (err) {
-            console.error('DB Error:', err);
-            res.status(500).json({ error: err.message });
-        }
+        const [result] = await pool.query('SELECT * FROM users');
+        res.json(result);
     }
 
     async getUserById(req, res) {
@@ -24,28 +29,14 @@ class UserController {
             return res.status(400).json({ error: 'ID is required in params' });
         }
 
-        const sql = `
-            SELECT
-                u.*,
-                c.id AS couple_id,
-                c.start_date AS couple_start_date
-            FROM users u
-            LEFT JOIN couples c
-                ON (c.first_user_id = u.id OR c.second_user_id = u.id)
-            WHERE u.id = ?
-            LIMIT 1
-        `;
-
-        try {
-            const [rows] = await pool.query(sql, [id]);
-            if (rows.length === 0) {
-                res.status(404).json({ error: 'User not found' });
-            } else {
-                res.json(rows[0]);
-            }
-        } catch (error) {
-            console.error(error);
-            res.status(500).json({ error: 'Server error' });
+        const [rows] = await pool.query(
+            USER_WITH_COUPLE_SQL + ' WHERE u.id = ? LIMIT 1',
+            [id]
+        );
+        if (rows.length === 0) {
+            res.status(404).json({ error: 'User not found' });
+        } else {
+            res.json(rows[0]);
         }
     }
 
@@ -59,39 +50,25 @@ class UserController {
             });
         }
 
-        const sql = `
-            SELECT
-                u.*,
-                c.id AS couple_id,
-                c.start_date AS couple_start_date
-            FROM users u
-            LEFT JOIN couples c
-                ON (c.first_user_id = u.id OR c.second_user_id = u.id)
-            WHERE u.username = ?
-            LIMIT 1
-        `;
+        const [rows] = await pool.query(
+            USER_WITH_COUPLE_SQL + ' WHERE u.username = ? LIMIT 1',
+            [username]
+        );
 
-        try {
-            const [rows] = await pool.query(sql, [username]);
-
-            if (rows.length === 0) {
-                return res.status(404).json({ error: 'User not found' });
-            }
-
-            const user = rows[0];
-            
-            const hashedPassword = createMD5Hash(password);
-
-            if (user.password !== hashedPassword) {
-                return res.status(401).json({ error: 'Invalid password' });
-            }
-
-            const { password: pwd, ...userWithoutPassword } = user;
-            res.json(userWithoutPassword);
-        } catch (err) {
-            console.error('DB Error:', err);
-            res.status(500).json({ error: 'Server error' });
+        if (rows.length === 0) {
+            return res.status(404).json({ error: 'User not found' });
         }
+
+        const user = rows[0];
+        
+        const hashedPassword = createMD5Hash(password);
+
+        if (user.password !== hashedPassword) {
+            return res.status(401).json({ error: 'Invalid password' });
+        }
+
+        const { password: pwd, ...userWithoutPassword } = user;
+        res.json(userWithoutPassword);
     }
 
     async updateUser(req, res) {
@@ -117,39 +94,25 @@ class UserController {
             }
         }
 
-        try {
-            const params = Object.values(fields).filter(v => v !== undefined);
-            params.push(id);
+        const params = Object.values(fields).filter(v => v !== undefined);
+        params.push(id);
 
-            const [result] = await pool.query(
-                `UPDATE users SET ${updates.join(', ')} WHERE id = ?`,
-                params
-            );
+        const [result] = await pool.query(
+            `UPDATE users SET ${updates.join(', ')} WHERE id = ?`,
+            params
+        );
 
-            if (result.affectedRows === 0) {
-                return res.status(404).json({ error: 'User not found' });
-            }
-
-            const sql = `
-            SELECT
-                u.*,
-                c.id AS couple_id,
-                c.start_date AS couple_start_date
-            FROM users u
-            LEFT JOIN couples c
-                ON (c.first_user_id = u.id OR c.second_user_id = u.id)
-            WHERE u.id = ?
-            LIMIT 1
-        `;
-            const [rows] = await pool.query(sql, [id]);
-            const updatedUser = rows[0];
-            delete updatedUser.password;
-            res.json(updatedUser);
-
-        } catch (err) {
-            console.error('DB Error:', err);
-            res.status(500).json({ error: 'Server error' });
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ error: 'User not found' });
         }
+
+        const [rows] = await pool.query(
+            USER_WITH_COUPLE_SQL + ' WHERE u.id = ? LIMIT 1',
+            [id]
+        );
+        const updatedUser = rows[0];
+        delete updatedUser.password;
+        res.json(updatedUser);
     }
 
     async deleteUser(req, res) {
@@ -159,19 +122,13 @@ class UserController {
             return res.status(400).json({ error: 'ID is required in body' });
         }
 
-        try {
-            const [result] = await pool.query('DELETE FROM users WHERE id = ?', [id]);
+        const [result] = await pool.query('DELETE FROM users WHERE id = ?', [id]);
 
-            if (result.affectedRows === 0) {
-                return res.status(404).json({ error: 'User not found' });
-            }
-
-            res.status(204).send();
-
-        } catch (err) {
-            console.error('DB Error:', err);
-            res.status(500).json({ error: 'Server error' });
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ error: 'User not found' });
         }
+
+        res.status(204).send();
     }
 
     async createUser(req, res) {
@@ -184,37 +141,32 @@ class UserController {
             });
         }
 
-        try {
-            const [existingUsers] = await pool.query('SELECT id FROM users WHERE username = ?', [username]);
+        const [existingUsers] = await pool.query('SELECT id FROM users WHERE username = ?', [username]);
 
-            if (existingUsers.length > 0) {
-                return res.status(409).json({ error: 'User with this username already exists' });
-            }
+        if (existingUsers.length > 0) {
+            return res.status(409).json({ error: 'User with this username already exists' });
+        }
 
-            const hashedPassword = createMD5Hash(password);
+        const hashedPassword = createMD5Hash(password);
 
-            const partnerIdValue = partner_id !== undefined ? partner_id : null;
-            const iconValue = icon !== undefined ? icon : null;
-            const sql = `
+        const partnerIdValue = partner_id !== undefined ? partner_id : null;
+        const iconValue = icon !== undefined ? icon : null;
+        const sql = `
                 INSERT INTO users (
                     username, password, partner_id, icon
                 ) VALUES (?, ?, ?, ?)
             `;
 
-            const params = [username, hashedPassword, partnerIdValue, iconValue];
+        const params = [username, hashedPassword, partnerIdValue, iconValue];
 
-            const [result] = await pool.query(sql, params);
+        const [result] = await pool.query(sql, params);
 
-            const [newRow] = await pool.query('SELECT * FROM users WHERE id = ?', [result.insertId]);
-            const user = newRow[0];
-            delete user.password;
-            res.status(201).json(user);
-
-        } catch (err) {
-            console.error('DB Error:', err);
-            res.status(500).json({ error: 'Server error' });
-        }
+        const [newRow] = await pool.query('SELECT * FROM users WHERE id = ?', [result.insertId]);
+        const user = newRow[0];
+        delete user.password;
+        res.status(201).json(user);
     }
+
     async generateToken(req, res) {
         const { userId } = req.body;
 
@@ -222,36 +174,31 @@ class UserController {
             return res.status(400).json({ error: 'User ID is required' });
         }
 
-        try {
-            let token = Math.floor(100000 + Math.random() * 900000).toString();
-            
-            let tokenExists = true;
-            while(tokenExists) {
-                const [result] = await pool.query('SELECT id FROM users WHERE token = ?', [token]);
-                if(result.length === 0) {
-                    tokenExists = false;
-                } else {
-                    token = Math.floor(100000 + Math.random() * 900000).toString();
-                }
+        let token = Math.floor(100000 + Math.random() * 900000).toString();
+        
+        let tokenExists = true;
+        while(tokenExists) {
+            const [result] = await pool.query('SELECT id FROM users WHERE token = ?', [token]);
+            if(result.length === 0) {
+                tokenExists = false;
+            } else {
+                token = Math.floor(100000 + Math.random() * 900000).toString();
             }
-            
-            const [result] = await pool.query(
-                'UPDATE users SET token = ? WHERE id = ?',
-                [token, userId]
-            );
-
-            if(result.affectedRows === 0) {
-                return res.status(404).json({ error: 'User not found' });
-            }
-            
-            const [updatedUserResult] = await pool.query('SELECT * FROM users WHERE id = ?', [userId]);
-            const updatedUser = updatedUserResult[0];
-            delete updatedUser.password;
-            res.json(updatedUser);
-        } catch (err) {
-            console.error('DB Error:', err);
-            res.status(500).json({ error: 'Server error' });
         }
+        
+        const [result] = await pool.query(
+            'UPDATE users SET token = ? WHERE id = ?',
+            [token, userId]
+        );
+
+        if(result.affectedRows === 0) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+        
+        const [updatedUserResult] = await pool.query('SELECT * FROM users WHERE id = ?', [userId]);
+        const updatedUser = updatedUserResult[0];
+        delete updatedUser.password;
+        res.json(updatedUser);
     }
 
     async joinCouple(req, res) {
@@ -263,56 +210,51 @@ class UserController {
             });
         }
 
-        try {
-            const [partnerResult] = await pool.query(
-                'SELECT id FROM users WHERE token = ?',
-                [partnerToken]
-            );
+        const [partnerResult] = await pool.query(
+            'SELECT id FROM users WHERE token = ?',
+            [partnerToken]
+        );
 
-            if(partnerResult.length === 0) {
-                return res.status(404).json({ error: 'User with this token not found' });
-            }
-
-            const partnerId = partnerResult[0].id;
-
-            if(userId === partnerId) {
-                return res.status(400).json({ error: 'Cannot join couple with yourself' });
-            }
-
-            const [currentUserResult] = await pool.query(
-                'SELECT partner_id FROM users WHERE id = ?',
-                [userId]
-            );
-            
-            const [partnerUserResult] = await pool.query(
-                'SELECT partner_id FROM users WHERE id = ?',
-                [partnerId]
-            );
-
-            if(currentUserResult[0].partner_id || partnerUserResult[0].partner_id) {
-                return res.status(400).json({ error: 'One of the users already has a partner' });
-            }
-
-            await pool.query(
-                'UPDATE users SET partner_id = ? WHERE id = ?',
-                [partnerId, userId]
-            );
-
-            await pool.query(
-                'UPDATE users SET partner_id = ? WHERE id = ?',
-                [userId, partnerId]
-            );
-
-            await pool.query(
-                'UPDATE users SET token = NULL WHERE id IN (?, ?)',
-                [userId, partnerId]
-            );
-
-            res.json({ success: true, message: 'Successfully joined couple' });
-        } catch (err) {
-            console.error('DB Error:', err);
-            res.status(500).json({ error: 'Server error' });
+        if(partnerResult.length === 0) {
+            return res.status(404).json({ error: 'User with this token not found' });
         }
+
+        const partnerId = partnerResult[0].id;
+
+        if(userId === partnerId) {
+            return res.status(400).json({ error: 'Cannot join couple with yourself' });
+        }
+
+        const [currentUserResult] = await pool.query(
+            'SELECT partner_id FROM users WHERE id = ?',
+            [userId]
+        );
+        
+        const [partnerUserResult] = await pool.query(
+            'SELECT partner_id FROM users WHERE id = ?',
+            [partnerId]
+        );
+
+        if(currentUserResult[0].partner_id || partnerUserResult[0].partner_id) {
+            return res.status(400).json({ error: 'One of the users already has a partner' });
+        }
+
+        await pool.query(
+            'UPDATE users SET partner_id = ? WHERE id = ?',
+            [partnerId, userId]
+        );
+
+        await pool.query(
+            'UPDATE users SET partner_id = ? WHERE id = ?',
+            [userId, partnerId]
+        );
+
+        await pool.query(
+            'UPDATE users SET token = NULL WHERE id IN (?, ?)',
+            [userId, partnerId]
+        );
+
+        res.json({ success: true, message: 'Successfully joined couple' });
     }
 }
 

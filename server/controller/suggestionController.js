@@ -11,8 +11,7 @@ class SuggestionController {
             return res.status(400).json({ error: 'User ID is required' });
         }
 
-        try {
-            const sql = `
+        const sql = `
                 SELECT
                     s.*,
                     u.username AS suggested_by_username
@@ -22,12 +21,8 @@ class SuggestionController {
                 ORDER BY s.created_at DESC
             `;
 
-            const [rows] = await pool.query(sql, [userId, userId]);
-            res.json(rows);
-        } catch (err) {
-            console.error('DB Error:', err);
-            res.status(500).json({ error: 'Server error' });
-        }
+        const [rows] = await pool.query(sql, [userId, userId]);
+        res.json(rows);
     }
 
     async createSuggestion(req, res) {
@@ -47,40 +42,35 @@ class SuggestionController {
             });
         }
 
-        try {
-            const [userRows] = await pool.query(
-                'SELECT partner_id FROM users WHERE id = ?',
-                [suggested_by]
-            );
+        const [userRows] = await pool.query(
+            'SELECT partner_id FROM users WHERE id = ?',
+            [suggested_by]
+        );
 
-            if (userRows.length === 0) {
-                return res.status(404).json({ error: 'Suggested by user not found' });
-            }
+        if (userRows.length === 0) {
+            return res.status(404).json({ error: 'Suggested by user not found' });
+        }
 
-            if (userRows[0].partner_id !== parseInt(suggested_to)) {
-                return res.status(403).json({ error: 'Users are not partners' });
-            }
+        if (parseInt(userRows[0].partner_id, 10) !== parseInt(suggested_to, 10)) {
+            return res.status(403).json({ error: 'Users are not partners' });
+        }
 
-            const sql = `
+        const sql = `
                 INSERT INTO suggestions (title, category, suggested_by, suggested_to)
                 VALUES (?, ?, ?, ?)
             `;
 
-            const [result] = await pool.query(sql, [title, category, suggested_by, suggested_to]);
+        const [result] = await pool.query(sql, [title, category, suggested_by, suggested_to]);
 
-            const [newRow] = await pool.query(
-                `SELECT s.*, u.username AS suggested_by_username
+        const [newRow] = await pool.query(
+            `SELECT s.*, u.username AS suggested_by_username
                  FROM suggestions s
                  LEFT JOIN users u ON u.id = s.suggested_by
                  WHERE s.id = ?`,
-                [result.insertId]
-            );
+            [result.insertId]
+        );
 
-            res.status(201).json(newRow[0]);
-        } catch (err) {
-            console.error('DB Error:', err);
-            res.status(500).json({ error: 'Server error' });
-        }
+        res.status(201).json(newRow[0]);
     }
 
     async acceptSuggestion(req, res) {
@@ -95,52 +85,47 @@ class SuggestionController {
             return res.status(400).json({ error: 'User ID is required' });
         }
 
-        try {
-            const [suggestionRows] = await pool.query(
-                'SELECT * FROM suggestions WHERE id = ?',
-                [suggestionId]
-            );
+        const [suggestionRows] = await pool.query(
+            'SELECT * FROM suggestions WHERE id = ?',
+            [suggestionId]
+        );
 
-            if (suggestionRows.length === 0) {
-                return res.status(404).json({ error: 'Suggestion not found' });
-            }
+        if (suggestionRows.length === 0) {
+            return res.status(404).json({ error: 'Suggestion not found' });
+        }
 
-            const suggestion = suggestionRows[0];
+        const suggestion = suggestionRows[0];
 
-            if (parseInt(suggestion.suggested_to) !== parseInt(user_id)) {
-                return res.status(403).json({ error: 'Only the recipient can accept this suggestion' });
-            }
+        if (parseInt(suggestion.suggested_to) !== parseInt(user_id)) {
+            return res.status(403).json({ error: 'Only the recipient can accept this suggestion' });
+        }
 
-            if (suggestion.status !== 'pending') {
-                return res.status(400).json({ error: 'Suggestion is not pending' });
-            }
+        if (suggestion.status !== 'pending') {
+            return res.status(400).json({ error: 'Suggestion is not pending' });
+        }
 
-            const contentSql = `
+        const contentSql = `
                 INSERT INTO content_items (
                     title, category, added_by_user_id, shared_with_partner, status, added_at
                 ) VALUES (?, ?, ?, TRUE, 'planned', NOW())
             `;
 
-            const [contentResult] = await pool.query(contentSql, [
-                suggestion.title, suggestion.category, suggestion.suggested_by
-            ]);
+        const [contentResult] = await pool.query(contentSql, [
+            suggestion.title, suggestion.category, suggestion.suggested_by
+        ]);
 
-            const suggestionSql = 'DELETE FROM suggestions WHERE id = ?';
-            await pool.query(suggestionSql, [suggestionId]);
+        const suggestionSql = 'DELETE FROM suggestions WHERE id = ?';
+        await pool.query(suggestionSql, [suggestionId]);
 
-            const [newContent] = await pool.query(
-                'SELECT * FROM content_items WHERE id = ?',
-                [contentResult.insertId]
-            );
+        const [newContent] = await pool.query(
+            'SELECT * FROM content_items WHERE id = ?',
+            [contentResult.insertId]
+        );
 
-            res.json({
-                message: 'Suggestion accepted',
-                activity: newContent[0]
-            });
-        } catch (err) {
-            console.error('DB Error:', err);
-            res.status(500).json({ error: 'Server error' });
-        }
+        res.json({
+            message: 'Suggestion accepted',
+            activity: newContent[0]
+        });
     }
 
     async declineSuggestion(req, res) {
@@ -155,36 +140,31 @@ class SuggestionController {
             return res.status(400).json({ error: 'User ID is required' });
         }
 
-        try {
-            const [suggestionRows] = await pool.query(
-                'SELECT * FROM suggestions WHERE id = ?',
-                [suggestionId]
-            );
+        const [suggestionRows] = await pool.query(
+            'SELECT * FROM suggestions WHERE id = ?',
+            [suggestionId]
+        );
 
-            if (suggestionRows.length === 0) {
-                return res.status(404).json({ error: 'Suggestion not found' });
-            }
-
-            const suggestion = suggestionRows[0];
-
-            const isRecipient = parseInt(suggestion.suggested_to) === parseInt(user_id);
-            const isAuthor = parseInt(suggestion.suggested_by) === parseInt(user_id);
-
-            if (!isRecipient && !isAuthor) {
-                return res.status(403).json({ error: 'You cannot decline this suggestion' });
-            }
-
-            if (suggestion.status !== 'pending') {
-                return res.status(400).json({ error: 'Suggestion is not pending' });
-            }
-
-            await pool.query('DELETE FROM suggestions WHERE id = ?', [suggestionId]);
-
-            res.json({ message: 'Suggestion declined' });
-        } catch (err) {
-            console.error('DB Error:', err);
-            res.status(500).json({ error: 'Server error' });
+        if (suggestionRows.length === 0) {
+            return res.status(404).json({ error: 'Suggestion not found' });
         }
+
+        const suggestion = suggestionRows[0];
+
+        const isRecipient = parseInt(suggestion.suggested_to) === parseInt(user_id);
+        const isAuthor = parseInt(suggestion.suggested_by) === parseInt(user_id);
+
+        if (!isRecipient && !isAuthor) {
+            return res.status(403).json({ error: 'You cannot decline this suggestion' });
+        }
+
+        if (suggestion.status !== 'pending') {
+            return res.status(400).json({ error: 'Suggestion is not pending' });
+        }
+
+        await pool.query('DELETE FROM suggestions WHERE id = ?', [suggestionId]);
+
+        res.json({ message: 'Suggestion declined' });
     }
 }
 
